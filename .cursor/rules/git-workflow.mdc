@@ -1,0 +1,44 @@
+---
+description: Git workflow preferences - always ask before committing changes
+alwaysApply: true
+---
+
+# Git Workflow
+
+**CRITICAL: Always ask for approval before committing changes to the repository.**
+
+## Workflow Steps
+
+1. **Make Changes**: Implement the requested features, fixes, or updates
+2. **Show Changes**: Explain what was changed and why
+3. **Ask for Approval**: Wait for explicit user confirmation before committing
+4. **Commit Only When Approved**: Do not commit until the user explicitly approves
+5. **Push Only When Requested**: Only push to remote when user explicitly asks
+
+## Rules
+
+❌ **NEVER automatically commit** after making changes  
+❌ **NEVER automatically push** after committing  
+❌ **NEVER assume** the user wants to keep the changes  
+
+✅ **ALWAYS ask** "Would you like to commit these changes?"  
+✅ **ALWAYS wait** for explicit approval before running `git commit`  
+✅ **ALWAYS batch** related changes into logical commits when approved  
+
+## Example Flow
+
+```
+User: "Add second Filipino voice"
+Assistant: [makes changes]
+Assistant: "I've added Maria as the second Filipino voice and removed Zofia from Polish. Would you like to commit these changes?"
+User: "Yes" or "Execute"
+Assistant: [commits with meaningful message]
+```
+
+## Benefits
+
+- User maintains full control over git history
+- Allows review before changes are permanent
+- Enables batching multiple changes into logical commits
+- Prevents cluttered git history with incremental commits
+- User decides what actually makes it to the repository
