@@ -224,64 +224,40 @@ export default function NewEmail({ onBack, contactName, contactEmail, onOpenEmai
   return (
     <div className="flex-1 flex flex-col h-full overflow-hidden relative">
       {/* Header */}
-      <header className="flex items-center justify-between px-8 py-5 border-b border-white/30 sticky top-0 bg-white/40 backdrop-blur-xl z-30 transition-all">
-        <div className="flex items-center gap-4">
+      <header className="flex items-center justify-between px-8 py-4 border-b border-slate-100/60 sticky top-0 bg-white/60 backdrop-blur-xl z-30 transition-all">
+        <div className="flex items-center gap-3">
           <button
             onClick={onBack}
-            className="group flex items-center justify-center w-10 h-10 bg-white hover:bg-slate-50 border border-slate-200 hover:border-slate-300 rounded-xl transition-all hover:shadow-md"
+            className="flex items-center gap-1.5 text-[13px] font-medium text-slate-400 hover:text-slate-600 transition-colors"
           >
-            <Icon icon="solar:arrow-left-linear" width="20" className="text-slate-600 group-hover:text-slate-900 transition-colors" />
+            <Icon icon="solar:arrow-left-linear" width="14" />
+            Back
           </button>
-          <div>
-            <div className="flex items-baseline gap-2">
-              <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
-                {contactName ? 'Email to' : 'New Email'}
-              </h1>
-              {contactName && (
-                <span className="text-3xl font-light text-slate-600 tracking-tight font-display">
-                  {contactName}
-                </span>
-              )}
-            </div>
-            <p className="text-sm font-medium text-slate-500 mt-1.5">
-              Compose a new message or view previous email conversations
-            </p>
-          </div>
+          <div className="h-4 w-px bg-slate-200" />
+          <h1 className="text-lg font-semibold text-slate-800 tracking-tight">
+            {contactName ? `Email to ${contactName}` : 'New Email'}
+          </h1>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
           {/* Preview/Editor Toggle */}
-          <div className="hidden md:flex items-center gap-2 bg-white p-1 rounded-xl border border-slate-200/60 shadow-sm">
-            <button className="px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:bg-slate-50 transition-colors">
+          <div className="hidden md:flex items-center bg-slate-100 rounded-lg p-0.5">
+            <button className="px-3 py-1.5 rounded-md text-[12px] font-medium text-slate-400 hover:text-slate-600 transition-all">
               Preview
             </button>
-            <div className="w-px h-4 bg-slate-200"></div>
-            <button className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 text-slate-900">
+            <button className="px-3 py-1.5 rounded-md text-[12px] font-medium bg-white text-slate-700 shadow-sm transition-all">
               Editor
             </button>
           </div>
-
-          {/* Email History Button */}
-          <button
-            onClick={() => onOpenEmailHistory?.()}
-            className="group flex items-center gap-2 px-4 py-2 bg-white hover:bg-slate-50 border border-slate-200 hover:border-slate-300 rounded-xl transition-all shadow-sm hover:shadow-md"
-          >
-            <Icon icon="solar:inbox-line-linear" width="18" className="text-slate-500 group-hover:text-slate-700 transition-colors" />
-            <span className="text-sm font-semibold text-slate-700 group-hover:text-slate-900">
-              Sent
-            </span>
-          </button>
-
-          <div className="h-8 w-px bg-slate-200"></div>
 
           {/* Notification Bell */}
           <div className="relative">
             <button
               onClick={() => setShowNotifications(!showNotifications)}
-              className="group hover:text-slate-800 transition-all flex outline-none focus:ring-2 focus:ring-slate-100 text-slate-500 bg-white w-10 h-10 rounded-xl relative items-center justify-center shadow-sm hover:shadow-[0_4px_16px_rgba(0,0,0,0.10)] active:scale-95"
+              className="group transition-all flex outline-none text-slate-400 hover:text-slate-600 w-9 h-9 rounded-xl border border-slate-200 relative items-center justify-center hover:bg-slate-50 hover:border-slate-300 active:scale-[0.97]"
             >
-              <Icon icon="solar:bell-linear" width="22" className="transition-transform group-hover:scale-105 group-active:scale-95" />
-              <span className="absolute top-2 right-2.5 w-2 h-2 bg-rose-500 rounded-full ring-2 ring-white">
+              <Icon icon="solar:bell-linear" width="18" />
+              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-rose-500 rounded-full ring-2 ring-white">
                 <span className="absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75 animate-ping"></span>
               </span>
             </button>
@@ -295,53 +271,42 @@ export default function NewEmail({ onBack, contactName, contactEmail, onOpenEmai
       </header>
 
       {/* Composer Scroll Area */}
-      <div className="flex-1 overflow-y-auto px-4 lg:px-8 pb-8 flex justify-center custom-scrollbar bg-slate-50/30">
+      <div className="flex-1 overflow-y-auto px-4 lg:px-8 pb-8 flex justify-center custom-scrollbar">
         <div className="w-full max-w-5xl flex flex-col gap-6 pt-6">
 
           {/* Context Selector Card */}
-          <section className="bg-white rounded-2xl p-5 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.05)] border border-slate-100">
-            <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+          <section className="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-3">
               {/* Reference Label */}
-              <div className="flex items-center gap-2.5 pl-2 shrink-0 select-none">
-                <div className="p-1.5 rounded-lg bg-blue-50 text-blue-600">
-                  <Icon icon="solar:link-circle-linear" width="18" />
-                </div>
-                <span className="text-xs font-bold text-slate-600 uppercase tracking-wider">
-                  Reference
-                </span>
-              </div>
+              <span className="text-[11px] font-medium text-slate-400 uppercase tracking-wider shrink-0 pl-1">
+                Attach
+              </span>
 
               {/* Switcher */}
-              <div className="flex shrink-0 bg-slate-100 p-1 rounded-xl">
+              <div className="flex shrink-0 bg-slate-100 rounded-lg p-0.5">
                 <button
                   onClick={() => handleSourceTypeChange('quote')}
-                  className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all flex items-center gap-2 ${
-                    sourceType === 'quote'
-                      ? 'bg-white text-slate-900 shadow-sm font-bold'
-                      : 'text-slate-500 hover:text-slate-700 hover:bg-white/50'
+                  className={`px-3 py-1.5 rounded-md text-[12px] font-medium transition-all ${
+                    sourceType === 'quote' ? 'bg-white text-slate-700 shadow-sm' : 'text-slate-400 hover:text-slate-600'
                   }`}
                 >
                   Quote
                 </button>
                 <button
                   onClick={() => handleSourceTypeChange('invoice')}
-                  className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all flex items-center gap-2 ${
-                    sourceType === 'invoice'
-                      ? 'bg-white text-slate-900 shadow-sm font-bold'
-                      : 'text-slate-500 hover:text-slate-700 hover:bg-white/50'
+                  className={`px-3 py-1.5 rounded-md text-[12px] font-medium transition-all ${
+                    sourceType === 'invoice' ? 'bg-white text-slate-700 shadow-sm' : 'text-slate-400 hover:text-slate-600'
                   }`}
                 >
                   Invoice
                 </button>
                 <button
                   onClick={() => handleSourceTypeChange('empty')}
-                  className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all flex items-center gap-2 ${
-                    sourceType === 'empty'
-                      ? 'bg-white text-slate-900 shadow-sm font-bold'
-                      : 'text-slate-500 hover:text-slate-700 hover:bg-white/50'
+                  className={`px-3 py-1.5 rounded-md text-[12px] font-medium transition-all ${
+                    sourceType === 'empty' ? 'bg-white text-slate-700 shadow-sm' : 'text-slate-400 hover:text-slate-600'
                   }`}
                 >
-                  Empty
+                  None
                 </button>
               </div>
 
@@ -352,10 +317,10 @@ export default function NewEmail({ onBack, contactName, contactEmail, onOpenEmai
                     <button
                       type="button"
                       onClick={() => setShowSourceDropdown(!showSourceDropdown)}
-                      className="flex items-center justify-between w-full h-[60px] px-4 bg-slate-50 hover:bg-white border border-slate-200/60 rounded-xl transition-all group cursor-pointer outline-none focus:ring-2 focus:ring-blue-100 hover:border-blue-300"
+                      className="flex items-center justify-between w-full h-[52px] px-4 bg-slate-50 hover:bg-white border border-slate-200 rounded-xl transition-all group cursor-pointer outline-none focus:border-slate-400"
                     >
                       <div className="flex items-center gap-4 overflow-hidden">
-                        <div className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0 border bg-blue-50 text-blue-600 border-blue-100">
+                        <div className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0 border bg-slate-100 text-slate-500 border-slate-200">
                           <Icon icon={getSourceIcon()} width="20" />
                         </div>
                         {selectedSourceItem ? (
@@ -368,7 +333,7 @@ export default function NewEmail({ onBack, contactName, contactEmail, onOpenEmai
                                 {sourceType === 'quote' ? 'Quote' : 'Invoice'} #{selectedSourceItem.number}
                               </span>
                               <span className="w-1 h-1 rounded-full bg-slate-300"></span>
-                              <span className="text-xs font-semibold truncate text-blue-600">
+                              <span className="text-xs font-semibold truncate text-slate-600">
                                 {selectedSourceItem.amount}
                               </span>
                             </div>
@@ -404,11 +369,11 @@ export default function NewEmail({ onBack, contactName, contactEmail, onOpenEmai
                               key={item.id}
                               onClick={() => handleSelectSourceItem(item)}
                               className={`w-full flex items-center justify-between p-3 rounded-lg transition-all group hover:bg-slate-50 ${
-                                selectedSourceItem?.id === item.id ? 'bg-blue-50 ring-1 ring-blue-100' : ''
+                                selectedSourceItem?.id === item.id ? 'bg-slate-50 ring-1 ring-slate-200' : ''
                               }`}
                             >
                               <div className="flex items-center gap-3 overflow-hidden flex-1">
-                                <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0 border bg-blue-50 text-blue-600 border-blue-100 group-hover:scale-105 transition-transform">
+                                <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0 border bg-slate-100 text-slate-500 border-slate-200 group-hover:scale-105 transition-transform">
                                   <Icon icon={getSourceIcon()} width="18" />
                                 </div>
                                 <div className="flex flex-col justify-center overflow-hidden text-left">
@@ -445,7 +410,7 @@ export default function NewEmail({ onBack, contactName, contactEmail, onOpenEmai
                   </>
                 ) : (
                   <div className="w-full h-[60px] bg-slate-50 border border-dashed border-slate-300 rounded-xl flex items-center justify-center px-4 text-sm font-semibold text-slate-600 animate-in fade-in zoom-in-95 duration-200 select-none gap-2">
-                    <div className="p-1.5 rounded-md bg-amber-100 text-amber-600">
+                    <div className="p-1.5 rounded-md bg-indigo-50 text-indigo-500">
                       <Icon icon="solar:stars-minimalistic-linear" width="16" />
                     </div>
                     Starting from blank slate
@@ -456,17 +421,17 @@ export default function NewEmail({ onBack, contactName, contactEmail, onOpenEmai
           </section>
 
           {/* Email Form Card */}
-          <div className="flex flex-col bg-white border border-slate-100 shadow-[0_8px_30px_rgba(0,0,0,0.04)] rounded-2xl ring-1 ring-slate-900/5 transition-all duration-300 hover:shadow-[0_20px_40px_-10px_rgba(0,0,0,0.06)] relative z-10">
+          <div className="flex flex-col bg-white border border-slate-200 shadow-sm rounded-2xl relative z-10">
             {/* Header Fields */}
             <div className="flex flex-col border-b border-slate-50 px-6 py-3">
               {/* To Field */}
               <div className="group flex min-h-[56px] border-b border-slate-50 items-center">
-                <label className="w-20 text-sm font-bold text-slate-600 transition-colors group-hover:text-blue-600">
+                <label className="w-20 text-[13px] font-medium text-slate-400 transition-colors group-hover:text-slate-600">
                   To
                 </label>
                 <div className="flex items-center gap-2 flex-1">
                   {contactName ? (
-                    <div className="flex items-center gap-2 pl-1 pr-3 py-1.5 bg-white border border-slate-200 rounded-full shadow-sm hover:ring-2 transition-all cursor-pointer group/chip hover:border-blue-300 hover:ring-blue-50">
+                    <div className="flex items-center gap-2 pl-1 pr-3 py-1.5 bg-white border border-slate-200 rounded-full shadow-sm hover:ring-1 transition-all cursor-pointer group/chip hover:border-slate-300 hover:ring-slate-100">
                       <div className={`flex items-center justify-center w-7 h-7 text-[11px] font-bold bg-gradient-to-br ${avatarColor.from} ${avatarColor.to} text-white rounded-full shadow-sm`}>
                         {getInitials(contactName)}
                       </div>
@@ -486,7 +451,7 @@ export default function NewEmail({ onBack, contactName, contactEmail, onOpenEmai
 
               {/* Cc Field */}
               <div className="group flex min-h-[56px] border-b border-slate-50 items-center">
-                <label className="w-20 text-sm font-bold text-slate-600 transition-colors group-hover:text-blue-600">
+                <label className="w-20 text-[13px] font-medium text-slate-400 transition-colors group-hover:text-slate-600">
                   Cc
                 </label>
                 <input
@@ -500,7 +465,7 @@ export default function NewEmail({ onBack, contactName, contactEmail, onOpenEmai
 
               {/* Subject Field */}
               <div className="group flex min-h-[56px] items-center">
-                <label className="w-20 text-sm font-bold text-slate-600 transition-colors group-hover:text-blue-600">
+                <label className="w-20 text-[13px] font-medium text-slate-400 transition-colors group-hover:text-slate-600">
                   Subject
                 </label>
                 <input
@@ -530,7 +495,7 @@ export default function NewEmail({ onBack, contactName, contactEmail, onOpenEmai
                 </div>
 
                 {/* Attachment Button */}
-                <button className="flex items-center justify-center p-2 bg-white border border-slate-200/80 rounded-lg shadow-sm text-slate-400 hover:shadow-md transition-all duration-200 outline-none group/attach hover:text-blue-600 hover:border-blue-200 hover:shadow-blue-500/10">
+                <button className="flex items-center justify-center p-2 bg-white border border-slate-200/80 rounded-lg shadow-sm text-slate-400 hover:shadow-md transition-all duration-200 outline-none group/attach hover:text-slate-600 hover:border-slate-300">
                   <Icon icon="solar:paperclip-linear" width="16" />
                 </button>
 
@@ -541,7 +506,7 @@ export default function NewEmail({ onBack, contactName, contactEmail, onOpenEmai
                     className="flex items-center justify-between gap-2 px-3 py-2 bg-white border border-slate-200/80 rounded-lg shadow-sm text-sm font-semibold text-slate-600 hover:text-slate-900 hover:border-slate-300 hover:shadow-md transition-all duration-200 outline-none"
                   >
                     <span className="flex items-center gap-1.5">
-                      <span className="w-1.5 h-1.5 rounded-full bg-orange-500"></span>
+                      <span className="w-1.5 h-1.5 rounded-full bg-indigo-500"></span>
                       Add presentation
                     </span>
                     <Icon
@@ -597,17 +562,17 @@ export default function NewEmail({ onBack, contactName, contactEmail, onOpenEmai
           <div className="flex items-center justify-between pt-2 pb-12">
             <button
               onClick={onBack}
-              className="text-slate-500 hover:text-red-600 hover:bg-red-50 rounded-xl text-sm font-bold px-4 py-2.5 transition-all flex items-center gap-2"
+              className="text-slate-400 hover:text-red-500 rounded-xl text-[13px] font-medium px-3 py-2 transition-colors flex items-center gap-1.5"
             >
-              <Icon icon="solar:trash-bin-trash-linear" width="16" />
-              Discard Draft
+              <Icon icon="solar:trash-bin-trash-linear" width="14" />
+              Discard
             </button>
 
             <div className="flex items-center gap-3">
               <div className="relative" data-dropdown>
                 <button
                   onClick={() => setShowScheduleDropdown(!showScheduleDropdown)}
-                  className="flex items-center gap-2 px-4 py-2.5 text-sm font-bold text-slate-700 bg-white border border-slate-200 rounded-xl shadow-sm hover:text-slate-900 hover:bg-slate-50 hover:border-slate-300 transition-all outline-none focus:ring-2 focus:ring-blue-100 group"
+                  className="flex items-center gap-1.5 px-3 py-2 text-[13px] font-medium text-slate-500 border border-slate-200 rounded-xl hover:text-slate-700 hover:bg-slate-50 hover:border-slate-300 transition-all outline-none group"
                 >
                   <Icon icon="solar:clock-circle-linear" width="18" className="text-slate-500 group-hover:text-slate-900 transition-colors" />
                   <span>Send Later</span>
@@ -636,7 +601,7 @@ export default function NewEmail({ onBack, contactName, contactEmail, onOpenEmai
 
                     <button className="w-full flex items-center justify-between px-3 py-2.5 text-sm font-semibold text-slate-700 rounded-lg hover:bg-slate-50 hover:text-slate-900 transition-colors group">
                       <div className="flex items-center gap-2.5">
-                        <Icon icon="solar:calendar-linear" width="16" className="text-slate-400 group-hover:text-blue-500 transition-colors" />
+                        <Icon icon="solar:calendar-linear" width="16" className="text-slate-400 group-hover:text-slate-600 transition-colors" />
                         <span>Monday morning</span>
                       </div>
                       <span className="text-xs font-medium text-slate-500">Nov 25</span>
@@ -655,12 +620,12 @@ export default function NewEmail({ onBack, contactName, contactEmail, onOpenEmai
               <button
                 onClick={handleSendEmail}
                 disabled={isSending || sendSuccess}
-                className={`group relative font-bold py-3 px-6 rounded-xl transition-all duration-500 text-sm flex items-center gap-2 overflow-hidden ${
+                className={`group relative font-semibold py-2.5 px-5 rounded-xl transition-all duration-300 text-[13px] flex items-center gap-2 overflow-hidden ${
                   sendSuccess
-                    ? 'bg-gradient-to-r from-emerald-500 to-emerald-600 text-white cursor-default shadow-lg shadow-emerald-500/30 scale-[1.02]'
+                    ? 'bg-emerald-600 text-white cursor-default'
                     : isSending
-                    ? 'bg-slate-800 text-white cursor-wait shadow-lg shadow-slate-500/20'
-                    : 'bg-slate-900 hover:bg-slate-800 text-white hover:shadow-xl shadow-lg shadow-slate-900/20 hover:shadow-slate-900/30 active:scale-[0.98]'
+                    ? 'bg-slate-800 text-white cursor-wait'
+                    : 'bg-slate-900 hover:bg-slate-800 text-white shadow-sm active:scale-[0.98]'
                 }`}
               >
                 {sendSuccess && (
@@ -693,7 +658,7 @@ export default function NewEmail({ onBack, contactName, contactEmail, onOpenEmai
       </div>
 
       {showSuccessOverlay && (
-        <div className="fixed inset-0 bg-gradient-to-br from-emerald-500/10 via-blue-500/5 to-slate-900/10 backdrop-blur-sm z-[45] animate-in fade-in duration-300" />
+        <div className="fixed inset-0 bg-slate-900/5 backdrop-blur-sm z-[45] animate-in fade-in duration-300" />
       )}
     </div>
   );

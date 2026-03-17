@@ -174,10 +174,7 @@ export default function TemplateBuilder({ onClose, templateType }: TemplateBuild
             </>
           )}
           <div>
-            <div className="flex items-center gap-2 text-[10px] font-semibold tracking-wider uppercase text-blue-600 mb-1">
-              <span>Template Settings</span>
-            </div>
-            <h1 className="text-lg font-semibold text-slate-900 tracking-tight">Template Builder</h1>
+            <h1 className="text-lg font-semibold text-slate-800 tracking-tight">Template Builder</h1>
           </div>
         </div>
         <div className="flex items-center gap-3">
@@ -203,16 +200,9 @@ export default function TemplateBuilder({ onClose, templateType }: TemplateBuild
         {/* Left Panel - Settings */}
         <div className="w-[520px] border-r border-slate-200 bg-white overflow-y-auto custom-scrollbar flex-shrink-0">
           {/* Styling & Format Header */}
-          <div className="p-6 border-b border-slate-200 bg-gradient-to-br from-slate-50 to-slate-100/50">
-            <div className="flex items-center gap-3">
-              <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-blue-50 to-blue-100 shadow-sm border border-blue-200 flex items-center justify-center">
-                <Icon icon="solar:magic-stick-3-bold" width="22" className="text-blue-600" />
-              </div>
-              <div>
-                <h2 className="text-base font-semibold text-slate-900">Styling & Format</h2>
-                <p className="text-xs text-slate-600">Customize branding, colors, fonts, typography, etc., for your quotation templates.</p>
-              </div>
-            </div>
+          <div className="px-6 py-4 border-b border-slate-200">
+            <h2 className="text-[13px] font-semibold text-slate-700">Styling & Format</h2>
+            <p className="text-[11px] text-slate-400 mt-0.5">Customize branding, colors, fonts, and layout for your templates.</p>
           </div>
 
           <CollapsibleSection
@@ -231,7 +221,7 @@ export default function TemplateBuilder({ onClose, templateType }: TemplateBuild
                       onClick={() => updateSetting('logoSize', size as any)}
                       className={`px-3 py-2.5 rounded-lg text-xs font-semibold transition-all ${
                         settings.logoSize === size
-                          ? 'bg-blue-100 text-blue-700 border-2 border-blue-400'
+                          ? 'bg-slate-100 text-slate-800 border-2 border-slate-300'
                           : 'bg-slate-50 text-slate-600 border border-slate-200 hover:border-slate-300'
                       }`}
                     >
@@ -256,7 +246,7 @@ export default function TemplateBuilder({ onClose, templateType }: TemplateBuild
                         onClick={() => updateSetting('logoPosition', pos.value as any)}
                         className={`px-2 py-2.5 rounded-lg text-xs font-semibold transition-all flex items-center justify-center gap-1 ${
                           settings.logoPosition === pos.value
-                            ? 'bg-blue-100 text-blue-700 border-2 border-blue-400'
+                            ? 'bg-slate-100 text-slate-800 border-2 border-slate-300'
                             : 'bg-slate-50 text-slate-600 border border-slate-200 hover:border-slate-300'
                         }`}
                         title={pos.label}
@@ -299,7 +289,7 @@ export default function TemplateBuilder({ onClose, templateType }: TemplateBuild
                       onClick={() => updateSetting('cornerStyle', style.value as any)}
                       className={`px-3 py-2.5 rounded-lg text-xs font-semibold transition-all flex items-center justify-center gap-1.5 ${
                         settings.cornerStyle === style.value
-                          ? 'bg-blue-100 text-blue-700 border-2 border-blue-400'
+                          ? 'bg-slate-100 text-slate-800 border-2 border-slate-300'
                           : 'bg-slate-50 text-slate-600 border border-slate-200 hover:border-slate-300'
                       }`}
                     >
@@ -345,7 +335,7 @@ export default function TemplateBuilder({ onClose, templateType }: TemplateBuild
                       onClick={() => updateSetting('colorTheme', theme.value)}
                       className={`group relative flex flex-col items-center gap-2 p-2 rounded-lg border-2 transition-all ${
                         settings.colorTheme === theme.value
-                          ? 'border-blue-500 bg-blue-50/50'
+                          ? 'border-slate-900 bg-slate-50'
                           : 'border-slate-200 bg-white hover:border-slate-300'
                       }`}
                       title={theme.name}
@@ -356,7 +346,7 @@ export default function TemplateBuilder({ onClose, templateType }: TemplateBuild
                       ></div>
                       <p className="text-[10px] font-medium text-slate-700 text-center leading-tight line-clamp-1 w-full">{theme.name}</p>
                       {settings.colorTheme === theme.value && (
-                        <div className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-blue-600 flex items-center justify-center ring-2 ring-white">
+                        <div className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-slate-900 flex items-center justify-center ring-2 ring-white">
                           <Icon icon="solar:check-linear" width="10" className="text-white" />
                         </div>
                       )}
@@ -422,7 +412,7 @@ export default function TemplateBuilder({ onClose, templateType }: TemplateBuild
                 <div>
                   <div className="flex items-center justify-between mb-3">
                     <label className="block text-xs font-semibold text-slate-900">Section Title Size</label>
-                    <span className="text-xs font-semibold text-blue-600">{settings.sectionTitleSize}%</span>
+                    <span className="text-xs font-semibold text-slate-700">{settings.sectionTitleSize}%</span>
                   </div>
                   <input
                     type="range"
@@ -449,7 +439,7 @@ export default function TemplateBuilder({ onClose, templateType }: TemplateBuild
                         onClick={() => updateSetting('bodyFontSize', size)}
                         className={`px-2 py-2.5 rounded-lg text-xs font-semibold transition-all ${
                           settings.bodyFontSize === size
-                            ? 'bg-blue-100 text-blue-700 border-2 border-blue-400'
+                            ? 'bg-slate-100 text-slate-800 border-2 border-slate-300'
                             : 'bg-slate-50 text-slate-600 border border-slate-200 hover:border-slate-300'
                         }`}
                       >
@@ -475,7 +465,7 @@ export default function TemplateBuilder({ onClose, templateType }: TemplateBuild
                         onClick={() => updateSetting('lineHeight', height.value as any)}
                         className={`px-2 py-2.5 rounded-lg text-xs font-semibold transition-all ${
                           settings.lineHeight === height.value
-                            ? 'bg-blue-100 text-blue-700 border-2 border-blue-400'
+                            ? 'bg-slate-100 text-slate-800 border-2 border-slate-300'
                             : 'bg-slate-50 text-slate-600 border border-slate-200 hover:border-slate-300'
                         }`}
                       >
@@ -496,7 +486,7 @@ export default function TemplateBuilder({ onClose, templateType }: TemplateBuild
                         onClick={() => updateSetting('pageMargins', margin as any)}
                         className={`px-2 py-2.5 rounded-lg text-xs font-semibold transition-all ${
                           settings.pageMargins === margin
-                            ? 'bg-blue-100 text-blue-700 border-2 border-blue-400'
+                            ? 'bg-slate-100 text-slate-800 border-2 border-slate-300'
                             : 'bg-slate-50 text-slate-600 border border-slate-200 hover:border-slate-300'
                         }`}
                       >
@@ -521,7 +511,7 @@ export default function TemplateBuilder({ onClose, templateType }: TemplateBuild
                       onClick={() => updateSetting('sectionSpacing', spacing.value as any)}
                       className={`px-3 py-3 rounded-lg text-xs font-semibold transition-all ${
                         settings.sectionSpacing === spacing.value
-                          ? 'bg-blue-100 text-blue-700 border-2 border-blue-400'
+                          ? 'bg-slate-100 text-slate-800 border-2 border-slate-300'
                           : 'bg-slate-50 text-slate-600 border border-slate-200 hover:border-slate-300'
                       }`}
                     >
@@ -550,7 +540,7 @@ export default function TemplateBuilder({ onClose, templateType }: TemplateBuild
                       onClick={() => updateSetting('borderStyle', style as any)}
                       className={`px-3 py-2.5 rounded-lg text-xs font-semibold transition-all ${
                         settings.borderStyle === style
-                          ? 'bg-blue-100 text-blue-700 border-2 border-blue-400'
+                          ? 'bg-slate-100 text-slate-800 border-2 border-slate-300'
                           : 'bg-slate-50 text-slate-600 border border-slate-200 hover:border-slate-300'
                       }`}
                     >
@@ -574,7 +564,7 @@ export default function TemplateBuilder({ onClose, templateType }: TemplateBuild
                       onClick={() => updateSetting('rowPadding', padding.value as any)}
                       className={`px-3 py-3 rounded-lg text-xs font-semibold transition-all ${
                         settings.rowPadding === padding.value
-                          ? 'bg-blue-100 text-blue-700 border-2 border-blue-400'
+                          ? 'bg-slate-100 text-slate-800 border-2 border-slate-300'
                           : 'bg-slate-50 text-slate-600 border border-slate-200 hover:border-slate-300'
                       }`}
                     >
@@ -589,7 +579,7 @@ export default function TemplateBuilder({ onClose, templateType }: TemplateBuild
               <div>
                 <div className="flex items-center justify-between mb-3">
                   <label className="block text-xs font-semibold text-slate-900">Header Background Opacity</label>
-                  <span className="text-xs font-semibold text-blue-600">{settings.headerBackgroundOpacity}%</span>
+                  <span className="text-xs font-semibold text-slate-700">{settings.headerBackgroundOpacity}%</span>
                 </div>
                 <input
                   type="range"
@@ -621,7 +611,7 @@ export default function TemplateBuilder({ onClose, templateType }: TemplateBuild
                   value={settings.termsText}
                   onChange={(e) => updateSetting('termsText', e.target.value)}
                   rows={8}
-                  className="w-full px-3 py-3 rounded-lg border border-slate-200 text-xs text-slate-700 bg-white hover:border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none font-mono leading-relaxed"
+                  className="w-full px-3 py-3 rounded-lg border border-slate-200 text-xs text-slate-700 bg-white hover:border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-300 focus:border-transparent resize-none font-mono leading-relaxed"
                   placeholder="Enter your terms and conditions..."
                 />
               </div>
@@ -633,7 +623,7 @@ export default function TemplateBuilder({ onClose, templateType }: TemplateBuild
                   value={settings.acceptanceText}
                   onChange={(e) => updateSetting('acceptanceText', e.target.value)}
                   rows={4}
-                  className="w-full px-3 py-3 rounded-lg border border-slate-200 text-xs text-slate-500 bg-white hover:border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                  className="w-full px-3 py-3 rounded-lg border border-slate-200 text-xs text-slate-500 bg-white hover:border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-300 focus:border-transparent resize-none"
                   placeholder="Enter the acceptance text that will appear above the signature fields..."
                 />
               </div>
@@ -668,9 +658,9 @@ export default function TemplateBuilder({ onClose, templateType }: TemplateBuild
 
               <button
                 onClick={addSignatureField}
-                className="w-full flex items-center justify-center gap-2 py-3 rounded-lg border-2 border-dashed border-slate-300 text-xs font-semibold text-slate-600 hover:border-blue-400 hover:text-blue-600 hover:bg-blue-50/50 transition-all group"
+                className="w-full flex items-center justify-center gap-2 py-3 rounded-lg border-2 border-dashed border-slate-300 text-xs font-semibold text-slate-600 hover:border-slate-300 hover:text-slate-700 hover:bg-slate-50 transition-all group"
               >
-                <Icon icon="solar:add-circle-linear" width="18" className="text-slate-400 group-hover:text-blue-600" />
+                <Icon icon="solar:add-circle-linear" width="18" className="text-slate-400 group-hover:text-slate-700" />
                 Add Signatory Field
               </button>
             </div>
@@ -683,8 +673,8 @@ export default function TemplateBuilder({ onClose, templateType }: TemplateBuild
             defaultOpen={false}
           >
             <div className="space-y-4">
-              <button className="w-full flex items-center justify-center gap-2 py-3 rounded-lg border-2 border-dashed border-slate-300 text-xs font-semibold text-slate-600 hover:border-blue-400 hover:text-blue-600 hover:bg-blue-50/50 transition-all group">
-                <Icon icon="solar:add-circle-linear" width="18" className="text-slate-400 group-hover:text-blue-600" />
+              <button className="w-full flex items-center justify-center gap-2 py-3 rounded-lg border-2 border-dashed border-slate-300 text-xs font-semibold text-slate-600 hover:border-slate-300 hover:text-slate-700 hover:bg-slate-50 transition-all group">
+                <Icon icon="solar:add-circle-linear" width="18" className="text-slate-400 group-hover:text-slate-700" />
                 Add New Column
               </button>
 
@@ -703,8 +693,8 @@ export default function TemplateBuilder({ onClose, templateType }: TemplateBuild
             defaultOpen={false}
           >
             <div className="space-y-4">
-              <button className="w-full flex items-center justify-center gap-2 py-3 rounded-lg border-2 border-dashed border-slate-300 text-xs font-semibold text-slate-600 hover:border-blue-400 hover:text-blue-600 hover:bg-blue-50/50 transition-all group">
-                <Icon icon="solar:add-circle-linear" width="18" className="text-slate-400 group-hover:text-blue-600" />
+              <button className="w-full flex items-center justify-center gap-2 py-3 rounded-lg border-2 border-dashed border-slate-300 text-xs font-semibold text-slate-600 hover:border-slate-300 hover:text-slate-700 hover:bg-slate-50 transition-all group">
+                <Icon icon="solar:add-circle-linear" width="18" className="text-slate-400 group-hover:text-slate-700" />
                 Add Custom Section
               </button>
 
@@ -737,7 +727,7 @@ export default function TemplateBuilder({ onClose, templateType }: TemplateBuild
                       onClick={() => updateSetting('pageSize', size.value as any)}
                       className={`px-3 py-3 rounded-lg text-xs font-semibold transition-all ${
                         settings.pageSize === size.value
-                          ? 'bg-blue-100 text-blue-700 border-2 border-blue-400'
+                          ? 'bg-slate-100 text-slate-800 border-2 border-slate-300'
                           : 'bg-slate-50 text-slate-600 border border-slate-200 hover:border-slate-300'
                       }`}
                     >
@@ -761,7 +751,7 @@ export default function TemplateBuilder({ onClose, templateType }: TemplateBuild
                       onClick={() => updateSetting('pageOrientation', orientation.value as any)}
                       className={`px-4 py-3 rounded-lg text-xs font-semibold transition-all flex items-center justify-center gap-2 ${
                         settings.pageOrientation === orientation.value
-                          ? 'bg-blue-100 text-blue-700 border-2 border-blue-400'
+                          ? 'bg-slate-100 text-slate-800 border-2 border-slate-300'
                           : 'bg-slate-50 text-slate-600 border border-slate-200 hover:border-slate-300'
                       }`}
                     >
@@ -780,7 +770,7 @@ export default function TemplateBuilder({ onClose, templateType }: TemplateBuild
                     type="checkbox"
                     checked={settings.enableWatermark}
                     onChange={(e) => updateSetting('enableWatermark', e.target.checked)}
-                    className="w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                    className="w-4 h-4 rounded border-slate-300 text-slate-700 focus:ring-slate-300"
                   />
                   <div>
                     <div className="text-xs font-bold text-slate-900">Enable Watermark</div>
@@ -796,7 +786,7 @@ export default function TemplateBuilder({ onClose, templateType }: TemplateBuild
                       value={settings.watermarkText}
                       onChange={(e) => updateSetting('watermarkText', e.target.value)}
                       placeholder="Enter watermark text..."
-                      className="w-full px-3 py-2.5 rounded-lg border border-slate-200 text-sm text-slate-700 bg-white hover:border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full px-3 py-2.5 rounded-lg border border-slate-200 text-sm text-slate-700 bg-white hover:border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-300 focus:border-transparent"
                     />
                   </div>
                 )}
@@ -811,7 +801,7 @@ export default function TemplateBuilder({ onClose, templateType }: TemplateBuild
           <div className="absolute top-6 left-1/2 -translate-x-1/2 z-40">
             <div className="bg-white/95 backdrop-blur-md border border-slate-200/80 rounded-full px-4 py-2.5 shadow-lg flex items-center gap-3">
               <div className="flex items-center gap-2">
-                <Icon icon="solar:eye-linear" width="16" className="text-blue-600" />
+                <Icon icon="solar:eye-linear" width="16" className="text-slate-700" />
                 <span className="text-xs font-semibold text-slate-700">Live Preview</span>
               </div>
               {!templateType && (

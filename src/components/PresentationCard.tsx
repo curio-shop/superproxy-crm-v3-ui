@@ -50,14 +50,14 @@ export default function PresentationCard({ presentation, onView, onDelete }: Pre
 
   return (
     <div
-      className="group relative bg-white rounded-xl border border-slate-200 hover:border-slate-300 hover:shadow-md transition-all"
+      className="group relative bg-white rounded-2xl border border-slate-200 hover:border-slate-300 hover:shadow-sm transition-all"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => {
         setIsHovered(false);
         setShowMenu(false);
       }}
     >
-      <div className="relative aspect-video overflow-hidden bg-slate-100 cursor-pointer rounded-t-xl" onClick={() => onView(presentation)}>
+      <div className="relative aspect-video overflow-hidden bg-slate-100 cursor-pointer rounded-t-2xl" onClick={() => onView(presentation)}>
         <img
           src={presentation.thumbnailUrl}
           alt={presentation.title}
@@ -95,41 +95,34 @@ export default function PresentationCard({ presentation, onView, onDelete }: Pre
         </div>
       </div>
 
-      <div className="p-4">
-        <div className="flex items-start justify-between gap-2 mb-2">
-          <h3 className="text-sm font-semibold text-slate-800 line-clamp-2 group-hover:text-slate-900 transition-colors">
+      <div className="p-3.5">
+        <div className="flex items-start justify-between gap-2 mb-1.5">
+          <h3 className="text-[13px] font-medium text-slate-800 line-clamp-1">
             {presentation.title}
           </h3>
 
           <div className="relative flex-shrink-0">
             <button
               onClick={() => setShowMenu(!showMenu)}
-              className="p-1 hover:bg-slate-100 rounded-md transition-colors"
+              className={`flex items-center justify-center w-6 h-6 rounded-md border transition-colors ${
+                showMenu ? 'bg-slate-100 border-slate-200 text-slate-600' : 'border-transparent text-slate-400 hover:text-slate-600 hover:bg-slate-50'
+              }`}
             >
-              <MoreVertical className="w-4 h-4 text-slate-500" />
+              <MoreVertical className="w-3.5 h-3.5" />
             </button>
 
             {showMenu && (
-              <div className="absolute right-0 top-full mt-1.5 w-36 bg-white rounded-lg shadow-lg border border-slate-200 py-1 z-50">
-                <button
-                  onClick={handleShare}
-                  className="w-full px-3 py-1.5 text-left text-sm text-slate-700 hover:bg-blue-50 hover:text-blue-700 flex items-center gap-2 transition-colors"
-                >
+              <div className="absolute right-0 top-full mt-1 w-40 bg-white rounded-xl shadow-[0_8px_32px_rgba(0,0,0,0.12)] border border-slate-200/60 py-1 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+                <button onClick={handleShare} className="w-full flex items-center gap-2 px-3 py-2 text-[13px] text-slate-600 hover:bg-slate-50 hover:text-slate-800 transition-colors">
                   <Share2 className="w-3.5 h-3.5" />
-                  Share Link
+                  Share
                 </button>
-                <button
-                  onClick={handleDownload}
-                  className="w-full px-3 py-1.5 text-left text-sm text-slate-700 hover:bg-emerald-50 hover:text-emerald-700 flex items-center gap-2 transition-colors"
-                >
+                <button onClick={handleDownload} className="w-full flex items-center gap-2 px-3 py-2 text-[13px] text-slate-600 hover:bg-slate-50 hover:text-slate-800 transition-colors">
                   <Download className="w-3.5 h-3.5" />
                   Download
                 </button>
-                <div className="border-t border-slate-100 my-1" />
-                <button
-                  onClick={handleDelete}
-                  className="w-full px-3 py-1.5 text-left text-sm text-slate-700 hover:bg-rose-50 hover:text-rose-700 flex items-center gap-2 transition-colors"
-                >
+                <div className="my-1 border-t border-slate-100 mx-2" />
+                <button onClick={handleDelete} className="w-full flex items-center gap-2 px-3 py-2 text-[13px] text-red-500 hover:bg-red-50 hover:text-red-600 transition-colors">
                   <Trash2 className="w-3.5 h-3.5" />
                   Delete
                 </button>
@@ -138,16 +131,14 @@ export default function PresentationCard({ presentation, onView, onDelete }: Pre
           </div>
         </div>
 
-        <div className="flex items-center gap-2 text-xs text-slate-600 mb-3">
-          <span className="font-mono font-medium">{presentation.referenceNumber}</span>
-        </div>
+        <div className="text-[11px] text-slate-400 font-mono mb-2.5">{presentation.referenceNumber}</div>
 
-        <div className="flex items-center justify-between text-xs text-slate-500">
-          <div className="flex items-center gap-1.5">
-            <Eye className="w-3.5 h-3.5" />
-            <span className="font-medium">{presentation.views.toLocaleString()} views</span>
+        <div className="flex items-center justify-between text-[11px] text-slate-400">
+          <div className="flex items-center gap-1">
+            <Eye className="w-3 h-3" />
+            <span>{presentation.views.toLocaleString()}</span>
           </div>
-          <span className="font-medium">{formatDate(presentation.createdAt)}</span>
+          <span>{formatDate(presentation.createdAt)}</span>
         </div>
       </div>
     </div>

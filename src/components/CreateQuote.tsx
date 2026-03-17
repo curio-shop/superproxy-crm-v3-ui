@@ -452,9 +452,6 @@ export default function CreateQuote({ onBack, onPublish }: CreateQuoteProps) {
   return (
     <div className="fixed inset-0 bg-[#F8FAFC] z-[200] flex flex-col overflow-hidden">
       <div className="absolute inset-0 -z-10 bg-[#F8FAFC]">
-        <div className="absolute top-[-10%] left-[-5%] w-[50%] h-[50%] rounded-full bg-indigo-100/40 blur-[120px] mix-blend-multiply animate-pulse"></div>
-        <div className="absolute top-[10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-blue-100/40 blur-[120px] mix-blend-multiply"></div>
-        <div className="absolute bottom-[-10%] left-[20%] w-[40%] h-[40%] rounded-full bg-purple-50/60 blur-[100px] mix-blend-multiply"></div>
       </div>
 
       <div className="flex-1 flex flex-col bg-white/90 backdrop-blur-2xl rounded-[24px] border border-white/50 shadow-2xl overflow-hidden relative ring-1 ring-slate-900/5 my-2 mx-2 h-[calc(100vh-1rem)]">
@@ -469,24 +466,20 @@ export default function CreateQuote({ onBack, onPublish }: CreateQuoteProps) {
               </button>
               <div className="h-6 w-px bg-slate-200"></div>
               <div>
-                <div className="flex items-center gap-2 text-[10px] font-semibold tracking-wider uppercase text-blue-600 mb-1">
+                <div className="flex items-center gap-2 text-[10px] font-semibold tracking-widest uppercase text-slate-500 mb-1">
                   <span>New Quotation</span>
                 </div>
                 <h1 className="flex items-center gap-2 text-lg font-semibold text-slate-900 tracking-tight">
                   <span>{quoteName}</span>
                   <Icon
                     icon="solar:pen-linear"
-                    className="text-slate-400 hover:text-blue-600 cursor-pointer transition-colors"
+                    className="text-slate-400 hover:text-slate-600 cursor-pointer transition-colors"
                     width="14"
                   />
                 </h1>
               </div>
             </div>
             <div className="flex gap-3 items-center">
-              <span className="hidden sm:flex items-center gap-1.5 select-none text-xs font-medium text-slate-400 mr-2">
-                <Icon icon="solar:cloud-check-linear" width="16" />
-                Saved
-              </span>
               {currentStep > 1 && (
                 <button
                   onClick={handlePrevStep}
@@ -501,7 +494,7 @@ export default function CreateQuote({ onBack, onPublish }: CreateQuoteProps) {
               {currentStep === 7 ? (
                 <button
                   onClick={handlePublish}
-                  className="group h-10 flex items-center gap-2 px-5 rounded-lg text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 hover:shadow-lg shadow-indigo-600/20 transition-all focus:ring-2 focus:ring-indigo-300 focus:outline-none active:scale-[0.98]"
+                  className="group h-10 flex items-center gap-2 px-5 rounded-lg text-sm font-semibold text-white bg-slate-900 hover:bg-slate-800 hover:shadow-lg transition-all focus:ring-2 focus:ring-slate-300 focus:outline-none active:scale-[0.98]"
                 >
                   <span>Publish Quote</span>
                   <Icon
@@ -526,8 +519,8 @@ export default function CreateQuote({ onBack, onPublish }: CreateQuoteProps) {
             </div>
           </div>
 
-          <div className="px-6 border-t border-slate-200 bg-slate-50 relative z-10">
-            <div className="flex gap-1 overflow-x-auto no-scrollbar pt-3 pb-3 items-center">
+          <div className="px-6 border-t border-slate-200 bg-white relative z-10">
+            <div className="flex items-center gap-0 overflow-x-auto no-scrollbar py-0">
               {STEPS.map((step, index) => {
                 const isCompleted = completedSteps.includes(step.id);
                 const isActive = step.id === currentStep;
@@ -537,49 +530,40 @@ export default function CreateQuote({ onBack, onPublish }: CreateQuoteProps) {
                   <div key={step.id} className="flex items-center flex-shrink-0">
                     <div
                       onClick={() => isClickable && setCurrentStep(step.id)}
-                      className={`flex items-center gap-2 px-4 py-1 rounded-lg group transition-all ${
+                      className={`relative flex items-center gap-2.5 px-4 py-3 transition-all ${
                         isClickable ? 'cursor-pointer' : 'cursor-not-allowed'
                       } ${
-                        isActive
-                          ? 'opacity-100 bg-white'
-                          : 'opacity-70 hover:opacity-100 hover:bg-white/60'
+                        isActive ? 'opacity-100' : 'opacity-60 hover:opacity-100'
                       }`}
                     >
                       <div
-                        className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-semibold transition-all ${
+                        className={`w-5 h-5 rounded-md flex items-center justify-center text-[10px] font-bold transition-all ${
                           isCompleted && !isActive
-                            ? 'bg-emerald-500 text-white'
+                            ? 'bg-slate-800 text-white'
                             : isActive
-                            ? 'bg-blue-600 text-white'
-                            : 'bg-slate-200 text-slate-500 group-hover:bg-slate-300'
+                            ? 'bg-slate-800 text-white'
+                            : 'bg-slate-200 text-slate-600'
                         }`}
                       >
-                        {isCompleted && !isActive ? (
-                          <Icon icon="solar:check-circle-bold" width="12" />
-                        ) : (
-                          step.id
-                        )}
+                        {step.id}
                       </div>
                       <span
-                        className={`text-xs font-medium whitespace-nowrap transition-colors ${
-                          isCompleted && !isActive
-                            ? 'text-emerald-600'
-                            : isActive
-                            ? 'text-slate-900'
-                            : 'text-slate-500 group-hover:text-slate-700'
+                        className={`text-[12px] font-medium whitespace-nowrap transition-colors ${
+                          isActive
+                            ? 'text-slate-800'
+                            : isCompleted
+                            ? 'text-slate-600'
+                            : 'text-slate-400'
                         }`}
                       >
                         {step.label}
                       </span>
+                      {isActive && (
+                        <div className="absolute bottom-0 left-4 right-4 h-[2px] bg-slate-800 rounded-full" />
+                      )}
                     </div>
                     {index < STEPS.length - 1 && (
-                      <Icon
-                        icon="solar:alt-arrow-right-linear"
-                        className={`flex-shrink-0 transition-colors ${
-                          completedSteps.includes(step.id) ? 'text-emerald-400' : 'text-slate-300'
-                        }`}
-                        width="12"
-                      />
+                      <div className="w-5 h-px bg-slate-200 flex-shrink-0" />
                     )}
                   </div>
                 );
@@ -589,9 +573,7 @@ export default function CreateQuote({ onBack, onPublish }: CreateQuoteProps) {
         </header>
 
         <div className="flex-1 relative overflow-hidden flex flex-col lg:flex-row">
-          <div className="lg:w-[35%] xl:w-[30%] overflow-y-auto overflow-x-visible z-20 flex flex-col bg-gradient-to-br from-white via-blue-50/20 to-slate-50/40 w-full border-slate-200/60 border-r relative">
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(59,130,246,0.03),transparent_60%)] pointer-events-none"></div>
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_right,rgba(148,163,184,0.02),transparent_50%)] pointer-events-none"></div>
+          <div className="lg:w-[35%] xl:w-[30%] overflow-y-auto overflow-x-visible z-20 flex flex-col bg-white w-full border-slate-200 border-r relative">
 
             {currentStep === 1 && (
               <>
@@ -608,7 +590,7 @@ export default function CreateQuote({ onBack, onPublish }: CreateQuoteProps) {
                         className="flex items-center justify-between uppercase text-xs font-semibold text-slate-600 tracking-wide"
                       >
                         <span>Quote Name</span>
-                        <span className="text-blue-600 opacity-0 group-focus-within:opacity-100 transition-opacity">
+                        <span className="text-slate-500 opacity-0 group-focus-within:opacity-100 transition-opacity">
                           Required
                         </span>
                       </label>
@@ -618,10 +600,10 @@ export default function CreateQuote({ onBack, onPublish }: CreateQuoteProps) {
                           id="quoteName"
                           value={quoteName}
                           onChange={(e) => setQuoteName(e.target.value || 'Untitled Quote')}
-                          className="peer w-full bg-white border border-slate-200 rounded-lg px-4 py-3 pl-10 text-sm font-semibold text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 focus:bg-white transition-all shadow-sm hover:shadow-md hover:border-slate-300"
+                          className="peer w-full bg-white border border-slate-200 rounded-lg px-4 py-3 pl-10 text-sm font-semibold text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-200 focus:border-slate-800 focus:bg-white transition-all shadow-sm hover:shadow-md hover:border-slate-300"
                           placeholder="e.g. Website Redesign"
                         />
-                        <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 peer-focus:text-blue-500 transition-colors">
+                        <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 peer-focus:text-slate-500 transition-colors">
                           <Icon icon="solar:pen-new-square-linear" width="18" />
                         </div>
                       </div>
@@ -629,11 +611,11 @@ export default function CreateQuote({ onBack, onPublish }: CreateQuoteProps) {
                   </div>
                 </div>
 
-                <div className="mt-auto p-6 bg-gradient-to-br from-blue-50/50 to-slate-50 border-t border-blue-100/50 relative z-10 backdrop-blur-sm">
+                <div className="mt-auto p-6 bg-gradient-to-br from-slate-50/80 to-slate-50 border-t border-slate-200/50 relative z-10 backdrop-blur-sm">
                   <div className="flex gap-3 items-start">
-                    <Icon icon="solar:info-circle-linear" className="text-blue-600 mt-0.5" width="18" />
+                    <Icon icon="solar:info-circle-linear" className="text-slate-400 mt-0.5" width="18" />
                     <p className="leading-relaxed text-xs text-slate-600">
-                      <span className="font-semibold text-slate-800">Pro Tip:</span> Upgrading to a professional plan removes the Superproxy branding, ensuring your documents look fully professional and white-labeled.
+                      <span className="font-semibold text-slate-800">Pro Tip:</span> Upgrading to a Growth plan removes the Superproxy branding, ensuring your documents look fully professional and white-labeled.
                     </p>
                   </div>
                 </div>
@@ -655,7 +637,7 @@ export default function CreateQuote({ onBack, onPublish }: CreateQuoteProps) {
                         className="flex items-center justify-between uppercase text-xs font-semibold text-slate-600 tracking-wide"
                       >
                         <span>Contact</span>
-                        <span className="text-blue-600 opacity-0 group-focus-within:opacity-100 transition-opacity">
+                        <span className="text-slate-500 opacity-0 group-focus-within:opacity-100 transition-opacity">
                           Required
                         </span>
                       </label>
@@ -678,9 +660,9 @@ export default function CreateQuote({ onBack, onPublish }: CreateQuoteProps) {
                         menuAlign="left"
                       />
                       {selectedContact && (
-                        <div className="mt-3 p-3 bg-white border border-blue-100 rounded-lg space-y-1.5 shadow-sm">
+                        <div className="mt-3 p-3 bg-white border border-slate-200 rounded-lg space-y-1.5 shadow-sm">
                           <div className="flex items-center gap-2 text-xs text-slate-600">
-                            <Icon icon="solar:user-linear" width="14" className="text-blue-500" />
+                            <Icon icon="solar:user-linear" width="14" className="text-slate-500" />
                             <span className="font-semibold">{selectedContact.name}</span>
                           </div>
                           {selectedContact.email && (
@@ -728,9 +710,9 @@ export default function CreateQuote({ onBack, onPublish }: CreateQuoteProps) {
                         menuAlign="left"
                       />
                       {selectedCompany && (
-                        <div className="mt-3 p-3 bg-white border border-blue-100 rounded-lg space-y-1.5 shadow-sm">
+                        <div className="mt-3 p-3 bg-white border border-slate-200 rounded-lg space-y-1.5 shadow-sm">
                           <div className="flex items-center gap-2 text-xs text-slate-600">
-                            <Icon icon="solar:buildings-2-linear" width="14" className="text-blue-500" />
+                            <Icon icon="solar:buildings-2-linear" width="14" className="text-slate-500" />
                             <span className="font-semibold">{selectedCompany.name}</span>
                           </div>
                           {selectedCompany.city && (
@@ -757,9 +739,9 @@ export default function CreateQuote({ onBack, onPublish }: CreateQuoteProps) {
                   </div>
                 </div>
 
-                <div className="mt-auto p-6 bg-gradient-to-br from-blue-50/50 to-slate-50 border-t border-blue-100/50 relative z-10 backdrop-blur-sm">
+                <div className="mt-auto p-6 bg-gradient-to-br from-slate-50/80 to-slate-50 border-t border-slate-200/50 relative z-10 backdrop-blur-sm">
                   <div className="flex gap-3 items-start">
-                    <Icon icon="solar:info-circle-linear" className="text-blue-600 mt-0.5" width="18" />
+                    <Icon icon="solar:info-circle-linear" className="text-slate-400 mt-0.5" width="18" />
                     <p className="leading-relaxed text-xs text-slate-600">
                       <span className="font-semibold text-slate-800">Quick Tip:</span> Select both a contact person and their company for complete buyer information in your quotation.
                     </p>
@@ -788,13 +770,10 @@ export default function CreateQuote({ onBack, onPublish }: CreateQuoteProps) {
                                 className="w-20 h-20 rounded-full object-cover border-2 border-slate-200 shadow-sm"
                               />
                             ) : (
-                              <div className="w-20 h-20 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white font-bold text-2xl shadow-sm border-2 border-slate-200">
+                              <div className="w-20 h-20 rounded-full bg-gradient-to-br from-slate-700 to-slate-800 flex items-center justify-center text-white font-bold text-2xl shadow-sm border-2 border-slate-200">
                                 {currentUser?.user_name?.charAt(0) || 'J'}
                               </div>
                             )}
-                            <div className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-emerald-500 border-2 border-white flex items-center justify-center shadow-sm">
-                              <Icon icon="solar:check-circle-bold" width="14" className="text-white" />
-                            </div>
                           </div>
 
                           <div className="flex-1 pt-1 space-y-3">
@@ -824,7 +803,7 @@ export default function CreateQuote({ onBack, onPublish }: CreateQuoteProps) {
 
                         <div className="space-y-3">
                           <div className="flex items-center gap-2">
-                            <Icon icon="solar:buildings-2-linear" width="16" className="text-blue-600" />
+                            <Icon icon="solar:buildings-2-linear" width="16" className="text-slate-500" />
                             <h3 className="text-xs font-bold uppercase tracking-wider text-slate-600">Company</h3>
                           </div>
 
@@ -853,9 +832,9 @@ export default function CreateQuote({ onBack, onPublish }: CreateQuoteProps) {
                   </div>
                 </div>
 
-                <div className="mt-auto p-6 bg-gradient-to-br from-blue-50/50 to-slate-50 border-t border-blue-100/50 relative z-10 backdrop-blur-sm">
+                <div className="mt-auto p-6 bg-gradient-to-br from-slate-50/80 to-slate-50 border-t border-slate-200/50 relative z-10 backdrop-blur-sm">
                   <div className="flex gap-3 items-start">
-                    <Icon icon="solar:info-circle-linear" className="text-blue-600 mt-0.5" width="18" />
+                    <Icon icon="solar:info-circle-linear" className="text-slate-400 mt-0.5" width="18" />
                     <p className="leading-relaxed text-xs text-slate-600">
                       <span className="font-semibold text-slate-800">Note:</span> To update your profile information or company details, navigate to your account or workspace settings at any time.
                     </p>
@@ -875,8 +854,8 @@ export default function CreateQuote({ onBack, onPublish }: CreateQuoteProps) {
                   <div className="space-y-5 overflow-visible">
                     <div className="space-y-4">
                       <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center">
-                          <Icon icon="solar:add-square-bold" width="16" className="text-white" />
+                        <div className="w-8 h-8 rounded-xl bg-slate-100 flex items-center justify-center ring-1 ring-slate-200/60">
+                          <Icon icon="solar:add-square-bold" width="16" className="text-slate-500" />
                         </div>
                         <h3 className="text-base font-medium text-slate-900">Select Products</h3>
                       </div>
@@ -904,30 +883,30 @@ export default function CreateQuote({ onBack, onPublish }: CreateQuoteProps) {
                           </button>
 
                           {isProductDropdownOpen && (
-                            <div className="absolute z-[100] top-full left-0 right-0 mt-2 bg-white rounded-xl border border-slate-200/80 shadow-xl overflow-hidden">
-                                <div className="p-3 border-b border-slate-100 bg-slate-50/50">
+                            <div className="absolute z-[100] top-full left-0 right-0 mt-1.5 bg-white rounded-2xl shadow-[0_12px_48px_-6px_rgb(0,0,0,0.12),0_0_0_1px_rgb(0,0,0,0.04)] overflow-hidden">
+                                <div className="p-2.5 border-b border-slate-100">
                                   <div className="relative">
                                     <input
                                       type="text"
                                       placeholder="Search by product name..."
                                       value={productSearchQuery}
                                       onChange={(e) => setProductSearchQuery(e.target.value)}
-                                      className="w-full pl-9 pr-4 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-100 focus:border-slate-300 transition-all"
+                                      className="w-full pl-9 pr-4 py-2 text-[13px] bg-slate-50 border-0 rounded-lg focus:bg-slate-100/80 focus:ring-0 focus:outline-none transition-all placeholder:text-slate-300"
                                     />
                                     <Icon
                                       icon="solar:magnifer-linear"
-                                      width="16"
-                                      className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
+                                      width="15"
+                                      className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-300"
                                     />
                                   </div>
                                 </div>
 
-                                <div className="flex gap-1 p-3 border-b border-slate-100 bg-slate-50/50">
+                                <div className="flex gap-1 p-2.5 border-b border-slate-100">
                                   <button
                                     onClick={() => setProductFilter('all')}
                                     className={`px-4 py-1.5 text-xs font-semibold rounded-lg transition-all ${
                                       productFilter === 'all'
-                                        ? 'bg-blue-600 text-white shadow-sm'
+                                        ? 'bg-slate-800 text-white shadow-sm'
                                         : 'text-slate-600 hover:bg-slate-100'
                                     }`}
                                   >
@@ -937,7 +916,7 @@ export default function CreateQuote({ onBack, onPublish }: CreateQuoteProps) {
                                     onClick={() => setProductFilter('team')}
                                     className={`px-4 py-1.5 text-xs font-semibold rounded-lg transition-all ${
                                       productFilter === 'team'
-                                        ? 'bg-blue-600 text-white shadow-sm'
+                                        ? 'bg-slate-800 text-white shadow-sm'
                                         : 'text-slate-600 hover:bg-slate-100'
                                     }`}
                                   >
@@ -947,7 +926,7 @@ export default function CreateQuote({ onBack, onPublish }: CreateQuoteProps) {
                                     onClick={() => setProductFilter('custom')}
                                     className={`px-4 py-1.5 text-xs font-semibold rounded-lg transition-all ${
                                       productFilter === 'custom'
-                                        ? 'bg-blue-600 text-white shadow-sm'
+                                        ? 'bg-slate-800 text-white shadow-sm'
                                         : 'text-slate-600 hover:bg-slate-100'
                                     }`}
                                   >
@@ -970,14 +949,14 @@ export default function CreateQuote({ onBack, onPublish }: CreateQuoteProps) {
                                             className="w-full flex items-center justify-between p-3 rounded-lg hover:bg-slate-50 transition-all duration-150 text-left group border border-transparent"
                                           >
                                             <div className="flex-1 min-w-0">
-                                              <p className="text-sm font-semibold text-slate-900 group-hover:text-blue-700 transition-colors truncate">
+                                              <p className="text-sm font-semibold text-slate-900 group-hover:text-slate-700 transition-colors truncate">
                                                 {product.name}
                                               </p>
                                               {product.description && (
                                                 <p className="text-xs text-slate-500 mt-0.5 truncate">{product.description}</p>
                                               )}
                                             </div>
-                                            <span className="text-sm font-bold text-slate-700 bg-slate-100 px-2.5 py-1 rounded-md group-hover:bg-blue-50 group-hover:text-blue-700 transition-colors flex-shrink-0 ml-2">
+                                            <span className="text-sm font-bold text-slate-700 bg-slate-100 px-2.5 py-1 rounded-md group-hover:bg-slate-50 group-hover:text-slate-700 transition-colors flex-shrink-0 ml-2">
                                               {formatCurrency(product.price)}
                                             </span>
                                           </button>
@@ -1001,14 +980,14 @@ export default function CreateQuote({ onBack, onPublish }: CreateQuoteProps) {
                                               className="w-full flex items-center justify-between p-3 rounded-lg hover:bg-slate-50 transition-all duration-150 text-left group border border-transparent"
                                             >
                                               <div className="flex-1 min-w-0">
-                                                <p className="text-sm font-semibold text-slate-900 group-hover:text-blue-700 transition-colors truncate">
+                                                <p className="text-sm font-semibold text-slate-900 group-hover:text-slate-700 transition-colors truncate">
                                                   {product.name}
                                                 </p>
                                                 {product.description && (
                                                   <p className="text-xs text-slate-500 mt-0.5 truncate">{product.description}</p>
                                                 )}
                                               </div>
-                                              <span className="text-sm font-bold text-slate-700 bg-slate-100 px-2.5 py-1 rounded-md group-hover:bg-blue-50 group-hover:text-blue-700 transition-colors flex-shrink-0 ml-2">
+                                              <span className="text-sm font-bold text-slate-700 bg-slate-100 px-2.5 py-1 rounded-md group-hover:bg-slate-50 group-hover:text-slate-700 transition-colors flex-shrink-0 ml-2">
                                                 {formatCurrency(product.price)}
                                               </span>
                                             </button>
@@ -1031,7 +1010,7 @@ export default function CreateQuote({ onBack, onPublish }: CreateQuoteProps) {
 
                       <button
                         onClick={() => setIsAddProductDrawerOpen(true)}
-                        className="w-full flex items-center justify-center gap-2 py-2.5 rounded-lg border-2 border-dashed border-slate-200 text-xs font-medium text-slate-600 hover:border-blue-300 hover:text-blue-600 hover:bg-blue-50/50 transition-all">
+                        className="w-full flex items-center justify-center gap-2 py-2.5 rounded-lg border-2 border-dashed border-slate-200 text-xs font-medium text-slate-600 hover:border-slate-300 hover:text-slate-500 hover:bg-slate-50/50 transition-all">
                         <Icon icon="solar:add-circle-linear" width="16" />
                         <span>Create Custom Product</span>
                       </button>
@@ -1040,11 +1019,11 @@ export default function CreateQuote({ onBack, onPublish }: CreateQuoteProps) {
                     {lineItems.length > 0 && (
                       <div className="space-y-4">
                         <div className="flex items-center gap-2">
-                          <div className="w-8 h-8 rounded-lg bg-emerald-100 flex items-center justify-center">
-                            <Icon icon="solar:check-circle-bold" width="16" className="text-emerald-600" />
+                          <div className="w-8 h-8 rounded-xl bg-sky-50 flex items-center justify-center ring-1 ring-sky-200/50">
+                            <Icon icon="solar:check-circle-bold" width="16" className="text-blue-500" />
                           </div>
                           <h3 className="text-base font-medium text-slate-900">
-                            Added Items <span className="text-blue-600">({lineItems.length})</span>
+                            Added Items <span className="text-slate-500">({lineItems.length})</span>
                           </h3>
                         </div>
 
@@ -1054,7 +1033,7 @@ export default function CreateQuote({ onBack, onPublish }: CreateQuoteProps) {
                                 key={item.id}
                                 className={`flex items-center justify-between gap-3 p-3 rounded-xl border transition-all ${
                                   justAddedProductId === item.product_id
-                                    ? 'border-emerald-300 bg-emerald-50/50'
+                                    ? 'border-sky-200 bg-sky-50/40'
                                     : 'border-slate-200 bg-slate-50'
                                 }`}
                               >
@@ -1073,7 +1052,7 @@ export default function CreateQuote({ onBack, onPublish }: CreateQuoteProps) {
                                     inputMode="numeric"
                                     value={item.quantity}
                                     onChange={(e) => handleUpdateQuantity(item.id, parseInt(e.target.value) || 1)}
-                                    className="w-14 h-8 text-center text-sm font-medium border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 bg-white"
+                                    className="w-14 h-8 text-center text-sm font-medium border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-200 focus:border-slate-400 bg-white"
                                     min="1"
                                   />
                                   <button
@@ -1087,7 +1066,7 @@ export default function CreateQuote({ onBack, onPublish }: CreateQuoteProps) {
                                   </span>
                                   <button
                                     onClick={() => handleRemoveItem(item.id)}
-                                    className="w-8 h-8 rounded-lg bg-white border border-rose-200 flex items-center justify-center text-rose-500 hover:bg-rose-50 hover:border-rose-300 transition-all"
+                                    className="w-8 h-8 rounded-lg bg-white border border-slate-200 flex items-center justify-center text-slate-400 hover:bg-rose-50 hover:border-rose-200 hover:text-rose-500 transition-all"
                                   >
                                     <Icon icon="solar:trash-bin-trash-linear" width="14" />
                                   </button>
@@ -1104,8 +1083,8 @@ export default function CreateQuote({ onBack, onPublish }: CreateQuoteProps) {
                               onClick={() => setTaxEnabled(!taxEnabled)}
                               className={`w-6 h-6 rounded-md flex items-center justify-center border transition-all flex-shrink-0 ${
                                 taxEnabled
-                                  ? 'bg-blue-500 border-blue-500'
-                                  : 'bg-white border-slate-300 hover:border-blue-400'
+                                  ? 'bg-slate-800 border-slate-800'
+                                  : 'bg-white border-slate-300 hover:border-slate-400'
                               }`}
                             >
                               {taxEnabled && <Icon icon="lucide:check" width="14" className="text-white" />}
@@ -1117,7 +1096,7 @@ export default function CreateQuote({ onBack, onPublish }: CreateQuoteProps) {
                                 value={taxRate === 0 ? '' : taxRate}
                                 onChange={(e) => setTaxRate(parseFloat(e.target.value) || 0)}
                                 disabled={!taxEnabled}
-                                className="flex-1 px-2 py-1.5 text-xs font-medium border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500/20 focus:border-blue-400 disabled:bg-slate-100 disabled:text-slate-400 bg-white"
+                                className="flex-1 px-2 py-1.5 text-xs font-medium border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-slate-200 focus:border-slate-400 disabled:bg-slate-100 disabled:text-slate-400 bg-white"
                                 placeholder="0"
                                 min="0"
                                 max="100"
@@ -1135,8 +1114,8 @@ export default function CreateQuote({ onBack, onPublish }: CreateQuoteProps) {
                               onClick={() => setDiscountEnabled(!discountEnabled)}
                               className={`w-6 h-6 rounded-md flex items-center justify-center border transition-all flex-shrink-0 ${
                                 discountEnabled
-                                  ? 'bg-blue-500 border-blue-500'
-                                  : 'bg-white border-slate-300 hover:border-blue-400'
+                                  ? 'bg-slate-800 border-slate-800'
+                                  : 'bg-white border-slate-300 hover:border-slate-400'
                               }`}
                             >
                               {discountEnabled && <Icon icon="lucide:check" width="14" className="text-white" />}
@@ -1148,7 +1127,7 @@ export default function CreateQuote({ onBack, onPublish }: CreateQuoteProps) {
                                 value={discountRate === 0 ? '' : discountRate}
                                 onChange={(e) => setDiscountRate(parseFloat(e.target.value) || 0)}
                                 disabled={!discountEnabled}
-                                className="flex-1 px-2 py-1.5 text-xs font-medium border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500/20 focus:border-blue-400 disabled:bg-slate-100 disabled:text-slate-400 bg-white"
+                                className="flex-1 px-2 py-1.5 text-xs font-medium border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-slate-200 focus:border-slate-400 disabled:bg-slate-100 disabled:text-slate-400 bg-white"
                                 placeholder="0"
                                 min="0"
                                 max="100"
@@ -1162,12 +1141,12 @@ export default function CreateQuote({ onBack, onPublish }: CreateQuoteProps) {
                           </div>
                         </div>
 
-                        <div className="flex items-center justify-between p-4 rounded-xl bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200">
+                        <div className="flex items-center justify-between p-4 rounded-xl bg-slate-900 border border-slate-800">
                           <div className="flex items-center gap-2">
-                            <Icon icon="solar:bill-list-bold" width="20" className="text-blue-600" />
-                            <span className="text-sm font-medium text-slate-900">Final Total</span>
+                            <Icon icon="solar:bill-list-bold" width="20" className="text-slate-400" />
+                            <span className="text-sm font-medium text-white">Final Total</span>
                           </div>
-                          <span className="text-xl font-bold text-blue-600">
+                          <span className="text-xl font-bold text-white">
                             {formatCurrency(calculateFinalTotal())}
                           </span>
                         </div>
@@ -1176,9 +1155,9 @@ export default function CreateQuote({ onBack, onPublish }: CreateQuoteProps) {
                   </div>
                 </div>
 
-                <div className="mt-auto p-6 bg-gradient-to-br from-blue-50/50 to-slate-50 border-t border-blue-100/50 relative z-10 backdrop-blur-sm">
+                <div className="mt-auto p-6 bg-gradient-to-br from-slate-50/80 to-slate-50 border-t border-slate-200/50 relative z-10 backdrop-blur-sm">
                   <div className="flex gap-3 items-start">
-                    <Icon icon="solar:info-circle-linear" className="text-blue-600 mt-0.5" width="18" />
+                    <Icon icon="solar:info-circle-linear" className="text-slate-400 mt-0.5" width="18" />
                     <p className="leading-relaxed text-xs text-slate-600">
                       <span className="font-semibold text-slate-800">Pro Tip:</span> Select products from the dropdown above and they'll automatically appear in your line items.
                     </p>
@@ -1201,19 +1180,19 @@ export default function CreateQuote({ onBack, onPublish }: CreateQuoteProps) {
                         onClick={() => setSignatureOption('none')}
                         className={`w-full flex items-start gap-4 p-4 rounded-xl border-2 transition-all ${
                           signatureOption === 'none'
-                            ? 'border-blue-500 bg-blue-50/50'
+                            ? 'border-slate-800 bg-slate-50/50'
                             : 'border-slate-200 bg-white hover:border-slate-300 hover:shadow-sm'
                         }`}
                       >
                         <div
                           className={`mt-0.5 flex-shrink-0 w-10 h-10 rounded-lg flex items-center justify-center ${
-                            signatureOption === 'none' ? 'bg-blue-100' : 'bg-slate-100'
+                            signatureOption === 'none' ? 'bg-slate-100' : 'bg-slate-100'
                           }`}
                         >
                           <Icon
                             icon="solar:close-circle-linear"
                             width="20"
-                            className={signatureOption === 'none' ? 'text-blue-600' : 'text-slate-500'}
+                            className={signatureOption === 'none' ? 'text-slate-500' : 'text-slate-500'}
                           />
                         </div>
                         <div className="flex-1 text-left">
@@ -1225,7 +1204,7 @@ export default function CreateQuote({ onBack, onPublish }: CreateQuoteProps) {
                         <div
                           className={`flex-shrink-0 w-5 h-5 rounded-full border-2 flex items-center justify-center ${
                             signatureOption === 'none'
-                              ? 'border-blue-500 bg-blue-500'
+                              ? 'border-slate-800 bg-slate-800'
                               : 'border-slate-300 bg-white'
                           }`}
                         >
@@ -1239,19 +1218,19 @@ export default function CreateQuote({ onBack, onPublish }: CreateQuoteProps) {
                         onClick={() => setSignatureOption('written')}
                         className={`w-full flex items-start gap-4 p-4 rounded-xl border-2 transition-all ${
                           signatureOption === 'written'
-                            ? 'border-blue-500 bg-blue-50/50'
+                            ? 'border-slate-800 bg-slate-50/50'
                             : 'border-slate-200 bg-white hover:border-slate-300 hover:shadow-sm'
                         }`}
                       >
                         <div
                           className={`mt-0.5 flex-shrink-0 w-10 h-10 rounded-lg flex items-center justify-center ${
-                            signatureOption === 'written' ? 'bg-blue-100' : 'bg-slate-100'
+                            signatureOption === 'written' ? 'bg-slate-100' : 'bg-slate-100'
                           }`}
                         >
                           <Icon
                             icon="solar:pen-linear"
                             width="20"
-                            className={signatureOption === 'written' ? 'text-blue-600' : 'text-slate-500'}
+                            className={signatureOption === 'written' ? 'text-slate-500' : 'text-slate-500'}
                           />
                         </div>
                         <div className="flex-1 text-left">
@@ -1263,7 +1242,7 @@ export default function CreateQuote({ onBack, onPublish }: CreateQuoteProps) {
                         <div
                           className={`flex-shrink-0 w-5 h-5 rounded-full border-2 flex items-center justify-center ${
                             signatureOption === 'written'
-                              ? 'border-blue-500 bg-blue-500'
+                              ? 'border-slate-800 bg-slate-800'
                               : 'border-slate-300 bg-white'
                           }`}
                         >
@@ -1277,19 +1256,19 @@ export default function CreateQuote({ onBack, onPublish }: CreateQuoteProps) {
                         onClick={() => setSignatureOption('electronic')}
                         className={`w-full flex items-start gap-4 p-4 rounded-xl border-2 transition-all ${
                           signatureOption === 'electronic'
-                            ? 'border-blue-500 bg-blue-50/50'
+                            ? 'border-slate-800 bg-slate-50/50'
                             : 'border-slate-200 bg-white hover:border-slate-300 hover:shadow-sm'
                         }`}
                       >
                         <div
                           className={`mt-0.5 flex-shrink-0 w-10 h-10 rounded-lg flex items-center justify-center ${
-                            signatureOption === 'electronic' ? 'bg-blue-100' : 'bg-slate-100'
+                            signatureOption === 'electronic' ? 'bg-slate-100' : 'bg-slate-100'
                           }`}
                         >
                           <Icon
                             icon="solar:document-linear"
                             width="20"
-                            className={signatureOption === 'electronic' ? 'text-blue-600' : 'text-slate-500'}
+                            className={signatureOption === 'electronic' ? 'text-slate-500' : 'text-slate-500'}
                           />
                         </div>
                         <div className="flex-1 text-left">
@@ -1301,7 +1280,7 @@ export default function CreateQuote({ onBack, onPublish }: CreateQuoteProps) {
                         <div
                           className={`flex-shrink-0 w-5 h-5 rounded-full border-2 flex items-center justify-center ${
                             signatureOption === 'electronic'
-                              ? 'border-blue-500 bg-blue-500'
+                              ? 'border-slate-800 bg-slate-800'
                               : 'border-slate-300 bg-white'
                           }`}
                         >
@@ -1357,7 +1336,7 @@ export default function CreateQuote({ onBack, onPublish }: CreateQuoteProps) {
 
                         <button
                           onClick={() => setAdditionalSignatories([...additionalSignatories, ''])}
-                          className="w-full flex items-center justify-center gap-2 p-3 rounded-lg border-2 border-dashed border-slate-300 text-slate-600 hover:border-blue-400 hover:text-blue-600 hover:bg-blue-50/50 transition-all group"
+                          className="w-full flex items-center justify-center gap-2 p-3 rounded-lg border-2 border-dashed border-slate-300 text-slate-600 hover:border-slate-400 hover:text-slate-500 hover:bg-slate-50/50 transition-all group"
                         >
                           <Icon icon="solar:add-circle-linear" width="18" className="group-hover:scale-110 transition-transform" />
                           <span className="text-xs font-medium">Add Signatory Field</span>
@@ -1367,9 +1346,9 @@ export default function CreateQuote({ onBack, onPublish }: CreateQuoteProps) {
                   </div>
                 </div>
 
-                <div className="mt-auto p-6 bg-gradient-to-br from-blue-50/50 to-slate-50 border-t border-blue-100/50 relative z-10 backdrop-blur-sm">
+                <div className="mt-auto p-6 bg-gradient-to-br from-slate-50/80 to-slate-50 border-t border-slate-200/50 relative z-10 backdrop-blur-sm">
                   <div className="flex gap-3 items-start">
-                    <Icon icon="solar:info-circle-linear" className="text-blue-600 mt-0.5" width="18" />
+                    <Icon icon="solar:info-circle-linear" className="text-slate-400 mt-0.5" width="18" />
                     <p className="leading-relaxed text-xs text-slate-600">
                       <span className="font-semibold text-slate-800">Pro Tip:</span> Choose the signature method that best fits your workflow. Written signatures work great for in-person meetings.
                     </p>
@@ -1408,12 +1387,12 @@ export default function CreateQuote({ onBack, onPublish }: CreateQuoteProps) {
                       />
 
                       {expiryPeriod === 'custom' && (
-                        <div className="flex items-center gap-3 p-3 rounded-lg border border-blue-200 bg-blue-50/50">
+                        <div className="flex items-center gap-3 p-3 rounded-lg border border-slate-200 bg-slate-50/50">
                           <input
                             type="number"
                             value={customExpiryDays}
                             onChange={(e) => setCustomExpiryDays(Math.max(1, parseInt(e.target.value) || 1))}
-                            className="flex-1 px-3 py-2 text-sm font-semibold border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 bg-white"
+                            className="flex-1 px-3 py-2 text-sm font-semibold border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-200 focus:border-slate-400 bg-white"
                             placeholder="Enter days"
                             min="1"
                           />
@@ -1439,7 +1418,7 @@ export default function CreateQuote({ onBack, onPublish }: CreateQuoteProps) {
                         onChange={(e) => setCommentsToBuyer(e.target.value)}
                         rows={4}
                         placeholder="Add any special notes, conditions, or comments for the buyer..."
-                        className="w-full px-4 py-3 text-sm text-slate-900 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 hover:border-slate-300 transition-all resize-none bg-white shadow-sm placeholder:text-slate-400"
+                        className="w-full px-4 py-3 text-sm text-slate-900 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-200 focus:border-slate-800 hover:border-slate-300 transition-all resize-none bg-white shadow-sm placeholder:text-slate-400"
                       />
                     </div>
 
@@ -1450,7 +1429,7 @@ export default function CreateQuote({ onBack, onPublish }: CreateQuoteProps) {
                         </label>
                         <button
                           onClick={() => setIsEditingTerms(!isEditingTerms)}
-                          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-all"
+                          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-500 hover:text-slate-700 hover:bg-slate-50 rounded-lg transition-all"
                         >
                           <Icon icon={isEditingTerms ? "solar:check-circle-linear" : "solar:pen-linear"} width="14" />
                           <span>{isEditingTerms ? 'Done' : 'Edit'}</span>
@@ -1462,7 +1441,7 @@ export default function CreateQuote({ onBack, onPublish }: CreateQuoteProps) {
                           value={termsOfSale}
                           onChange={(e) => setTermsOfSale(e.target.value)}
                           rows={12}
-                          className="w-full px-4 py-3 text-xs text-slate-700 leading-relaxed border border-blue-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all resize-none bg-white shadow-sm font-mono"
+                          className="w-full px-4 py-3 text-xs text-slate-700 leading-relaxed border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-200 focus:border-slate-800 transition-all resize-none bg-white shadow-sm font-mono"
                         />
                       ) : (
                         <div className="p-4 rounded-lg border border-slate-200 bg-white shadow-sm max-h-64 overflow-y-auto">
@@ -1475,9 +1454,9 @@ export default function CreateQuote({ onBack, onPublish }: CreateQuoteProps) {
                   </div>
                 </div>
 
-                <div className="mt-auto p-6 bg-gradient-to-br from-blue-50/50 to-slate-50 border-t border-blue-100/50 relative z-10 backdrop-blur-sm">
+                <div className="mt-auto p-6 bg-gradient-to-br from-slate-50/80 to-slate-50 border-t border-slate-200/50 relative z-10 backdrop-blur-sm">
                   <div className="flex gap-3 items-start">
-                    <Icon icon="solar:info-circle-linear" className="text-blue-600 mt-0.5" width="18" />
+                    <Icon icon="solar:info-circle-linear" className="text-slate-400 mt-0.5" width="18" />
                     <p className="leading-relaxed text-xs text-slate-600">
                       <span className="font-semibold text-slate-800">Pro Tip:</span> Clear terms and expiry dates help set expectations and create urgency for your clients.
                     </p>
@@ -1498,7 +1477,7 @@ export default function CreateQuote({ onBack, onPublish }: CreateQuoteProps) {
                     <div className="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden">
                       <div className="px-4 py-3 bg-slate-50 border-b border-slate-200">
                         <div className="flex items-center gap-2">
-                          <Icon icon="solar:document-text-linear" width="16" className="text-blue-600" />
+                          <Icon icon="solar:document-text-linear" width="16" className="text-slate-400" />
                           <h3 className="text-xs font-bold uppercase tracking-wider text-slate-700">Quote Details</h3>
                         </div>
                       </div>
@@ -1531,7 +1510,7 @@ export default function CreateQuote({ onBack, onPublish }: CreateQuoteProps) {
                       <div className="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden">
                         <div className="px-4 py-3 bg-slate-50 border-b border-slate-200">
                           <div className="flex items-center gap-2">
-                            <Icon icon="solar:user-linear" width="16" className="text-blue-600" />
+                            <Icon icon="solar:user-linear" width="16" className="text-slate-400" />
                             <h3 className="text-xs font-bold uppercase tracking-wider text-slate-700">Buyer</h3>
                           </div>
                         </div>
@@ -1576,7 +1555,7 @@ export default function CreateQuote({ onBack, onPublish }: CreateQuoteProps) {
                       <div className="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden">
                         <div className="px-4 py-3 bg-slate-50 border-b border-slate-200">
                           <div className="flex items-center gap-2">
-                            <Icon icon="solar:case-linear" width="16" className="text-blue-600" />
+                            <Icon icon="solar:case-linear" width="16" className="text-slate-400" />
                             <h3 className="text-xs font-bold uppercase tracking-wider text-slate-700">Your Info</h3>
                           </div>
                         </div>
@@ -1603,7 +1582,7 @@ export default function CreateQuote({ onBack, onPublish }: CreateQuoteProps) {
                       <div className="px-4 py-3 bg-slate-50 border-b border-slate-200">
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-2">
-                            <Icon icon="solar:bill-list-linear" width="16" className="text-blue-600" />
+                            <Icon icon="solar:bill-list-linear" width="16" className="text-slate-400" />
                             <h3 className="text-xs font-bold uppercase tracking-wider text-slate-700">Line Items</h3>
                           </div>
                           <span className="text-xs font-medium text-slate-600">{lineItems.length} {lineItems.length === 1 ? 'item' : 'items'}</span>
@@ -1657,13 +1636,13 @@ export default function CreateQuote({ onBack, onPublish }: CreateQuoteProps) {
                       <div className="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden">
                         <div className="px-4 py-3 bg-slate-50 border-b border-slate-200">
                           <div className="flex items-center gap-2">
-                            <Icon icon="solar:pen-new-square-linear" width="16" className="text-blue-600" />
+                            <Icon icon="solar:pen-new-square-linear" width="16" className="text-slate-400" />
                             <h3 className="text-xs font-bold uppercase tracking-wider text-slate-700">Signature Method</h3>
                           </div>
                         </div>
                         <div className="p-4">
                           <div className="flex items-center gap-3">
-                            <div className="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center flex-shrink-0">
+                            <div className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center flex-shrink-0">
                               <Icon
                                 icon={
                                   signatureOption === 'none'
@@ -1673,7 +1652,7 @@ export default function CreateQuote({ onBack, onPublish }: CreateQuoteProps) {
                                     : 'solar:document-linear'
                                 }
                                 width="16"
-                                className="text-blue-600"
+                                className="text-slate-500"
                               />
                             </div>
                             <div>
@@ -1700,7 +1679,7 @@ export default function CreateQuote({ onBack, onPublish }: CreateQuoteProps) {
                                 <p className="text-[10px] uppercase font-semibold text-slate-500 tracking-wider mb-2">Additional Fields</p>
                                 {additionalSignatories.map((field, index) => (
                                   <div key={index} className="flex items-center gap-2 text-xs text-slate-600">
-                                    <Icon icon="solar:check-circle-linear" width="12" className="text-blue-500" />
+                                    <Icon icon="solar:check-circle-linear" width="12" className="text-slate-500" />
                                     <span>{field}</span>
                                   </div>
                                 ))}
@@ -1713,7 +1692,7 @@ export default function CreateQuote({ onBack, onPublish }: CreateQuoteProps) {
                       <div className="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden">
                         <div className="px-4 py-3 bg-slate-50 border-b border-slate-200">
                           <div className="flex items-center gap-2">
-                            <Icon icon="solar:calendar-mark-linear" width="16" className="text-blue-600" />
+                            <Icon icon="solar:calendar-mark-linear" width="16" className="text-slate-400" />
                             <h3 className="text-xs font-bold uppercase tracking-wider text-slate-700">Validity</h3>
                           </div>
                         </div>
@@ -1736,7 +1715,7 @@ export default function CreateQuote({ onBack, onPublish }: CreateQuoteProps) {
                       <div className="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden">
                         <div className="px-4 py-3 bg-slate-50 border-b border-slate-200">
                           <div className="flex items-center gap-2">
-                            <Icon icon="solar:chat-round-line-linear" width="16" className="text-blue-600" />
+                            <Icon icon="solar:chat-round-line-linear" width="16" className="text-slate-400" />
                             <h3 className="text-xs font-bold uppercase tracking-wider text-slate-700">Comments to Buyer</h3>
                           </div>
                         </div>
@@ -1749,7 +1728,7 @@ export default function CreateQuote({ onBack, onPublish }: CreateQuoteProps) {
                     <div className="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden">
                       <div className="px-4 py-3 bg-slate-50 border-b border-slate-200">
                         <div className="flex items-center gap-2">
-                          <Icon icon="solar:document-text-linear" width="16" className="text-blue-600" />
+                          <Icon icon="solar:document-text-linear" width="16" className="text-slate-400" />
                           <h3 className="text-xs font-bold uppercase tracking-wider text-slate-700">Terms of Sale</h3>
                         </div>
                       </div>
@@ -1777,14 +1756,14 @@ export default function CreateQuote({ onBack, onPublish }: CreateQuoteProps) {
           <div className="flex-1 flex flex-col bg-slate-100/80 relative overflow-hidden">
             <div className="absolute top-6 left-1/2 -translate-x-1/2 z-40 bg-white/90 backdrop-blur-md border border-slate-200/60 rounded-full px-4 py-2 shadow-lg flex items-center gap-4 transition-all hover:bg-white hover:scale-105">
               <div className="flex items-center gap-2 text-xs font-semibold text-slate-600">
-                <Icon icon="solar:eye-linear" width="14" className="text-indigo-600" />
+                <Icon icon="solar:eye-linear" width="14" className="text-slate-400" />
                 <span>Live Preview</span>
               </div>
               <div className="w-px h-3 bg-slate-200"></div>
               <div className="flex gap-1">
                 <div className="relative group/tooltip">
                   <button
-                    className="p-1.5 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-full transition-all"
+                    className="p-1.5 text-slate-400 hover:text-slate-500 hover:bg-slate-100 rounded-full transition-all"
                   >
                     <Icon icon="solar:monitor-linear" width="14" />
                   </button>
@@ -1794,7 +1773,7 @@ export default function CreateQuote({ onBack, onPublish }: CreateQuoteProps) {
                 </div>
                 <div className="relative group/tooltip">
                   <button
-                    className="p-1.5 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-full transition-all"
+                    className="p-1.5 text-slate-400 hover:text-slate-500 hover:bg-slate-100 rounded-full transition-all"
                   >
                     <Icon icon="solar:smartphone-linear" width="14" />
                   </button>

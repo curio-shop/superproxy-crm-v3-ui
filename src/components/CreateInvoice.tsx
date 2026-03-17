@@ -250,9 +250,6 @@ export default function CreateInvoice({ onBack, onPublish, preSelectedQuote }: C
   return (
     <div className="fixed inset-0 bg-[#F8FAFC] z-[200] flex flex-col overflow-hidden">
       <div className="absolute inset-0 -z-10 bg-[#F8FAFC]">
-        <div className="absolute top-[-10%] left-[-5%] w-[50%] h-[50%] rounded-full bg-blue-100/40 blur-[120px] mix-blend-multiply animate-pulse"></div>
-        <div className="absolute top-[10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-indigo-100/40 blur-[120px] mix-blend-multiply"></div>
-        <div className="absolute bottom-[-10%] left-[20%] w-[40%] h-[40%] rounded-full bg-slate-50/60 blur-[100px] mix-blend-multiply"></div>
       </div>
 
       <div className="flex-1 flex flex-col bg-white/90 backdrop-blur-2xl rounded-[24px] border border-white/50 shadow-2xl overflow-hidden relative ring-1 ring-slate-900/5 my-2 mx-2 h-[calc(100vh-1rem)]">
@@ -267,24 +264,20 @@ export default function CreateInvoice({ onBack, onPublish, preSelectedQuote }: C
               </button>
               <div className="h-6 w-px bg-slate-200"></div>
               <div>
-                <div className="flex items-center gap-2 text-[10px] font-semibold tracking-wider uppercase text-blue-600 mb-1">
+                <div className="flex items-center gap-2 text-[10px] font-semibold tracking-wider uppercase text-slate-500 mb-1">
                   <span>New Invoice</span>
                 </div>
                 <h1 className="flex items-center gap-2 text-lg font-semibold text-slate-900 tracking-tight">
                   <span>{invoiceTitle}</span>
                   <Icon
                     icon="solar:pen-linear"
-                    className="text-slate-400 hover:text-blue-600 cursor-pointer transition-colors"
+                    className="text-slate-400 hover:text-slate-500 cursor-pointer transition-colors"
                     width="14"
                   />
                 </h1>
               </div>
             </div>
             <div className="flex gap-3 items-center">
-              <span className="hidden sm:flex items-center gap-1.5 select-none text-xs font-medium text-slate-400 mr-2">
-                <Icon icon="solar:cloud-check-linear" width="16" />
-                Saved
-              </span>
               {currentStep > 1 && (
                 <button
                   onClick={handlePrevStep}
@@ -299,7 +292,7 @@ export default function CreateInvoice({ onBack, onPublish, preSelectedQuote }: C
               {currentStep === 3 ? (
                 <button
                   onClick={handlePublish}
-                  className="group h-10 flex items-center gap-2 px-5 rounded-lg text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 hover:shadow-lg shadow-indigo-600/20 transition-all focus:ring-2 focus:ring-indigo-300 focus:outline-none active:scale-[0.98]"
+                  className="group h-10 flex items-center gap-2 px-5 rounded-lg text-sm font-semibold text-white bg-slate-900 hover:bg-slate-800 hover:shadow-lg transition-all focus:ring-2 focus:ring-slate-300 focus:outline-none active:scale-[0.98]"
                 >
                   <span>Publish Invoice</span>
                   <Icon
@@ -324,8 +317,8 @@ export default function CreateInvoice({ onBack, onPublish, preSelectedQuote }: C
             </div>
           </div>
 
-          <div className="px-6 border-t border-slate-200 bg-slate-50 relative z-10">
-            <div className="flex gap-1 overflow-x-auto no-scrollbar pt-3 pb-3 items-center">
+          <div className="px-6 border-t border-slate-200 bg-white relative z-10">
+            <div className="flex items-center gap-0 overflow-x-auto no-scrollbar py-0">
               {INVOICE_STEPS.map((step, index) => {
                 const isCompleted = completedSteps.includes(step.id);
                 const isActive = step.id === currentStep;
@@ -335,49 +328,40 @@ export default function CreateInvoice({ onBack, onPublish, preSelectedQuote }: C
                   <div key={step.id} className="flex items-center flex-shrink-0">
                     <div
                       onClick={() => isClickable && handleStepClick(step.id)}
-                      className={`flex items-center gap-2 px-4 py-1 rounded-lg group transition-all ${
+                      className={`relative flex items-center gap-2.5 px-4 py-3 transition-all ${
                         isClickable ? 'cursor-pointer' : 'cursor-not-allowed'
                       } ${
-                        isActive
-                          ? 'opacity-100 bg-white'
-                          : 'opacity-70 hover:opacity-100 hover:bg-white/60'
+                        isActive ? 'opacity-100' : 'opacity-60 hover:opacity-100'
                       }`}
                     >
                       <div
-                        className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-semibold transition-all ${
+                        className={`w-5 h-5 rounded-md flex items-center justify-center text-[10px] font-bold transition-all ${
                           isCompleted && !isActive
-                            ? 'bg-emerald-500 text-white'
+                            ? 'bg-slate-800 text-white'
                             : isActive
-                            ? 'bg-blue-600 text-white'
-                            : 'bg-slate-200 text-slate-500 group-hover:bg-slate-300'
+                            ? 'bg-slate-800 text-white'
+                            : 'bg-slate-200 text-slate-600'
                         }`}
                       >
-                        {isCompleted && !isActive ? (
-                          <Icon icon="solar:check-circle-bold" width="12" />
-                        ) : (
-                          step.id
-                        )}
+                        {step.id}
                       </div>
                       <span
-                        className={`text-xs font-medium whitespace-nowrap transition-colors ${
-                          isCompleted && !isActive
-                            ? 'text-emerald-600'
-                            : isActive
-                            ? 'text-slate-900'
-                            : 'text-slate-500 group-hover:text-slate-700'
+                        className={`text-[12px] font-medium whitespace-nowrap transition-colors ${
+                          isActive
+                            ? 'text-slate-800'
+                            : isCompleted
+                            ? 'text-slate-600'
+                            : 'text-slate-400'
                         }`}
                       >
                         {step.label}
                       </span>
+                      {isActive && (
+                        <div className="absolute bottom-0 left-4 right-4 h-[2px] bg-slate-800 rounded-full" />
+                      )}
                     </div>
                     {index < INVOICE_STEPS.length - 1 && (
-                      <Icon
-                        icon="solar:alt-arrow-right-linear"
-                        className={`flex-shrink-0 transition-colors ${
-                          completedSteps.includes(step.id) ? 'text-emerald-400' : 'text-slate-300'
-                        }`}
-                        width="12"
-                      />
+                      <div className="w-5 h-px bg-slate-200 flex-shrink-0" />
                     )}
                   </div>
                 );
@@ -387,7 +371,7 @@ export default function CreateInvoice({ onBack, onPublish, preSelectedQuote }: C
         </header>
 
         <div className="flex-1 relative overflow-hidden flex flex-col lg:flex-row">
-          <div className="lg:w-[35%] xl:w-[30%] overflow-y-auto overflow-x-visible z-20 flex flex-col bg-gradient-to-br from-white via-blue-50/20 to-slate-50/40 w-full border-slate-200/60 border-r relative">
+          <div className="lg:w-[35%] xl:w-[30%] overflow-y-auto overflow-x-visible z-20 flex flex-col bg-white w-full border-slate-200 border-r relative">
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(59,130,246,0.03),transparent_60%)] pointer-events-none"></div>
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_right,rgba(148,163,184,0.02),transparent_50%)] pointer-events-none"></div>
 
@@ -435,7 +419,7 @@ export default function CreateInvoice({ onBack, onPublish, preSelectedQuote }: C
                                 value={quoteSearchQuery}
                                 onChange={(e) => setQuoteSearchQuery(e.target.value)}
                                 placeholder="Search quotation..."
-                                className="w-full pl-9 pr-3 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 bg-white transition-all"
+                                className="w-full pl-9 pr-3 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-slate-200 focus:border-slate-400 bg-white transition-all"
                                 onClick={(e) => e.stopPropagation()}
                               />
                             </div>
@@ -451,11 +435,11 @@ export default function CreateInvoice({ onBack, onPublish, preSelectedQuote }: C
                                     setIsQuoteDropdownOpen(false);
                                   }}
                                   className={`w-full flex items-start gap-4 p-5 hover:bg-slate-50 transition-all text-left border-b border-slate-100 last:border-0 group ${
-                                    selectedQuoteId === quote.id ? 'bg-blue-50/50 hover:bg-blue-50' : ''
+                                    selectedQuoteId === quote.id ? 'bg-slate-50/50 hover:bg-slate-50' : ''
                                   }`}
                                 >
                                   <div className="flex-1 min-w-0">
-                                    <p className="text-[15px] font-semibold text-slate-900 truncate group-hover:text-blue-600 transition-colors mb-2.5">
+                                    <p className="text-[15px] font-semibold text-slate-900 truncate group-hover:text-slate-500 transition-colors mb-2.5">
                                       {quote.title}
                                     </p>
                                     <div className="space-y-1.5">
@@ -490,7 +474,7 @@ export default function CreateInvoice({ onBack, onPublish, preSelectedQuote }: C
                                     {selectedQuoteId === quote.id && (
                                       <Icon
                                         icon="solar:check-circle-bold"
-                                        className="text-blue-600 mt-auto"
+                                        className="text-slate-500 mt-auto"
                                         width="20"
                                       />
                                     )}
@@ -516,30 +500,30 @@ export default function CreateInvoice({ onBack, onPublish, preSelectedQuote }: C
                     </div>
 
                     {selectedQuote && (
-                      <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 space-y-3">
+                      <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-3">
                         <div className="flex items-center gap-2">
-                          <Icon icon="solar:info-circle-linear" className="text-blue-600" width="16" />
-                          <span className="text-xs font-semibold text-blue-900 uppercase tracking-wider">
+                          <Icon icon="solar:info-circle-linear" className="text-slate-400" width="16" />
+                          <span className="text-xs font-semibold text-slate-800 uppercase tracking-wider">
                             Selected Quote Details
                           </span>
                         </div>
                         <div className="space-y-2">
                           <div className="flex justify-between text-sm">
-                            <span className="text-blue-700">Amount</span>
-                            <span className="font-semibold text-blue-900">
+                            <span className="text-slate-600">Amount</span>
+                            <span className="font-semibold text-slate-800">
                               {formatCurrency(selectedQuote.total_amount)}
                             </span>
                           </div>
                           <div className="flex justify-between text-sm">
-                            <span className="text-blue-700">Status</span>
-                            <span className="font-semibold text-blue-900 capitalize">
+                            <span className="text-slate-600">Status</span>
+                            <span className="font-semibold text-slate-800 capitalize">
                               {selectedQuote.status}
                             </span>
                           </div>
                           {selectedQuote.valid_until && (
                             <div className="flex justify-between text-sm">
-                              <span className="text-blue-700">Valid Until</span>
-                              <span className="font-semibold text-blue-900">
+                              <span className="text-slate-600">Valid Until</span>
+                              <span className="font-semibold text-slate-800">
                                 {formatDate(selectedQuote.valid_until)}
                               </span>
                             </div>
@@ -550,9 +534,9 @@ export default function CreateInvoice({ onBack, onPublish, preSelectedQuote }: C
                   </div>
                 </div>
 
-                <div className="mt-auto p-6 bg-gradient-to-br from-blue-50/50 to-slate-50 border-t border-blue-100/50 relative z-10 backdrop-blur-sm">
+                <div className="mt-auto p-6 bg-gradient-to-br from-slate-50/80 to-slate-50 border-t border-slate-200/50 relative z-10 backdrop-blur-sm">
                   <div className="flex gap-3 items-start">
-                    <Icon icon="solar:info-circle-linear" className="text-blue-600 mt-0.5" width="18" />
+                    <Icon icon="solar:info-circle-linear" className="text-slate-400 mt-0.5" width="18" />
                     <p className="leading-relaxed text-xs text-slate-600">
                       <span className="font-semibold text-slate-800">Quick Tip:</span> Only convert sent or published quotes to ensure accurate billing information.
                     </p>
@@ -588,7 +572,7 @@ export default function CreateInvoice({ onBack, onPublish, preSelectedQuote }: C
                               setAmountDueNowPercentage(val);
                             }
                           }}
-                          className="w-24 bg-white border border-slate-200 rounded-lg px-4 py-3 text-sm font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all shadow-sm hover:shadow-md hover:border-slate-300"
+                          className="w-24 bg-white border border-slate-200 rounded-lg px-4 py-3 text-sm font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-200 focus:border-slate-400 transition-all shadow-sm hover:shadow-md hover:border-slate-300"
                           placeholder=""
                           min="0"
                           max="100"
@@ -637,7 +621,7 @@ export default function CreateInvoice({ onBack, onPublish, preSelectedQuote }: C
                                   }}
                                   className={`w-full flex items-center justify-between px-3 py-2 transition-all duration-150 text-left ${
                                     invoiceDueInDays === days
-                                      ? 'bg-blue-50/80 text-blue-700'
+                                      ? 'bg-slate-50/80 text-slate-600'
                                       : 'hover:bg-slate-50 text-slate-700'
                                   }`}
                                 >
@@ -647,7 +631,7 @@ export default function CreateInvoice({ onBack, onPublish, preSelectedQuote }: C
                                   {invoiceDueInDays === days && (
                                     <Icon
                                       icon="solar:check-circle-bold"
-                                      className="text-blue-600"
+                                      className="text-slate-500"
                                       width="16"
                                     />
                                   )}
@@ -661,7 +645,7 @@ export default function CreateInvoice({ onBack, onPublish, preSelectedQuote }: C
                                 }}
                                 className={`w-full flex items-center justify-between px-3 py-2 transition-all duration-150 text-left ${
                                   invoiceDueInDays === 'custom'
-                                    ? 'bg-blue-50/80 text-blue-700'
+                                    ? 'bg-slate-50/80 text-slate-600'
                                     : 'hover:bg-slate-50 text-slate-700'
                                 }`}
                               >
@@ -669,7 +653,7 @@ export default function CreateInvoice({ onBack, onPublish, preSelectedQuote }: C
                                 {invoiceDueInDays === 'custom' && (
                                   <Icon
                                     icon="solar:check-circle-bold"
-                                    className="text-blue-600"
+                                    className="text-slate-500"
                                     width="16"
                                   />
                                 )}
@@ -684,7 +668,7 @@ export default function CreateInvoice({ onBack, onPublish, preSelectedQuote }: C
                           value={customDays}
                           onChange={(e) => setCustomDays(e.target.value)}
                           placeholder="Enter number of days"
-                          className="w-full bg-white border border-slate-200 rounded-lg px-4 py-3 text-sm font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all shadow-sm hover:shadow-md hover:border-slate-300"
+                          className="w-full bg-white border border-slate-200 rounded-lg px-4 py-3 text-sm font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-200 focus:border-slate-400 transition-all shadow-sm hover:shadow-md hover:border-slate-300"
                           min="1"
                         />
                       )}
@@ -700,7 +684,7 @@ export default function CreateInvoice({ onBack, onPublish, preSelectedQuote }: C
                         </label>
                         <button
                           onClick={() => setIsEditingBilling(!isEditingBilling)}
-                          className="text-xs font-medium text-blue-600 hover:text-blue-700 flex items-center gap-1 transition-colors"
+                          className="text-xs font-medium text-slate-500 hover:text-slate-600 flex items-center gap-1 transition-colors"
                         >
                           <Icon
                             icon={isEditingBilling ? 'solar:check-circle-linear' : 'solar:pen-linear'}
@@ -714,7 +698,7 @@ export default function CreateInvoice({ onBack, onPublish, preSelectedQuote }: C
                         <textarea
                           value={billingDetails}
                           onChange={(e) => setBillingDetails(e.target.value)}
-                          className="w-full bg-white border border-slate-200 rounded-lg px-4 py-3 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all shadow-sm hover:shadow-md hover:border-slate-300 resize-none"
+                          className="w-full bg-white border border-slate-200 rounded-lg px-4 py-3 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-200 focus:border-slate-400 transition-all shadow-sm hover:shadow-md hover:border-slate-300 resize-none"
                           rows={8}
                         />
                       ) : (
@@ -735,16 +719,16 @@ export default function CreateInvoice({ onBack, onPublish, preSelectedQuote }: C
                         value={notes}
                         onChange={(e) => setNotes(e.target.value)}
                         placeholder="Add any special instructions, payment details, or notes for the client..."
-                        className="w-full bg-white border border-slate-200 rounded-lg px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all shadow-sm hover:shadow-md hover:border-slate-300 resize-none"
+                        className="w-full bg-white border border-slate-200 rounded-lg px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-200 focus:border-slate-400 transition-all shadow-sm hover:shadow-md hover:border-slate-300 resize-none"
                         rows={4}
                       />
                     </div>
                   </div>
                 </div>
 
-                <div className="mt-auto p-6 bg-gradient-to-br from-blue-50/50 to-slate-50 border-t border-blue-100/50 relative z-10 backdrop-blur-sm">
+                <div className="mt-auto p-6 bg-gradient-to-br from-slate-50/80 to-slate-50 border-t border-slate-200/50 relative z-10 backdrop-blur-sm">
                   <div className="flex gap-3 items-start">
-                    <Icon icon="solar:info-circle-linear" className="text-blue-600 mt-0.5" width="18" />
+                    <Icon icon="solar:info-circle-linear" className="text-slate-400 mt-0.5" width="18" />
                     <p className="leading-relaxed text-xs text-slate-600">
                       <span className="font-semibold text-slate-800">Pro Tip:</span> Setting a clear 'Amount Due Now' helps manage cash flow.
                     </p>
@@ -767,7 +751,7 @@ export default function CreateInvoice({ onBack, onPublish, preSelectedQuote }: C
 
                   <div className="space-y-6">
                     {/* Main Invoice Card */}
-                    <div className="bg-gradient-to-br from-blue-50 via-white to-slate-50 border border-blue-200 rounded-2xl p-6 shadow-sm">
+                    <div className="bg-slate-50 border border-slate-200 rounded-2xl p-6 shadow-sm">
                       <div className="flex items-start justify-between mb-6">
                         <div className="flex-1">
                           <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">
@@ -806,17 +790,17 @@ export default function CreateInvoice({ onBack, onPublish, preSelectedQuote }: C
                           <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">
                             Amount Due Now
                           </p>
-                          <p className="text-2xl font-bold text-blue-600">
+                          <p className="text-2xl font-bold text-slate-500">
                             {formatCurrency(amountDueNow)}
                           </p>
                           <p className="text-xs text-slate-500 mt-1.5">
                             {parseFloat(amountDueNowPercentage) || 0}% of total
                           </p>
                         </div>
-                        <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-blue-50">
+                        <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-slate-50">
                           <Icon
                             icon="solar:wallet-bold"
-                            className="text-blue-600"
+                            className="text-slate-500"
                             width="24"
                           />
                         </div>
@@ -876,11 +860,11 @@ export default function CreateInvoice({ onBack, onPublish, preSelectedQuote }: C
                   </div>
                 </div>
 
-                <div className="mt-auto p-6 bg-gradient-to-br from-blue-50/50 to-slate-50 border-t border-blue-100/50 relative z-10 backdrop-blur-sm">
+                <div className="mt-auto p-6 bg-gradient-to-br from-emerald-50/50 to-slate-50 border-t border-emerald-100/50 relative z-10 backdrop-blur-sm">
                   <div className="flex gap-3 items-start">
-                    <Icon icon="solar:info-circle-linear" className="text-blue-600 mt-0.5" width="18" />
+                    <Icon icon="solar:check-circle-linear" className="text-emerald-600 mt-0.5" width="18" />
                     <p className="leading-relaxed text-xs text-slate-600">
-                      <span className="font-semibold text-slate-800">Quick Tip:</span> Double-check payment terms and due dates before publishing.
+                      <span className="font-semibold text-slate-800">Ready to Publish:</span> Review all details carefully. Once published, you can send this invoice to your client for payment.
                     </p>
                   </div>
                 </div>
@@ -891,14 +875,14 @@ export default function CreateInvoice({ onBack, onPublish, preSelectedQuote }: C
           <div className="flex-1 flex flex-col bg-slate-100/80 relative overflow-hidden">
             <div className="absolute top-6 left-1/2 -translate-x-1/2 z-40 bg-white/90 backdrop-blur-md border border-slate-200/60 rounded-full px-4 py-2 shadow-lg flex items-center gap-4 transition-all hover:bg-white hover:scale-105">
               <div className="flex items-center gap-2 text-xs font-semibold text-slate-600">
-                <Icon icon="solar:eye-linear" width="14" className="text-indigo-600" />
+                <Icon icon="solar:eye-linear" width="14" className="text-slate-400" />
                 <span>Live Preview</span>
               </div>
               <div className="w-px h-3 bg-slate-200"></div>
               <div className="flex gap-1">
                 <div className="relative group/tooltip">
                   <button
-                    className="p-1.5 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-full transition-all"
+                    className="p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-full transition-all"
                   >
                     <Icon icon="solar:monitor-linear" width="14" />
                   </button>
@@ -908,7 +892,7 @@ export default function CreateInvoice({ onBack, onPublish, preSelectedQuote }: C
                 </div>
                 <div className="relative group/tooltip">
                   <button
-                    className="p-1.5 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-full transition-all"
+                    className="p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-full transition-all"
                   >
                     <Icon icon="solar:smartphone-linear" width="14" />
                   </button>
@@ -1002,12 +986,12 @@ export default function CreateInvoice({ onBack, onPublish, preSelectedQuote }: C
                         <span className="font-medium text-slate-900">{formatCurrency(selectedQuote.total_amount)}</span>
                       </div>
                       {parseFloat(amountDueNowPercentage) > 0 && (
-                        <div className="flex justify-between items-center py-2 bg-blue-50 rounded-lg px-4 text-sm">
+                        <div className="flex justify-between items-center py-2 bg-slate-50 rounded-lg px-4 text-sm">
                           <div>
-                            <span className="text-blue-600 font-semibold">Amount Due Now</span>
-                            <span className="text-xs text-blue-700 ml-2">({parseFloat(amountDueNowPercentage) || 0}%)</span>
+                            <span className="text-slate-500 font-semibold">Amount Due Now</span>
+                            <span className="text-xs text-slate-600 ml-2">({parseFloat(amountDueNowPercentage) || 0}%)</span>
                           </div>
-                          <span className="font-bold text-blue-900">{formatCurrency(amountDueNow)}</span>
+                          <span className="font-bold text-slate-800">{formatCurrency(amountDueNow)}</span>
                         </div>
                       )}
                       <div className="border-t-2 border-slate-900 pt-3 flex justify-between items-center">

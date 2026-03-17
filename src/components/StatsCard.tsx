@@ -46,22 +46,20 @@ function StatsCard({
   };
 
   return (
-    <div className="glass-card p-6 group rounded-[24px]">
-      <div className="flex justify-between items-start mb-4">
-        <p className={`text-xs font-semibold uppercase tracking-wider ${titleColor}`}>{title}</p>
+    <div className="bg-white rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.04),0_8px_24px_rgba(0,0,0,0.03)] border border-slate-100/80 p-5 group">
+      <div className="flex justify-between items-start mb-3">
+        <p className="text-[11px] font-medium text-slate-400 uppercase tracking-wider">{title}</p>
         <div
           ref={iconRef}
           onClick={handleIconClick}
           className={onIconClick ? 'cursor-pointer' : ''}
         >
-          <Icon icon={icon} width="24" className={`${iconColor} transition`} />
+          <Icon icon={icon} width="18" className="text-slate-400 transition" />
         </div>
       </div>
-      <div className="flex items-baseline gap-2">
-        <h3 className="text-4xl font-semibold text-slate-900 tracking-tight">{value}</h3>
-      </div>
-      <div className="mt-4 pt-4 border-t border-slate-200/50">
-        <p className="text-xs text-slate-500 font-medium">{subtitle}</p>
+      <h3 className="text-2xl font-semibold text-slate-800 tracking-tight">{value}</h3>
+      <div className="mt-3">
+        <p className="text-[11px] text-slate-400">{subtitle}</p>
       </div>
     </div>
   );

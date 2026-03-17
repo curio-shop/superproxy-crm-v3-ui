@@ -1,209 +1,279 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Icon } from '@iconify/react';
-import Dropdown from './Dropdown';
 
-const currencies = ['USD', 'EUR', 'GBP', 'JPY', 'AUD', 'CAD', 'CHF', 'CNY', 'INR', 'SGD'];
+const CURRENCIES = [
+  { code: 'USD', name: 'US Dollar', symbol: '$', flag: '🇺🇸' },
+  { code: 'EUR', name: 'Euro', symbol: '€', flag: '🇪🇺' },
+  { code: 'GBP', name: 'British Pound', symbol: '£', flag: '🇬🇧' },
+  { code: 'JPY', name: 'Japanese Yen', symbol: '¥', flag: '🇯🇵' },
+  { code: 'AUD', name: 'Australian Dollar', symbol: 'A$', flag: '🇦🇺' },
+  { code: 'CAD', name: 'Canadian Dollar', symbol: 'C$', flag: '🇨🇦' },
+  { code: 'CHF', name: 'Swiss Franc', symbol: 'CHF', flag: '🇨🇭' },
+  { code: 'SGD', name: 'Singapore Dollar', symbol: 'S$', flag: '🇸🇬' },
+  { code: 'AED', name: 'UAE Dirham', symbol: 'د.إ', flag: '🇦🇪' },
+  { code: 'NZD', name: 'New Zealand Dollar', symbol: 'NZ$', flag: '🇳🇿' },
+  { code: 'PHP', name: 'Philippine Peso', symbol: '₱', flag: '🇵🇭' },
+  { code: 'THB', name: 'Thai Baht', symbol: '฿', flag: '🇹🇭' },
+  { code: 'INR', name: 'Indian Rupee', symbol: '₹', flag: '🇮🇳' },
+  { code: 'CNY', name: 'Chinese Yuan', symbol: '¥', flag: '🇨🇳' },
+  { code: 'KRW', name: 'South Korean Won', symbol: '₩', flag: '🇰🇷' },
+  { code: 'MYR', name: 'Malaysian Ringgit', symbol: 'RM', flag: '🇲🇾' },
+  { code: 'IDR', name: 'Indonesian Rupiah', symbol: 'Rp', flag: '🇮🇩' },
+  { code: 'SAR', name: 'Saudi Riyal', symbol: '﷼', flag: '🇸🇦' },
+  { code: 'ZAR', name: 'South African Rand', symbol: 'R', flag: '🇿🇦' },
+  { code: 'BRL', name: 'Brazilian Real', symbol: 'R$', flag: '🇧🇷' },
+  { code: 'MXN', name: 'Mexican Peso', symbol: 'Mex$', flag: '🇲🇽' },
+  { code: 'SEK', name: 'Swedish Krona', symbol: 'kr', flag: '🇸🇪' },
+  { code: 'NOK', name: 'Norwegian Krone', symbol: 'kr', flag: '🇳🇴' },
+  { code: 'DKK', name: 'Danish Krone', symbol: 'kr', flag: '🇩🇰' },
+  { code: 'HKD', name: 'Hong Kong Dollar', symbol: 'HK$', flag: '🇭🇰' },
+  { code: 'TWD', name: 'Taiwan Dollar', symbol: 'NT$', flag: '🇹🇼' },
+  { code: 'PLN', name: 'Polish Zloty', symbol: 'zł', flag: '🇵🇱' },
+  { code: 'CZK', name: 'Czech Koruna', symbol: 'Kč', flag: '🇨🇿' },
+  { code: 'ILS', name: 'Israeli Shekel', symbol: '₪', flag: '🇮🇱' },
+  { code: 'QAR', name: 'Qatari Riyal', symbol: 'QR', flag: '🇶🇦' },
+];
 
-const currencySymbols: Record<string, string> = {
-  USD: '$', EUR: '€', GBP: '£', JPY: '¥', AUD: 'A$',
-  CAD: 'C$', CHF: 'CHF', CNY: '¥', INR: '₹', SGD: 'S$',
+const getRate = (from: string, to: string): number => {
+  if (from === to) return 1;
+  const baseRates: Record<string, number> = {
+    USD: 1, EUR: 0.92, GBP: 0.79, JPY: 149.50, AUD: 1.52, CAD: 1.36, CHF: 0.88,
+    SGD: 1.34, AED: 3.67, NZD: 1.64, PHP: 56.20, THB: 35.40, INR: 83.12, CNY: 7.24,
+    KRW: 1320.50, MYR: 4.72, IDR: 15680, SAR: 3.75, ZAR: 18.65, BRL: 4.97,
+    MXN: 17.15, SEK: 10.45, NOK: 10.62, DKK: 6.87, HKD: 7.82, TWD: 31.50,
+    PLN: 4.02, CZK: 23.10, ILS: 3.68, QAR: 3.64,
+  };
+  return (baseRates[to] || 1) / (baseRates[from] || 1);
 };
 
-const currencyFlags: Record<string, string> = {
-  USD: '🇺🇸', EUR: '🇪🇺', GBP: '🇬🇧', JPY: '🇯🇵', AUD: '🇦🇺',
-  CAD: '🇨🇦', CHF: '🇨🇭', CNY: '🇨🇳', INR: '🇮🇳', SGD: '🇸🇬',
-};
-
-const currencyNames: Record<string, string> = {
-  USD: 'US Dollar', EUR: 'Euro', GBP: 'British Pound', JPY: 'Japanese Yen',
-  AUD: 'Australian Dollar', CAD: 'Canadian Dollar', CHF: 'Swiss Franc',
-  CNY: 'Chinese Yuan', INR: 'Indian Rupee', SGD: 'Singapore Dollar',
-};
-
-const exchangeRates: Record<string, Record<string, number>> = {
-  USD: { EUR: 0.92, GBP: 0.79, JPY: 149.50, AUD: 1.52, CAD: 1.36, CHF: 0.88, CNY: 7.24, INR: 83.12, SGD: 1.34, USD: 1 },
-  EUR: { USD: 1.09, GBP: 0.86, JPY: 162.50, AUD: 1.65, CAD: 1.48, CHF: 0.96, CNY: 7.88, INR: 90.45, SGD: 1.46, EUR: 1 },
-  GBP: { USD: 1.27, EUR: 1.16, JPY: 189.30, AUD: 1.92, CAD: 1.72, CHF: 1.11, CNY: 9.19, INR: 105.42, SGD: 1.70, GBP: 1 },
-  JPY: { USD: 0.0067, EUR: 0.0062, GBP: 0.0053, AUD: 0.010, CAD: 0.0091, CHF: 0.0059, CNY: 0.048, INR: 0.56, SGD: 0.009, JPY: 1 },
-  AUD: { USD: 0.66, EUR: 0.61, GBP: 0.52, JPY: 98.40, CAD: 0.89, CHF: 0.58, CNY: 4.76, INR: 54.68, SGD: 0.88, AUD: 1 },
-  CAD: { USD: 0.74, EUR: 0.68, GBP: 0.58, JPY: 109.93, AUD: 1.12, CHF: 0.65, CNY: 5.32, INR: 61.12, SGD: 0.99, CAD: 1 },
-  CHF: { USD: 1.14, EUR: 1.04, GBP: 0.90, JPY: 169.89, AUD: 1.72, CAD: 1.54, CNY: 8.23, INR: 94.45, SGD: 1.52, CHF: 1 },
-  CNY: { USD: 0.14, EUR: 0.13, GBP: 0.11, JPY: 20.67, AUD: 0.21, CAD: 0.19, CHF: 0.12, INR: 11.48, SGD: 0.19, CNY: 1 },
-  INR: { USD: 0.012, EUR: 0.011, GBP: 0.0095, JPY: 1.80, AUD: 0.018, CAD: 0.016, CHF: 0.011, CNY: 0.087, SGD: 0.016, INR: 1 },
-  SGD: { USD: 0.75, EUR: 0.68, GBP: 0.59, JPY: 111.57, AUD: 1.14, CAD: 1.01, CHF: 0.66, CNY: 5.40, INR: 62.01, SGD: 1 },
-};
+type ActiveTab = 'display' | 'filter';
 
 export default function CurrencyPage() {
+  const [activeTab, setActiveTab] = useState<ActiveTab>('display');
   const [displayCurrency, setDisplayCurrency] = useState('USD');
+  const [selectedFilters, setSelectedFilters] = useState<string[]>(['USD']);
+  const [search, setSearch] = useState('');
   const [fromCurrency, setFromCurrency] = useState('USD');
   const [toCurrency, setToCurrency] = useState('EUR');
-  const [amount, setAmount] = useState('100');
+  const [amount, setAmount] = useState('1000');
 
-  const convertedAmount = (parseFloat(amount) || 0) * (exchangeRates[fromCurrency]?.[toCurrency] || 1);
+  const convertedAmount = (parseFloat(amount) || 0) * getRate(fromCurrency, toCurrency);
 
-  const handleSwap = () => {
-    setFromCurrency(toCurrency);
-    setToCurrency(fromCurrency);
+  const handleSwap = () => { setFromCurrency(toCurrency); setToCurrency(fromCurrency); };
+
+  const toggleFilter = (code: string) => {
+    setSelectedFilters(prev => prev.includes(code) ? prev.filter(c => c !== code) : [...prev, code]);
   };
 
+  const filtered = useMemo(() =>
+    CURRENCIES.filter(c =>
+      c.code.toLowerCase().includes(search.toLowerCase()) ||
+      c.name.toLowerCase().includes(search.toLowerCase())
+    ), [search]);
+
+  const selectedDisplay = CURRENCIES.find(c => c.code === displayCurrency);
+
   return (
-    <div className="flex-1 overflow-y-auto px-8 py-8 custom-scrollbar space-y-6" style={{ scrollbarGutter: 'stable' }}>
+    <div className="flex-1 overflow-hidden flex flex-col p-6" style={{ scrollbarGutter: 'stable' }}>
+      <div className="flex-1 flex gap-4 min-h-0">
 
-      {/* Top row: Display Preference + Converter */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-
-        {/* Display Currency Card */}
-        <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-6">
-          <div className="flex items-center gap-3 mb-1">
-            <div className="h-9 w-9 rounded-xl bg-indigo-50 flex items-center justify-center">
-              <Icon icon="solar:eye-linear" width="18" className="text-indigo-600" />
-            </div>
-            <div>
-              <h2 className="text-sm font-semibold text-slate-900">Display Currency</h2>
-              <p className="text-xs text-slate-400 mt-0.5">Set the currency shown across your dashboard</p>
-            </div>
-          </div>
-
-          <div className="mt-5">
-            <Dropdown
-              value={displayCurrency}
-              options={currencies.map(c => ({ value: c, label: `${currencyFlags[c]} ${c} — ${currencyNames[c]}` }))}
-              onChange={(val) => setDisplayCurrency(val as string)}
-              menuAlign="left"
-            />
-          </div>
-
-          {/* Selected currency highlight */}
-          <div className="mt-4 flex items-center gap-3 p-3 rounded-xl bg-indigo-50/60 border border-indigo-100">
-            <span className="text-2xl">{currencyFlags[displayCurrency]}</span>
-            <div>
-              <p className="text-sm font-semibold text-slate-900">{currencyNames[displayCurrency]}</p>
-              <p className="text-xs text-slate-500">{currencySymbols[displayCurrency]} · {displayCurrency}</p>
-            </div>
-            <div className="ml-auto">
-              <span className="text-xs font-semibold text-indigo-600 bg-indigo-100 px-2 py-1 rounded-lg">Active</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Currency Converter Card */}
-        <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-6">
-          <div className="flex items-center gap-3 mb-1">
-            <div className="h-9 w-9 rounded-xl bg-indigo-50 flex items-center justify-center">
-              <Icon icon="solar:transfer-horizontal-linear" width="18" className="text-indigo-600" />
-            </div>
-            <div>
-              <h2 className="text-sm font-semibold text-slate-900">Currency Converter</h2>
-              <p className="text-xs text-slate-400 mt-0.5">Convert between any two currencies instantly</p>
-            </div>
-          </div>
-
-          <div className="mt-5 space-y-3">
-            {/* From */}
-            <div>
-              <label className="text-xs font-medium text-slate-500 mb-1.5 block">From</label>
-              <div className="flex gap-2">
-                <input
-                  type="number"
-                  value={amount}
-                  onChange={(e) => setAmount(e.target.value)}
-                  className="flex-1 px-3 py-2.5 rounded-xl border border-slate-200 text-sm font-semibold text-slate-900 focus:border-indigo-300 focus:ring-2 focus:ring-indigo-100 outline-none transition-all"
-                  placeholder="Amount"
-                />
-                <Dropdown
-                  value={fromCurrency}
-                  options={currencies}
-                  onChange={(val) => setFromCurrency(val as string)}
-                  buttonClassName="h-[42px] px-3 min-w-[90px]"
-                />
-              </div>
-            </div>
-
-            {/* Swap */}
-            <div className="flex justify-center">
+        {/* Left — Currency selector */}
+        <div className="flex-1 flex flex-col bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden min-w-0">
+          {/* Tabs */}
+          <div className="flex items-center gap-1 px-4 pt-4 pb-3">
+            <div className="flex items-center bg-slate-100 rounded-lg p-0.5">
               <button
-                onClick={handleSwap}
-                className="p-2.5 rounded-xl bg-indigo-50 hover:bg-indigo-100 border border-indigo-100 transition-colors active:scale-95 group"
-                aria-label="Swap currencies"
+                onClick={() => { setActiveTab('display'); setSearch(''); }}
+                className={`px-3 py-1.5 rounded-md text-[12px] font-medium transition-all ${activeTab === 'display' ? 'bg-white text-slate-700 shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
               >
-                <Icon icon="solar:refresh-linear" width="16" className="text-indigo-600 group-hover:rotate-180 transition-transform duration-300" />
+                Display Currency
+              </button>
+              <button
+                onClick={() => { setActiveTab('filter'); setSearch(''); }}
+                className={`px-3 py-1.5 rounded-md text-[12px] font-medium transition-all ${activeTab === 'filter' ? 'bg-white text-slate-700 shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
+              >
+                Dashboard Filter
               </button>
             </div>
 
-            {/* To */}
-            <div>
-              <label className="text-xs font-medium text-slate-500 mb-1.5 block">To</label>
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  value={convertedAmount.toFixed(2)}
-                  readOnly
-                  className="flex-1 px-3 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm font-semibold text-slate-900 outline-none"
-                />
-                <Dropdown
-                  value={toCurrency}
-                  options={currencies}
-                  onChange={(val) => setToCurrency(val as string)}
-                  buttonClassName="h-[42px] px-3 min-w-[90px]"
-                />
-              </div>
-            </div>
+            {activeTab === 'filter' && selectedFilters.length > 0 && (
+              <span className="text-[10px] text-slate-400 ml-2">{selectedFilters.length} selected</span>
+            )}
+          </div>
 
-            {/* Rate reference */}
-            <div className="pt-1 flex items-center justify-center gap-1.5">
-              <Icon icon="solar:refresh-circle-linear" width="13" className="text-slate-400" />
-              <p className="text-xs text-slate-400 text-center">
-                1 {fromCurrency} = <span className="font-semibold text-slate-600">{exchangeRates[fromCurrency]?.[toCurrency]?.toFixed(4)}</span> {toCurrency}
+          {/* Description */}
+          <div className="px-4 pb-3">
+            <p className="text-[11px] text-slate-400">
+              {activeTab === 'display'
+                ? 'Set the currency your dashboard displays. Ideal for teams working across borders — see unified totals in one currency while keeping each quote and invoice in its original currency.'
+                : 'Filter your dashboard by the currencies you trade in. Perfect for tracking performance by market — only quotes and invoices in selected currencies will count toward your stats.'
+              }
+            </p>
+          </div>
+
+          {/* Search */}
+          <div className="px-4 pb-2">
+            <div className="relative">
+              <Icon icon="solar:magnifer-linear" width="14" className="absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400" />
+              <input
+                type="text"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder={`Search ${CURRENCIES.length} currencies...`}
+                className="w-full pl-8 pr-3 py-1.5 text-[13px] text-slate-700 placeholder-slate-400 bg-slate-50 rounded-lg border border-slate-100 outline-none focus:border-slate-300 transition-colors"
+              />
+            </div>
+          </div>
+
+          {/* Filter chips */}
+          {activeTab === 'filter' && selectedFilters.length > 0 && (
+            <div className="flex flex-wrap gap-1 px-4 pb-2">
+              {selectedFilters.map(code => {
+                const c = CURRENCIES.find(cur => cur.code === code);
+                return (
+                  <button
+                    key={code}
+                    onClick={() => toggleFilter(code)}
+                    className="flex items-center gap-1 px-2 py-0.5 bg-slate-100 rounded-md text-[11px] font-medium text-slate-600 hover:bg-slate-200 transition-colors"
+                  >
+                    {c?.flag} {code}
+                    <Icon icon="solar:close-circle-linear" width="11" className="text-slate-400" />
+                  </button>
+                );
+              })}
+            </div>
+          )}
+
+          {/* Currency list */}
+          <div className="flex-1 overflow-y-auto custom-scrollbar px-2 pb-2 min-h-0">
+            {filtered.length === 0 ? (
+              <p className="text-[12px] text-slate-400 text-center py-8">No currencies found</p>
+            ) : (
+              <div className="space-y-0.5">
+                {filtered.map((currency) => {
+                  const isDisplay = activeTab === 'display';
+                  const isSelected = isDisplay
+                    ? displayCurrency === currency.code
+                    : selectedFilters.includes(currency.code);
+
+                  return (
+                    <button
+                      key={currency.code}
+                      onClick={() => isDisplay ? setDisplayCurrency(currency.code) : toggleFilter(currency.code)}
+                      className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl text-left transition-all ${
+                        isSelected ? 'bg-slate-50 border border-slate-200' : 'border border-transparent hover:bg-slate-50'
+                      }`}
+                    >
+                      <span className="text-base leading-none">{currency.flag}</span>
+                      <span className="text-[13px] font-medium text-slate-800 w-10">{currency.code}</span>
+                      <span className="text-[12px] text-slate-400 flex-1">{currency.name}</span>
+                      <span className="text-[11px] text-slate-300 mr-1">{currency.symbol}</span>
+
+                      {isDisplay ? (
+                        <div className={`w-4 h-4 rounded-full border-[1.5px] flex items-center justify-center transition-all flex-shrink-0 ${
+                          isSelected ? 'border-slate-900' : 'border-slate-300'
+                        }`}>
+                          {isSelected && <div className="w-2 h-2 rounded-full bg-slate-900" />}
+                        </div>
+                      ) : (
+                        <div className={`w-4 h-4 rounded border-[1.5px] flex items-center justify-center transition-all flex-shrink-0 ${
+                          isSelected ? 'bg-slate-900 border-slate-900' : 'border-slate-300'
+                        }`}>
+                          {isSelected && <Icon icon="solar:check-read-linear" width="10" className="text-white" />}
+                        </div>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Right — Converter */}
+        <div className="w-[320px] flex-shrink-0">
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5">
+            <h2 className="text-[13px] font-semibold text-slate-700 mb-1">Converter</h2>
+            <p className="text-[11px] text-slate-400 mb-4">Quick conversion between currencies.</p>
+
+            <div className="space-y-2.5">
+              <div>
+                <label className="text-[11px] font-medium text-slate-400 mb-1 block">From</label>
+                <div className="flex gap-1.5">
+                  <input
+                    type="number"
+                    value={amount}
+                    onChange={(e) => setAmount(e.target.value)}
+                    className="flex-1 min-w-0 px-3 py-2 rounded-xl border border-slate-200 text-[13px] font-semibold text-slate-800 focus:border-slate-400 outline-none transition-colors"
+                    placeholder="Amount"
+                  />
+                  <select
+                    value={fromCurrency}
+                    onChange={(e) => setFromCurrency(e.target.value)}
+                    className="px-2 py-2 rounded-xl border border-slate-200 text-[12px] font-medium text-slate-700 bg-white focus:border-slate-400 outline-none transition-colors w-[78px]"
+                  >
+                    {CURRENCIES.map(c => <option key={c.code} value={c.code}>{c.flag} {c.code}</option>)}
+                  </select>
+                </div>
+              </div>
+
+              <div className="flex justify-center">
+                <button onClick={handleSwap} className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 transition-colors active:scale-95">
+                  <Icon icon="solar:transfer-vertical-linear" width="14" className="text-slate-500" />
+                </button>
+              </div>
+
+              <div>
+                <label className="text-[11px] font-medium text-slate-400 mb-1 block">To</label>
+                <div className="flex gap-1.5">
+                  <input
+                    type="text"
+                    value={convertedAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    readOnly
+                    className="flex-1 min-w-0 px-3 py-2 rounded-xl border border-slate-200 bg-slate-50 text-[13px] font-semibold text-slate-800 outline-none"
+                  />
+                  <select
+                    value={toCurrency}
+                    onChange={(e) => setToCurrency(e.target.value)}
+                    className="px-2 py-2 rounded-xl border border-slate-200 text-[12px] font-medium text-slate-700 bg-white focus:border-slate-400 outline-none transition-colors w-[78px]"
+                  >
+                    {CURRENCIES.map(c => <option key={c.code} value={c.code}>{c.flag} {c.code}</option>)}
+                  </select>
+                </div>
+              </div>
+
+              <p className="text-[11px] text-slate-400 text-center pt-0.5">
+                1 {fromCurrency} = <span className="font-medium text-slate-600">{getRate(fromCurrency, toCurrency).toFixed(4)}</span> {toCurrency}
               </p>
             </div>
-          </div>
-        </div>
-      </div>
 
-      {/* Exchange Rates Table */}
-      <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-6">
-        <div className="flex items-center justify-between mb-5">
-          <div className="flex items-center gap-3">
-            <div className="h-9 w-9 rounded-xl bg-indigo-50 flex items-center justify-center">
-              <Icon icon="solar:chart-2-linear" width="18" className="text-indigo-600" />
-            </div>
-            <div>
-              <h2 className="text-sm font-semibold text-slate-900">Exchange Rates</h2>
-              <p className="text-xs text-slate-400 mt-0.5">Rates relative to <span className="font-medium text-slate-600">{displayCurrency}</span></p>
-            </div>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
-          {currencies.map((currency) => {
-            const rate = exchangeRates[displayCurrency]?.[currency] ?? 1;
-            const isBase = currency === displayCurrency;
-            return (
-              <div
-                key={currency}
-                className={`rounded-xl p-3.5 border transition-all ${
-                  isBase
-                    ? 'bg-indigo-50 border-indigo-200'
-                    : 'bg-slate-50 border-slate-100 hover:border-slate-200 hover:bg-white'
-                }`}
-              >
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="text-lg leading-none">{currencyFlags[currency]}</span>
-                  <span className={`text-xs font-bold ${isBase ? 'text-indigo-700' : 'text-slate-700'}`}>{currency}</span>
-                  {isBase && (
-                    <span className="ml-auto text-[10px] font-semibold text-indigo-500 bg-indigo-100 px-1.5 py-0.5 rounded-md">base</span>
-                  )}
+            {/* Current selections summary */}
+            <div className="mt-5 pt-4 border-t border-slate-100 space-y-2.5">
+              <div>
+                <p className="text-[10px] font-medium text-slate-400 uppercase tracking-wider mb-1">Display Currency</p>
+                <div className="flex items-center gap-2">
+                  <span className="text-base leading-none">{selectedDisplay?.flag}</span>
+                  <span className="text-[13px] font-semibold text-slate-800">{selectedDisplay?.code}</span>
+                  <span className="text-[11px] text-slate-400">{selectedDisplay?.name}</span>
                 </div>
-                <p className={`text-base font-bold ${isBase ? 'text-indigo-900' : 'text-slate-900'}`}>
-                  {isBase ? '1.0000' : rate.toFixed(4)}
-                </p>
-                <p className="text-[11px] text-slate-400 mt-0.5 truncate">{currencyNames[currency]}</p>
               </div>
-            );
-          })}
+              <div>
+                <p className="text-[10px] font-medium text-slate-400 uppercase tracking-wider mb-1">Dashboard Filter</p>
+                <div className="flex flex-wrap gap-1">
+                  {selectedFilters.length === 0 ? (
+                    <span className="text-[11px] text-slate-300">None selected</span>
+                  ) : selectedFilters.map(code => (
+                    <span key={code} className="text-[11px] font-medium text-slate-600 bg-slate-50 border border-slate-100 px-1.5 py-0.5 rounded">
+                      {CURRENCIES.find(c => c.code === code)?.flag} {code}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
 
+      </div>
     </div>
   );
 }

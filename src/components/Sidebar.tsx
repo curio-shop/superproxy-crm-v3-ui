@@ -44,7 +44,7 @@ export default function Sidebar({ activePage, onPageChange, currentWorkspace, on
 
   return (
     <aside
-      className={`hidden lg:flex flex-col z-40 transition-all duration-300 ease-[cubic-bezier(0.25,0.1,0.25,1)] group/sidebar bg-white/80 border-slate-200/50 border rounded-[24px] relative shadow-[0_8px_40px_rgba(0,0,0,0.08),0_2px_12px_rgba(0,0,0,0.04)] backdrop-blur-lg overflow-visible ${
+      className={`hidden lg:flex flex-col z-40 my-3 mr-3 transition-all duration-300 ease-[cubic-bezier(0.25,0.1,0.25,1)] group/sidebar bg-white border-slate-200/50 border rounded-[24px] relative shadow-[0_8px_40px_rgba(0,0,0,0.06),0_2px_8px_rgba(0,0,0,0.03)] overflow-visible ${
         collapsed ? 'w-[88px]' : 'w-72'
       }`}
     >
@@ -504,7 +504,10 @@ export default function Sidebar({ activePage, onPageChange, currentWorkspace, on
         <div className="px-5 pb-2 flex items-center justify-center gap-2">
           <span className="text-xs font-medium text-slate-400">Free plan</span>
           <span className="h-3 w-px bg-slate-200"></span>
-          <button className="text-xs font-semibold text-indigo-600 hover:text-indigo-700 transition-colors">
+          <button
+            onClick={() => onPageChange('pricing')}
+            className="text-xs font-semibold text-indigo-600 hover:text-indigo-700 transition-colors"
+          >
             Upgrade
           </button>
         </div>

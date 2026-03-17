@@ -1,8 +1,9 @@
 import { Icon } from '@iconify/react';
 import { useState, useRef, useEffect } from 'react';
-import ScopeFilter, { ScopeType } from './ScopeFilter';
 import RecordPresentationModal from './RecordPresentationModal';
 import { Contact, Quotation } from '../contexts/CallManagerContext';
+
+type QuotationStatus = Quotation['status'];
 
 interface QuotationsProps {
   isTeamView: boolean;
@@ -17,14 +18,61 @@ interface QuotationsProps {
   onDeleteQuotation?: (quotation: Quotation) => void;
 }
 
+const statusConfig: Record<QuotationStatus, { label: string; icon: string; pillBg: string; pillText: string; pillBorder: string; pillIconColor: string; badgeBg: string; badgeText: string; badgeBorder: string }> = {
+  draft: {
+    label: 'Draft',
+    icon: 'solar:pen-new-square-linear',
+    pillBg: 'bg-amber-50', pillText: 'text-amber-600', pillBorder: 'border-amber-200/80', pillIconColor: 'text-amber-500',
+    badgeBg: 'bg-amber-50', badgeText: 'text-amber-700', badgeBorder: 'border-amber-200',
+  },
+  sent: {
+    label: 'Sent',
+    icon: 'solar:plain-3-linear',
+    pillBg: 'bg-sky-50', pillText: 'text-sky-600', pillBorder: 'border-sky-200/80', pillIconColor: 'text-sky-500',
+    badgeBg: 'bg-sky-50', badgeText: 'text-sky-700', badgeBorder: 'border-sky-200',
+  },
+  published: {
+    label: 'Published',
+    icon: 'solar:check-circle-linear',
+    pillBg: 'bg-indigo-50', pillText: 'text-indigo-600', pillBorder: 'border-indigo-200/80', pillIconColor: 'text-indigo-500',
+    badgeBg: 'bg-indigo-50', badgeText: 'text-indigo-700', badgeBorder: 'border-indigo-200',
+  },
+  expired: {
+    label: 'Expired',
+    icon: 'solar:clock-circle-linear',
+    pillBg: 'bg-slate-100', pillText: 'text-slate-500', pillBorder: 'border-slate-200/80', pillIconColor: 'text-slate-400',
+    badgeBg: 'bg-slate-100', badgeText: 'text-slate-600', badgeBorder: 'border-slate-200',
+  },
+  deal_won: {
+    label: 'Deal Won',
+    icon: 'solar:cup-star-linear',
+    pillBg: 'bg-emerald-50', pillText: 'text-emerald-600', pillBorder: 'border-emerald-200/80', pillIconColor: 'text-emerald-500',
+    badgeBg: 'bg-emerald-50', badgeText: 'text-emerald-700', badgeBorder: 'border-emerald-200',
+  },
+  deal_lost: {
+    label: 'Deal Lost',
+    icon: 'solar:close-circle-linear',
+    pillBg: 'bg-rose-50', pillText: 'text-rose-500', pillBorder: 'border-rose-200/80', pillIconColor: 'text-rose-400',
+    badgeBg: 'bg-rose-50', badgeText: 'text-rose-600', badgeBorder: 'border-rose-200',
+  },
+};
+
+const allStatuses: QuotationStatus[] = ['draft', 'sent', 'published', 'expired', 'deal_won', 'deal_lost'];
+
 export default function Quotations({ isTeamView, homeFilterPreference, onViewQuote, onQuoteFollowUpClick, onEmailQuoteClick, onCreateInvoiceClick, onAskAIClick, onOpenTemplateBuilder, onOpenCreateQuote, onDeleteQuotation }: QuotationsProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
-  const [scopeFilter, setScopeFilter] = useState<ScopeType>(homeFilterPreference);
+  const [openStatusBadge, setOpenStatusBadge] = useState<string | null>(null);
+  const [scopeFilter, setScopeFilter] = useState<'team' | 'personal'>(homeFilterPreference);
+  const [statusFilter, setStatusFilter] = useState<QuotationStatus | 'all'>('all');
+  const [isStatusDropdownOpen, setIsStatusDropdownOpen] = useState(false);
   const [hasManuallyChanged, setHasManuallyChanged] = useState(false);
   const [isRecordPresentationOpen, setIsRecordPresentationOpen] = useState(false);
   const [selectedQuoteForPresentation, setSelectedQuoteForPresentation] = useState<string | null>(null);
+  const [quotationStatuses, setQuotationStatuses] = useState<Record<string, QuotationStatus>>({});
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const statusDropdownRef = useRef<HTMLDivElement>(null);
+  const statusBadgeRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!hasManuallyChanged) {
@@ -37,26 +85,17 @@ export default function Quotations({ isTeamView, homeFilterPreference, onViewQuo
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setOpenDropdown(null);
       }
+      if (statusDropdownRef.current && !statusDropdownRef.current.contains(event.target as Node)) {
+        setIsStatusDropdownOpen(false);
+      }
+      if (statusBadgeRef.current && !statusBadgeRef.current.contains(event.target as Node)) {
+        setOpenStatusBadge(null);
+      }
     };
 
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
-
-  const statusStyles = {
-    draft: { bg: 'bg-amber-50', text: 'text-amber-700', border: 'border-amber-200', icon: 'solar:pen-new-square-linear' },
-    published: { bg: 'bg-sky-50', text: 'text-sky-700', border: 'border-sky-200', icon: 'solar:plain-3-linear' },
-    sent: { bg: 'bg-emerald-50', text: 'text-emerald-700', border: 'border-emerald-200', icon: 'solar:check-circle-linear' },
-  };
-
-  const clientColors = {
-    blue: { bg: 'bg-blue-50', text: 'text-blue-600', ring: 'ring-blue-100' },
-    purple: { bg: 'bg-purple-50', text: 'text-purple-600', ring: 'ring-purple-100' },
-    emerald: { bg: 'bg-emerald-50', text: 'text-emerald-600', ring: 'ring-emerald-100' },
-    amber: { bg: 'bg-amber-50', text: 'text-amber-600', ring: 'ring-amber-100' },
-    slate: { bg: 'bg-slate-100', text: 'text-slate-600', ring: 'ring-slate-200' },
-    pink: { bg: 'bg-pink-50', text: 'text-pink-600', ring: 'ring-pink-100' },
-  };
 
   const quotations: Quotation[] = [
     {
@@ -97,7 +136,7 @@ export default function Quotations({ isTeamView, homeFilterPreference, onViewQuo
       number: 'QT-2024-004',
       title: 'E-commerce Platform',
       client: { name: 'Apple', initials: 'AP', color: 'amber' },
-      status: 'published',
+      status: 'deal_won',
       amount: 1800000,
       date: '2024-12-26',
       validUntil: '2025-01-25',
@@ -108,11 +147,22 @@ export default function Quotations({ isTeamView, homeFilterPreference, onViewQuo
       number: 'QT-2024-005',
       title: 'Marketing Campaign',
       client: { name: 'Acme Corp', initials: 'AC', color: 'emerald' },
-      status: 'draft',
+      status: 'expired',
       amount: 320000,
       date: '2024-12-20',
       validUntil: '2024-12-30',
       items: 6,
+    },
+    {
+      id: '6',
+      number: 'QT-2024-006',
+      title: 'Cloud Migration Services',
+      client: { name: 'BuildRight Inc', initials: 'BI', color: 'rose' },
+      status: 'deal_lost',
+      amount: 975000,
+      date: '2024-12-18',
+      validUntil: '2025-01-17',
+      items: 9,
     },
   ];
 
@@ -132,328 +182,378 @@ export default function Quotations({ isTeamView, homeFilterPreference, onViewQuo
     });
   };
 
+  const getEffectiveStatus = (quote: Quotation): QuotationStatus =>
+    quotationStatuses[quote.id] ?? quote.status;
+
+  const filteredQuotations = statusFilter === 'all'
+    ? quotations
+    : quotations.filter(q => getEffectiveStatus(q) === statusFilter);
+
+  const activeStatusConfig = statusFilter === 'all' ? null : statusConfig[statusFilter];
+
   return (
     <div className="flex-1 overflow-hidden flex flex-col p-6" style={{ scrollbarGutter: 'stable' }}>
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 mb-6">
+      <div className="flex flex-col sm:flex-row gap-3 items-center justify-between mb-6">
         <div className="flex items-center gap-3 w-full sm:w-auto">
-          <div className="group relative w-full sm:w-auto max-w-2xl">
+          <div className="group w-full sm:w-80 relative">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
               <Icon
                 icon="solar:magnifer-linear"
                 width="16"
-                className="text-slate-400 group-focus-within:text-indigo-500 transition-colors"
+                className="text-slate-400 group-focus-within:text-slate-500 transition-colors"
               />
             </div>
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="block w-full pl-10 pr-3 py-2.5 border border-slate-200 rounded-xl leading-5 bg-white text-slate-600 placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500/50 sm:text-sm shadow-sm transition-all hover:border-slate-300 hover:shadow-md"
+              className="block w-full pl-10 pr-3 py-2.5 border border-slate-200 rounded-xl leading-5 bg-white text-slate-600 placeholder-slate-400 focus:outline-none focus:border-slate-400 sm:text-sm transition-colors hover:border-slate-300"
               placeholder="Search quotations..."
             />
           </div>
 
-          <ScopeFilter
-            value={scopeFilter}
-            onChange={(scope) => {
-              setScopeFilter(scope);
-              setHasManuallyChanged(true);
-            }}
-            defaultScope="personal"
-            availableScopes={['personal', 'team']}
-          />
+          <div className="flex items-center bg-slate-100 rounded-lg p-0.5">
+            <button
+              onClick={() => { setScopeFilter('personal'); setHasManuallyChanged(true); }}
+              className={`px-3 py-1.5 rounded-md text-[12px] font-medium transition-all ${
+                scopeFilter === 'personal'
+                  ? 'bg-white text-slate-700 shadow-sm'
+                  : 'text-slate-400 hover:text-slate-600'
+              }`}
+            >
+              Personal
+            </button>
+            <button
+              onClick={() => { setScopeFilter('team'); setHasManuallyChanged(true); }}
+              className={`px-3 py-1.5 rounded-md text-[12px] font-medium transition-all ${
+                scopeFilter === 'team'
+                  ? 'bg-white text-slate-700 shadow-sm'
+                  : 'text-slate-400 hover:text-slate-600'
+              }`}
+            >
+              Team
+            </button>
+          </div>
+
+          {/* Status Filter Dropdown */}
+          <div className="relative" ref={statusDropdownRef}>
+            <button
+              onClick={() => setIsStatusDropdownOpen(!isStatusDropdownOpen)}
+              className={`flex items-center gap-2 px-3.5 py-2 rounded-full border transition-all active:scale-[0.97] ${
+                statusFilter === 'all'
+                  ? 'bg-white border-slate-200 text-slate-500 hover:border-slate-300 hover:bg-slate-50'
+                  : `${activeStatusConfig!.pillBg} ${activeStatusConfig!.pillBorder} ${activeStatusConfig!.pillText} border`
+              }`}
+            >
+              <Icon
+                icon={statusFilter === 'all' ? 'solar:filter-linear' : activeStatusConfig!.icon}
+                width="14"
+                className={statusFilter === 'all' ? 'text-slate-400' : activeStatusConfig!.pillIconColor}
+              />
+              <span className="text-[12px] font-semibold tracking-wide">
+                {statusFilter === 'all' ? 'All Status' : activeStatusConfig!.label}
+              </span>
+              <Icon
+                icon="solar:alt-arrow-down-linear"
+                width="14"
+                className={`transition-transform ${isStatusDropdownOpen ? 'rotate-180' : ''} ${statusFilter === 'all' ? 'text-slate-400' : 'opacity-60'}`}
+              />
+            </button>
+
+            {isStatusDropdownOpen && (
+              <div className="absolute left-0 mt-2 w-48 bg-white rounded-2xl shadow-[0_12px_48px_rgba(0,0,0,0.14)] border border-slate-100 py-1.5 z-50 animate-in fade-in slide-in-from-top-2 duration-200 overflow-hidden">
+                {/* All option */}
+                <button
+                  onClick={() => { setStatusFilter('all'); setIsStatusDropdownOpen(false); }}
+                  className={`w-full flex items-center justify-between px-3.5 py-2.5 text-[13px] transition-colors ${
+                    statusFilter === 'all'
+                      ? 'bg-slate-50 text-slate-800 font-semibold'
+                      : 'text-slate-600 hover:bg-slate-50/80 font-medium'
+                  }`}
+                >
+                  <span>All Status</span>
+                  {statusFilter === 'all' && (
+                    <Icon icon="solar:check-circle-bold" width="16" className="text-slate-500" />
+                  )}
+                </button>
+
+                <div className="my-1 border-t border-slate-100 mx-3" />
+
+                {allStatuses.map((status) => {
+                  const config = statusConfig[status];
+                  const isActive = statusFilter === status;
+                  return (
+                    <button
+                      key={status}
+                      onClick={() => { setStatusFilter(status); setIsStatusDropdownOpen(false); }}
+                      className={`w-full flex items-center justify-between px-3.5 py-2.5 text-[13px] transition-colors ${
+                        isActive
+                          ? `${config.badgeBg} ${config.badgeText} font-semibold`
+                          : 'text-slate-600 hover:bg-slate-50/80 font-medium'
+                      }`}
+                    >
+                      <div className="flex items-center gap-2.5">
+                        <Icon icon={config.icon} width="15" className={isActive ? config.pillIconColor : 'text-slate-400'} />
+                        <span>{config.label}</span>
+                      </div>
+                      {isActive && (
+                        <Icon icon="solar:check-circle-bold" width="16" className={config.pillIconColor} />
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+          </div>
         </div>
 
         <div className="flex items-center gap-2">
           <button
             onClick={() => onOpenTemplateBuilder?.()}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-sm font-medium text-slate-700 hover:bg-slate-50 hover:border-slate-300 hover:text-slate-900 transition-all shadow-sm hover:shadow-md active:scale-[0.98]"
+            className="flex items-center gap-2 border border-slate-200 text-slate-600 hover:text-slate-800 hover:border-slate-300 hover:bg-slate-50 px-4 py-2 rounded-xl transition-all active:scale-[0.98]"
           >
-            <Icon icon="solar:magic-stick-3-linear" width="18" className="text-slate-500" />
-            <span>Customize Template</span>
+            <Icon icon="solar:magic-stick-3-linear" width="15" className="text-slate-400" />
+            <span className="text-[13px] font-medium">Customize Template</span>
           </button>
           <button
             onClick={() => onOpenCreateQuote?.()}
-            className="flex items-center gap-2 bg-gradient-to-b from-indigo-600 to-indigo-700 hover:from-indigo-500 hover:to-indigo-600 border-t border-white/20 text-white px-5 py-2.5 rounded-xl shadow-lg shadow-indigo-600/20 transition-all active:scale-95"
+            className="flex items-center gap-2 border border-slate-200 text-slate-600 hover:text-slate-800 hover:border-slate-300 hover:bg-slate-50 px-4 py-2 rounded-xl transition-all active:scale-[0.98]"
           >
-            <Icon icon="solar:add-circle-linear" width="18" className="text-indigo-100" />
-            <span className="text-sm font-semibold tracking-wide">Create Quote</span>
+            <Icon icon="solar:add-circle-linear" width="15" className="text-slate-400" />
+            <span className="text-[13px] font-medium">Create Quote</span>
           </button>
         </div>
       </div>
 
-      <div className="flex-1 shadow-slate-200/20 overflow-hidden flex flex-col bg-white/50 border-white/60 border rounded-[24px] relative shadow-xl">
+      <div className="flex-1 overflow-hidden flex flex-col bg-white border border-slate-200 rounded-2xl shadow-sm">
         <div className="overflow-x-auto flex-1 custom-scrollbar">
           <table className="min-w-full divide-y divide-slate-100">
-            <thead className="bg-slate-50/80">
-              <tr className="text-left text-[11px] font-bold text-slate-500 uppercase tracking-wider">
-                <th scope="col" className="pl-6 pr-3 py-4 w-12">
-                  <label className="custom-checkbox flex items-center cursor-pointer">
-                    <input type="checkbox" className="sr-only" />
-                    <div className="w-4 h-4 border-2 border-slate-300 rounded-md bg-white flex items-center justify-center transition-all hover:border-slate-400 hover:bg-slate-50">
-                      <svg
-                        className="w-2.5 h-2.5 text-white hidden pointer-events-none"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="3"
-                          d="M5 13l4 4L19 7"
-                        />
-                      </svg>
-                    </div>
-                  </label>
-                </th>
-                <th scope="col" className="px-6 py-4">
-                  Quote Name
-                </th>
-                <th scope="col" className="px-6 py-4">
-                  Client
-                </th>
-                <th scope="col" className="px-6 py-4">
-                  Status
-                </th>
-                <th scope="col" className="px-6 py-4">
-                  Amount
-                </th>
-                <th scope="col" className="px-6 py-4">
-                  Date Created
-                </th>
-                <th scope="col" className="px-6 py-4">
-                  Valid Until
-                </th>
-                <th scope="col" className="px-6 py-4 w-16">
-                  ACTIONS
-                </th>
+            <thead>
+              <tr className="text-left text-[11px] font-medium text-slate-400 uppercase tracking-wider">
+                <th scope="col" className="pl-5 pr-2 py-3">Quote Name</th>
+                <th scope="col" className="px-4 py-3">Client</th>
+                <th scope="col" className="px-4 py-3">Status</th>
+                <th scope="col" className="px-4 py-3">Amount</th>
+                <th scope="col" className="px-4 py-3">Date Created</th>
+                <th scope="col" className="px-4 py-3 w-12"></th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100 bg-white">
-                {quotations.map((quote) => {
-                  const statusStyle = statusStyles[quote.status];
-                  const clientColor = clientColors[quote.client.color as keyof typeof clientColors];
+            <tbody className="divide-y divide-slate-50">
+              {filteredQuotations.map((quote) => {
+                const effectiveStatus = getEffectiveStatus(quote);
+                const config = statusConfig[effectiveStatus];
 
-                  return (
-                    <tr key={quote.id} className="hover:bg-slate-50/50 transition-colors group">
-                      <td className="pl-6 pr-3 py-4 whitespace-nowrap">
-                        <label className="custom-checkbox flex items-center cursor-pointer">
-                          <input type="checkbox" className="sr-only" />
-                          <div className="w-4 h-4 border border-slate-300 rounded-md bg-white flex items-center justify-center transition-all group-hover:border-slate-400">
-                            <svg
-                              className="w-2.5 h-2.5 text-white hidden pointer-events-none"
-                              fill="none"
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
+                return (
+                  <tr
+                    key={quote.id}
+                    className="hover:bg-slate-50/70 transition-colors group cursor-pointer"
+                    onClick={() => onViewQuote?.(quote)}
+                  >
+                    <td className="pl-5 pr-2 py-3 whitespace-nowrap">
+                      <div className="flex items-center gap-2.5">
+                        <div className="h-7 w-7 rounded-lg bg-slate-100 text-slate-500 flex items-center justify-center text-[10px] font-semibold flex-shrink-0">
+                          {quote.client.initials}
+                        </div>
+                        <span className="text-[13px] font-medium text-slate-800">{quote.title}</span>
+                      </div>
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap">
+                      <span className="text-[13px] text-slate-500">{quote.client.name}</span>
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap">
+                      <div className="relative" ref={openStatusBadge === quote.id ? statusBadgeRef : null}>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setOpenStatusBadge(openStatusBadge === quote.id ? null : quote.id);
+                          }}
+                          className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg ${config.badgeBg} ${config.badgeText} text-[11px] font-semibold border ${config.badgeBorder} hover:opacity-80 transition-all active:scale-[0.96] cursor-pointer`}
+                        >
+                          <Icon icon={config.icon} width="12" />
+                          {config.label}
+                          <Icon icon="solar:alt-arrow-down-linear" width="11" className="opacity-50 -mr-0.5" />
+                        </button>
+
+                        {openStatusBadge === quote.id && (
+                          <div className="absolute left-0 mt-1.5 w-44 bg-white rounded-2xl shadow-[0_12px_48px_rgba(0,0,0,0.14)] border border-slate-100 py-1.5 z-50 animate-in fade-in slide-in-from-top-2 duration-200 overflow-hidden">
+                            {allStatuses.map((status) => {
+                              const opt = statusConfig[status];
+                              const isActive = effectiveStatus === status;
+                              return (
+                                <button
+                                  key={status}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setQuotationStatuses(prev => ({ ...prev, [quote.id]: status }));
+                                    setOpenStatusBadge(null);
+                                  }}
+                                  className={`w-full flex items-center justify-between px-3.5 py-2 text-[13px] transition-colors ${
+                                    isActive
+                                      ? `${opt.badgeBg} ${opt.badgeText} font-semibold`
+                                      : 'text-slate-600 hover:bg-slate-50/80 font-medium'
+                                  }`}
+                                >
+                                  <div className="flex items-center gap-2.5">
+                                    <Icon icon={opt.icon} width="15" className={isActive ? opt.pillIconColor : 'text-slate-400'} />
+                                    <span>{opt.label}</span>
+                                  </div>
+                                  {isActive && (
+                                    <Icon icon="solar:check-circle-bold" width="16" className={opt.pillIconColor} />
+                                  )}
+                                </button>
+                              );
+                            })}
+                          </div>
+                        )}
+                      </div>
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap">
+                      <span className="text-[13px] font-medium text-slate-800">{formatCurrency(quote.amount)}</span>
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap">
+                      <span className="text-[13px] text-slate-500">{formatDate(quote.date)}</span>
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap">
+                      <div className="relative" ref={openDropdown === quote.id ? dropdownRef : null}>
+                        <button
+                          onClick={(e) => { e.stopPropagation(); setOpenDropdown(openDropdown === quote.id ? null : quote.id); }}
+                          className={`flex items-center justify-center w-7 h-7 rounded-lg border transition-colors ${
+                            openDropdown === quote.id
+                              ? 'bg-slate-100 border-slate-200 text-slate-600'
+                              : 'border-slate-200 text-slate-400 hover:text-slate-600 hover:bg-slate-50 hover:border-slate-300'
+                          }`}
+                        >
+                          <Icon icon="solar:menu-dots-bold" width="14" />
+                        </button>
+
+                        {openDropdown === quote.id && (
+                          <div className="absolute right-0 mt-1.5 w-44 bg-white rounded-xl shadow-[0_8px_32px_rgba(0,0,0,0.12)] border border-slate-200/60 py-1 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                onViewQuote?.(quote);
+                                setOpenDropdown(null);
+                              }}
+                              className="w-full flex items-center gap-2 px-3 py-2 text-[13px] text-slate-600 hover:bg-slate-50 hover:text-slate-800 transition-colors"
                             >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth="3"
-                                d="M5 13l4 4L19 7"
-                              />
-                            </svg>
+                              <Icon icon="solar:eye-linear" width="14" className="text-slate-400" />
+                              View
+                            </button>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setOpenDropdown(null);
+                              }}
+                              className="w-full flex items-center gap-2 px-3 py-2 text-[13px] text-slate-600 hover:bg-slate-50 hover:text-slate-800 transition-colors"
+                            >
+                              <Icon icon="solar:pen-linear" width="14" className="text-slate-400" />
+                              Edit
+                            </button>
+                            <div className="my-1 border-t border-slate-100 mx-2" />
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setSelectedQuoteForPresentation(quote.id);
+                                setIsRecordPresentationOpen(true);
+                                setOpenDropdown(null);
+                              }}
+                              className="w-full flex items-center gap-2 px-3 py-2 text-[13px] text-slate-600 hover:bg-slate-50 hover:text-slate-800 transition-colors"
+                            >
+                              <Icon icon="solar:presentation-graph-linear" width="14" className="text-slate-400" />
+                              Create Presentation
+                            </button>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                onEmailQuoteClick?.(quote);
+                                setOpenDropdown(null);
+                              }}
+                              className="w-full flex items-center gap-2 px-3 py-2 text-[13px] text-slate-600 hover:bg-slate-50 hover:text-slate-800 transition-colors"
+                            >
+                              <Icon icon="solar:letter-linear" width="14" className="text-slate-400" />
+                              Email Quote
+                            </button>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                onCreateInvoiceClick?.(quote);
+                                setOpenDropdown(null);
+                              }}
+                              className="w-full flex items-center gap-2 px-3 py-2 text-[13px] text-slate-600 hover:bg-slate-50 hover:text-slate-800 transition-colors"
+                            >
+                              <Icon icon="solar:bill-list-linear" width="14" className="text-slate-400" />
+                              Create Invoice
+                            </button>
+                            <div className="my-1 border-t border-slate-100 mx-2" />
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                onQuoteFollowUpClick?.(quote, {
+                                  id: quote.id,
+                                  name: quote.client.name,
+                                  company_name: quote.client.name,
+                                });
+                                setOpenDropdown(null);
+                              }}
+                              className="w-full flex items-center gap-2 px-3 py-2 text-[13px] text-slate-600 hover:bg-slate-50 hover:text-slate-800 transition-colors"
+                            >
+                              <Icon icon="solar:phone-calling-linear" width="14" className="text-slate-400" />
+                              AI Follow-Up Call
+                            </button>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                onAskAIClick?.(quote);
+                                setOpenDropdown(null);
+                              }}
+                              className="w-full flex items-center gap-2 px-3 py-2 text-[13px] text-slate-600 hover:bg-slate-50 hover:text-slate-800 transition-colors"
+                            >
+                              <Icon icon="solar:lightbulb-linear" width="14" className="text-slate-400" />
+                              Ask AI
+                            </button>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setOpenDropdown(null);
+                              }}
+                              className="w-full flex items-center gap-2 px-3 py-2 text-[13px] text-slate-600 hover:bg-slate-50 hover:text-slate-800 transition-colors"
+                            >
+                              <Icon icon="solar:copy-linear" width="14" className="text-slate-400" />
+                              Duplicate
+                            </button>
+                            <div className="my-1 border-t border-slate-100 mx-2" />
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                onDeleteQuotation?.(quote);
+                                setOpenDropdown(null);
+                              }}
+                              className="w-full flex items-center gap-2 px-3 py-2 text-[13px] text-red-500 hover:bg-red-50 hover:text-red-600 transition-colors"
+                            >
+                              <Icon icon="solar:trash-bin-minimalistic-linear" width="14" />
+                              Delete
+                            </button>
                           </div>
-                        </label>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm font-semibold text-slate-900">{quote.title}</div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="flex items-center gap-3">
-                          <div
-                            className={`h-9 w-9 rounded-full ${clientColor.bg} ${clientColor.text} flex items-center justify-center text-xs font-semibold ring-2 ${clientColor.ring} shadow-sm group-hover:shadow-md transition-shadow`}
-                          >
-                            {quote.client.initials}
-                          </div>
-                          <div className="text-sm font-semibold text-slate-900">{quote.client.name}</div>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md ${statusStyle.bg} ${statusStyle.text} text-xs font-medium border ${statusStyle.border}`}>
-                          <Icon icon={statusStyle.icon} width="14" />
-                          {quote.status.charAt(0).toUpperCase() + quote.status.slice(1)}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="flex items-center gap-2">
-                          <Icon icon="solar:wallet-money-linear" width="14" className="text-slate-400" />
-                          <span className="text-sm font-bold text-slate-900">{formatCurrency(quote.amount)}</span>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="flex items-center gap-2 text-sm text-slate-600">
-                          <Icon icon="solar:calendar-linear" width="14" className="text-slate-400" />
-                          <span>{formatDate(quote.date)}</span>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="flex items-center gap-2 text-sm text-slate-600">
-                          <Icon icon="solar:calendar-mark-linear" width="14" className="text-slate-400" />
-                          <span>{formatDate(quote.validUntil)}</span>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-right">
-                        <div className="relative" ref={openDropdown === quote.id ? dropdownRef : null}>
-                          <button
-                            onClick={() => setOpenDropdown(openDropdown === quote.id ? null : quote.id)}
-                            className="flex items-center justify-center w-8 h-8 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 hover:ring-1 hover:ring-slate-200 transition-all focus:outline-none"
-                          >
-                            <Icon icon="solar:menu-dots-bold" width="16" />
-                          </button>
-
-                          {openDropdown === quote.id && (
-                            <div className="absolute right-0 mt-2 w-52 bg-white/95 backdrop-blur-xl rounded-xl shadow-lg border border-slate-200/60 py-1.5 z-50 animate-in fade-in slide-in-from-top-2 duration-200 ring-1 ring-black/5">
-                              <button
-                                onClick={() => {
-                                  onViewQuote?.(quote);
-                                  setOpenDropdown(null);
-                                }}
-                                className="w-full px-3 py-2 text-left text-sm font-bold text-slate-800 hover:bg-sky-50/80 hover:text-sky-700 flex items-center gap-2.5 transition-all duration-200 group"
-                              >
-                                <div className="w-7 h-7 rounded-lg bg-sky-50 flex items-center justify-center group-hover:bg-sky-100 group-hover:scale-105 transition-all duration-200">
-                                  <Icon icon="solar:eye-linear" width="15" className="text-sky-600 group-hover:text-sky-700" />
-                                </div>
-                                <span>View Quote</span>
-                              </button>
-                              <button
-                                onClick={() => {
-                                  setOpenDropdown(null);
-                                }}
-                                className="w-full px-3 py-2 text-left text-sm font-semibold text-slate-700 hover:bg-slate-50/80 hover:text-slate-900 flex items-center gap-2.5 transition-all duration-200 group"
-                              >
-                                <div className="w-7 h-7 rounded-lg bg-slate-100 flex items-center justify-center group-hover:bg-slate-200 group-hover:scale-105 transition-all duration-200">
-                                  <Icon icon="solar:pen-linear" width="15" className="text-slate-600 group-hover:text-slate-700" />
-                                </div>
-                                <span>Edit Quote</span>
-                              </button>
-                              <div className="border-t border-slate-100 my-1.5 mx-2" />
-                              <button
-                                onClick={() => {
-                                  setSelectedQuoteForPresentation(quote.id);
-                                  setIsRecordPresentationOpen(true);
-                                  setOpenDropdown(null);
-                                }}
-                                className="w-full px-3 py-1.5 text-left text-sm font-medium text-slate-700 hover:bg-slate-50/80 hover:text-slate-900 flex items-center gap-2.5 transition-all duration-200 group"
-                              >
-                                <div className="w-6 h-6 rounded-lg bg-slate-100 flex items-center justify-center group-hover:bg-slate-200 group-hover:scale-105 transition-all duration-200">
-                                  <Icon icon="solar:presentation-graph-linear" width="13" className="text-slate-600 group-hover:text-slate-700" />
-                                </div>
-                                <span>Create Presentation</span>
-                              </button>
-                              <button
-                                onClick={() => {
-                                  onEmailQuoteClick?.(quote);
-                                  setOpenDropdown(null);
-                                }}
-                                className="w-full px-3 py-1.5 text-left text-sm font-medium text-slate-700 hover:bg-slate-50/80 hover:text-slate-900 flex items-center gap-2.5 transition-all duration-200 group"
-                              >
-                                <div className="w-6 h-6 rounded-lg bg-slate-100 flex items-center justify-center group-hover:bg-slate-200 group-hover:scale-105 transition-all duration-200">
-                                  <Icon icon="solar:letter-linear" width="13" className="text-slate-600 group-hover:text-slate-700" />
-                                </div>
-                                <span>Email Quote</span>
-                              </button>
-                              <button
-                                onClick={() => {
-                                  onCreateInvoiceClick?.(quote);
-                                  setOpenDropdown(null);
-                                }}
-                                className="w-full px-3 py-1.5 text-left text-sm font-medium text-slate-700 hover:bg-emerald-50/80 hover:text-emerald-700 flex items-center gap-2.5 transition-all duration-200 group"
-                              >
-                                <div className="w-6 h-6 rounded-lg bg-slate-100 flex items-center justify-center group-hover:bg-emerald-100 group-hover:scale-105 transition-all duration-200">
-                                  <Icon icon="solar:bill-list-linear" width="13" className="text-slate-600 group-hover:text-emerald-600" />
-                                </div>
-                                <span>Create Invoice</span>
-                              </button>
-                              <div className="border-t border-slate-100 my-1.5 mx-2" />
-                              <button
-                                onClick={() => {
-                                  onQuoteFollowUpClick?.(quote, {
-                                    id: quote.id,
-                                    name: quote.client.name,
-                                    company_name: quote.client.name,
-                                  });
-                                  setOpenDropdown(null);
-                                }}
-                                className="w-full px-3 py-1.5 text-left text-sm font-medium text-slate-700 hover:bg-blue-50/80 hover:text-blue-700 flex items-center gap-2.5 transition-all duration-200 group"
-                              >
-                                <div className="w-6 h-6 rounded-lg bg-slate-100 flex items-center justify-center group-hover:bg-blue-100 group-hover:scale-105 transition-all duration-200">
-                                  <Icon icon="solar:phone-calling-rounded-linear" width="13" className="text-slate-600 group-hover:text-blue-600" />
-                                </div>
-                                <span>AI Follow-Up Call</span>
-                              </button>
-                              <button
-                                onClick={() => {
-                                  onAskAIClick?.(quote);
-                                  setOpenDropdown(null);
-                                }}
-                                className="w-full px-3 py-1.5 text-left text-sm font-medium text-slate-700 hover:bg-indigo-50/80 hover:text-indigo-700 flex items-center gap-2.5 transition-all duration-200 group"
-                              >
-                                <div className="w-6 h-6 rounded-lg bg-slate-100 flex items-center justify-center group-hover:bg-indigo-100 group-hover:scale-105 transition-all duration-200">
-                                  <Icon icon="solar:lightbulb-linear" width="13" className="text-slate-600 group-hover:text-indigo-600" />
-                                </div>
-                                <span>Ask AI</span>
-                              </button>
-                              <button
-                                onClick={() => {
-                                  setOpenDropdown(null);
-                                }}
-                                className="w-full px-3 py-1.5 text-left text-sm font-medium text-slate-700 hover:bg-slate-50/80 hover:text-slate-900 flex items-center gap-2.5 transition-all duration-200 group"
-                              >
-                                <div className="w-6 h-6 rounded-lg bg-slate-100 flex items-center justify-center group-hover:bg-slate-200 group-hover:scale-105 transition-all duration-200">
-                                  <Icon icon="solar:copy-linear" width="13" className="text-slate-600 group-hover:text-slate-700" />
-                                </div>
-                                <span>Duplicate Quote</span>
-                              </button>
-                              <div className="border-t border-slate-100 my-1.5 mx-2" />
-                              <button
-                                onClick={() => {
-                                  onDeleteQuotation?.(quote);
-                                  setOpenDropdown(null);
-                                }}
-                                className="w-full px-3 py-2 text-left text-sm font-semibold text-rose-600 hover:bg-rose-50/80 hover:text-rose-700 flex items-center gap-2.5 transition-all duration-200 group"
-                              >
-                                <div className="w-7 h-7 rounded-lg bg-rose-50 flex items-center justify-center group-hover:bg-rose-100 group-hover:scale-105 transition-all duration-200">
-                                  <Icon icon="solar:trash-bin-trash-linear" width="15" className="text-rose-500 group-hover:text-rose-600" />
-                                </div>
-                                <span>Delete Quote</span>
-                              </button>
-                            </div>
-                          )}
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
         </div>
 
-        <div className="flex bg-white/80 backdrop-blur-sm border-slate-100 border-t py-4 px-6 items-center justify-between">
-            <div className="flex items-center gap-2">
-              <span className="text-xs text-slate-500 font-medium">Showing</span>
-              <span className="inline-flex items-center px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 text-xs font-semibold">
-                1-5
-              </span>
-              <span className="text-xs text-slate-500 font-medium">of</span>
-              <span className="inline-flex items-center px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 text-xs font-semibold">
-                5
-              </span>
-            </div>
-            <div className="flex items-center gap-2">
-              <button
-                className="w-8 h-8 flex items-center justify-center border border-slate-200 rounded-lg text-slate-400 hover:bg-slate-50 hover:text-slate-600 hover:border-slate-300 transition-all disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:border-slate-200"
-                disabled
-              >
-                <Icon icon="solar:alt-arrow-left-linear" width="16" />
-              </button>
-              <button className="px-3 h-8 bg-slate-900 border border-slate-900 rounded-lg text-xs font-bold text-white shadow-sm hover:bg-slate-800 transition-colors">
-                1
-              </button>
-              <button className="w-8 h-8 flex items-center justify-center border border-slate-200 rounded-lg text-slate-400 hover:bg-slate-50 hover:text-slate-600 hover:border-slate-300 transition-all disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:border-slate-200" disabled>
-                <Icon icon="solar:alt-arrow-right-linear" width="16" />
-              </button>
+        <div className="flex border-t border-slate-100 py-3 px-4 items-center gap-3">
+          <span className="text-[11px] text-slate-400">Showing 1–{filteredQuotations.length} of {filteredQuotations.length}</span>
+          <div className="flex items-center gap-1.5">
+            <button className="w-7 h-7 flex items-center justify-center border border-slate-200 rounded-lg text-slate-300 transition-colors" disabled>
+              <Icon icon="solar:alt-arrow-left-linear" width="14" />
+            </button>
+            <button className="px-2.5 h-7 bg-slate-100 border border-slate-200 rounded-lg text-[11px] font-semibold text-slate-800">1</button>
+            <button className="w-7 h-7 flex items-center justify-center border border-slate-200 rounded-lg text-slate-300 transition-colors" disabled>
+              <Icon icon="solar:alt-arrow-right-linear" width="14" />
+            </button>
           </div>
         </div>
       </div>

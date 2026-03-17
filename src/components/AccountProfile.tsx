@@ -12,6 +12,7 @@ interface AccountProfileProps {
   onDeleteAccountClick: () => void;
   connectedTools?: Record<string, boolean>;
   onConnectedToolsChange?: (tools: Record<string, boolean>) => void;
+  onViewPlans?: () => void;
 }
 
 export default function AccountProfile({
@@ -21,7 +22,8 @@ export default function AccountProfile({
   chatUnreadCount,
   onDeleteAccountClick,
   connectedTools = {},
-  onConnectedToolsChange
+  onConnectedToolsChange,
+  onViewPlans
 }: AccountProfileProps) {
   const [showDangerZone, setShowDangerZone] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -337,12 +339,12 @@ export default function AccountProfile({
 
   return (
     <div className="flex-1 flex flex-col overflow-hidden">
-      <div className="flex-shrink-0 px-8 pt-4 pb-3 border-b border-slate-200">
+      <div className="flex-shrink-0 px-8 pt-4 pb-3 border-b border-slate-100">
         <div className="max-w-7xl mx-auto">
           <div className="flex items-center justify-between gap-6">
             <div className="flex items-center gap-4 flex-1 min-w-0">
               <div className="relative group flex-shrink-0">
-                <div className="h-14 w-14 rounded-2xl overflow-hidden bg-slate-100 border-2 border-white shadow-md ring-1 ring-slate-200">
+                <div className="h-14 w-14 rounded-2xl overflow-hidden bg-slate-100 border-2 border-white shadow-[0_2px_8px_rgba(0,0,0,0.04),0_8px_24px_rgba(0,0,0,0.03)] ring-1 ring-slate-200">
                   {avatarPreview || profileData.avatar ? (
                     <img
                       src={avatarPreview || profileData.avatar}
@@ -367,19 +369,19 @@ export default function AccountProfile({
 
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-0.5">
-                  <h1 className="text-xl font-bold text-slate-900 truncate">
+                  <h1 className="text-lg font-bold text-slate-900 tracking-tight truncate">
                     {profileData.firstName} {profileData.lastName}
                   </h1>
                 </div>
-                <p className="text-sm text-slate-600 mb-1.5 truncate">{profileData.email}</p>
-                <div className="flex items-center gap-3 text-xs">
-                  <div className="flex items-center gap-1.5 text-slate-500">
-                    <Icon icon="solar:map-point-linear" width="14" />
+                <p className="text-[13px] text-slate-500 mb-1.5 truncate">{profileData.email}</p>
+                <div className="flex items-center gap-3 text-[11px]">
+                  <div className="flex items-center gap-1.5 text-slate-400">
+                    <Icon icon="solar:map-point-linear" width="13" />
                     {profileData.location}
                   </div>
-                  <div className="h-1 w-1 rounded-full bg-slate-300"></div>
-                  <div className="flex items-center gap-1.5 text-slate-500">
-                    <Icon icon="solar:calendar-linear" width="14" />
+                  <div className="h-3 w-px bg-slate-200"></div>
+                  <div className="flex items-center gap-1.5 text-slate-400">
+                    <Icon icon="solar:calendar-linear" width="13" />
                     Member since {activityData.accountCreated}
                   </div>
                 </div>
@@ -388,13 +390,13 @@ export default function AccountProfile({
 
             <div className="flex items-center gap-1 flex-shrink-0">
               <div className="text-center px-4">
-                <div className="text-xl font-bold text-slate-900">{activityData.totalQuotations}</div>
-                <div className="text-xs text-slate-500 font-medium">Quotations</div>
+                <div className="text-lg font-bold text-slate-900">{activityData.totalQuotations}</div>
+                <div className="text-[11px] text-slate-400 font-medium uppercase tracking-wider">Quotations</div>
               </div>
-              <div className="h-10 w-px bg-slate-200"></div>
+              <div className="h-8 w-px bg-slate-200"></div>
               <div className="text-center px-4">
-                <div className="text-xl font-bold text-slate-900">{activityData.totalInvoices}</div>
-                <div className="text-xs text-slate-500 font-medium">Invoices</div>
+                <div className="text-lg font-bold text-slate-900">{activityData.totalInvoices}</div>
+                <div className="text-[11px] text-slate-400 font-medium uppercase tracking-wider">Invoices</div>
               </div>
             </div>
           </div>
@@ -411,13 +413,13 @@ export default function AccountProfile({
                   onClick={() => {
                     onTabChange(tab.id);
                   }}
-                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all ${
+                  className={`w-full flex items-center gap-2.5 px-4 py-2.5 rounded-xl text-[13px] font-medium transition-all active:scale-[0.98] ${
                     activeTab === tab.id
-                      ? 'bg-slate-900 text-white shadow-lg'
-                      : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                      ? 'bg-slate-900 text-white shadow-sm'
+                      : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800'
                   }`}
                 >
-                  <Icon icon={tab.icon} width="20" />
+                  <Icon icon={tab.icon} width="18" />
                   {tab.label}
                 </button>
               ))}
@@ -428,9 +430,9 @@ export default function AccountProfile({
             {activeTab === 'profile' && (
               <div className="space-y-6">
                 <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
-                  <div className="p-6 border-b border-slate-100">
-                    <h2 className="text-lg font-semibold text-slate-800 tracking-tight">Profile</h2>
-                    <p className="text-[13px] text-slate-400 mt-0.5">Your details, preferences, and how the AI works for you.</p>
+                  <div className="px-5 py-4 border-b border-slate-100">
+                    <h2 className="text-[13px] font-semibold text-slate-800 tracking-tight">Profile</h2>
+                    <p className="text-[11px] text-slate-400 mt-0.5">Your details, preferences, and how the AI works for you.</p>
                   </div>
 
                   <div className="p-6 space-y-5">
@@ -454,7 +456,7 @@ export default function AccountProfile({
                       <div className="flex items-center gap-3">
                         <label
                           htmlFor="avatar-upload"
-                          className="inline-flex items-center gap-2 px-4 py-2 border border-slate-200 text-slate-600 rounded-xl text-[13px] font-medium hover:bg-slate-50 hover:border-slate-300 transition-all cursor-pointer"
+                          className="inline-flex items-center gap-2 px-4 py-2 border border-slate-200 text-slate-600 rounded-xl text-[13px] font-medium hover:bg-slate-50 hover:border-slate-300 transition-all cursor-pointer active:scale-[0.98]"
                         >
                           <Icon icon="solar:camera-linear" width="15" />
                           Change photo
@@ -473,33 +475,33 @@ export default function AccountProfile({
                     {/* Personal fields */}
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-[13px] font-medium text-slate-500 mb-1.5">First Name</label>
+                        <label className="block text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-1.5">First Name</label>
                         <input
                           type="text"
                           value={profileData.firstName}
                           onChange={(e) => setProfileData({ ...profileData, firstName: e.target.value })}
-                          className="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl focus:outline-none focus:border-slate-400 text-sm text-slate-800 transition-colors"
+                          className="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl focus:outline-none focus:border-slate-400 text-[13px] text-slate-800 transition-colors"
                           placeholder="First name"
                         />
                       </div>
                       <div>
-                        <label className="block text-[13px] font-medium text-slate-500 mb-1.5">Last Name</label>
+                        <label className="block text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Last Name</label>
                         <input
                           type="text"
                           value={profileData.lastName}
                           onChange={(e) => setProfileData({ ...profileData, lastName: e.target.value })}
-                          className="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl focus:outline-none focus:border-slate-400 text-sm text-slate-800 transition-colors"
+                          className="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl focus:outline-none focus:border-slate-400 text-[13px] text-slate-800 transition-colors"
                           placeholder="Last name"
                         />
                       </div>
                       <div>
-                        <label className="block text-[13px] font-medium text-slate-500 mb-1.5">Email</label>
+                        <label className="block text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Email</label>
                         <div className="relative">
                           <input
                             type="email"
                             value={profileData.email}
                             readOnly
-                            className="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl bg-slate-50/80 text-sm text-slate-500 pr-10 cursor-not-allowed"
+                            className="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl bg-slate-50/80 text-[13px] text-slate-500 pr-10 cursor-not-allowed"
                           />
                           <div className="absolute right-3 top-1/2 -translate-y-1/2">
                             <Icon icon="solar:check-circle-bold" width="16" className="text-emerald-400" />
@@ -507,27 +509,27 @@ export default function AccountProfile({
                         </div>
                       </div>
                       <div>
-                        <label className="block text-[13px] font-medium text-slate-500 mb-1.5">Phone</label>
+                        <label className="block text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Phone</label>
                         <input
                           type="tel"
                           value={profileData.phone}
                           onChange={(e) => setProfileData({ ...profileData, phone: e.target.value })}
-                          className="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl focus:outline-none focus:border-slate-400 text-sm text-slate-800 transition-colors"
+                          className="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl focus:outline-none focus:border-slate-400 text-[13px] text-slate-800 transition-colors"
                           placeholder="+66 98 765 4321"
                         />
                       </div>
                       <div>
-                        <label className="block text-[13px] font-medium text-slate-500 mb-1.5">Location</label>
+                        <label className="block text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Location</label>
                         <input
                           type="text"
                           value={profileData.location}
                           onChange={(e) => setProfileData({ ...profileData, location: e.target.value })}
-                          className="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl focus:outline-none focus:border-slate-400 text-sm text-slate-800 transition-colors"
+                          className="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl focus:outline-none focus:border-slate-400 text-[13px] text-slate-800 transition-colors"
                           placeholder="City, Country"
                         />
                       </div>
                       <div>
-                        <label className="block text-[13px] font-medium text-slate-500 mb-1.5">Timezone</label>
+                        <label className="block text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Timezone</label>
                         <Dropdown
                           value={profileData.timezone}
                           options={[
@@ -553,53 +555,53 @@ export default function AccountProfile({
                     <div className="border-t border-slate-100" />
 
                     {/* Personalization */}
-                    <div>
-                      <div className="flex items-center gap-2 mb-1.5">
-                        <Icon icon="solar:user-circle-linear" width="15" className="text-slate-400" />
-                        <label className="text-[13px] font-medium text-slate-500">About Me</label>
+                    <div className="bg-slate-50/50 rounded-xl border border-slate-100 p-4">
+                      <div className="flex items-center gap-2 mb-2">
+                        <Icon icon="solar:user-circle-linear" width="14" className="text-slate-400" />
+                        <label className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">About Me</label>
                       </div>
                       <textarea
                         value={memoryData.aboutMe}
                         onChange={(e) => setMemoryData(prev => ({ ...prev, aboutMe: e.target.value }))}
                         placeholder="Your role, company, industry, and what you do day-to-day..."
-                        className="w-full min-h-[88px] px-3.5 py-2.5 border border-slate-200 rounded-xl text-sm text-slate-800 placeholder-slate-300 outline-none focus:border-slate-400 transition-colors resize-none leading-relaxed"
+                        className="w-full min-h-[88px] px-3.5 py-2.5 border border-slate-200 rounded-xl text-[13px] text-slate-800 placeholder-slate-300 outline-none focus:border-slate-400 transition-colors resize-none leading-relaxed bg-white/80"
                         maxLength={2000}
                       />
-                      <div className="flex justify-end mt-0.5">
+                      <div className="flex justify-end mt-1">
                         <span className="text-[10px] text-slate-300">{memoryData.aboutMe.length}/2000</span>
                       </div>
                     </div>
 
-                    <div>
-                      <div className="flex items-center gap-2 mb-1.5">
-                        <Icon icon="solar:chat-line-linear" width="15" className="text-slate-400" />
-                        <label className="text-[13px] font-medium text-slate-500">Communication Style</label>
+                    <div className="bg-slate-50/50 rounded-xl border border-slate-100 p-4">
+                      <div className="flex items-center gap-2 mb-2">
+                        <Icon icon="solar:chat-line-linear" width="14" className="text-slate-400" />
+                        <label className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Communication Style</label>
                       </div>
                       <textarea
                         value={memoryData.communicationStyle}
                         onChange={(e) => setMemoryData(prev => ({ ...prev, communicationStyle: e.target.value }))}
                         placeholder="How should Superproxy communicate with you and your clients..."
-                        className="w-full min-h-[88px] px-3.5 py-2.5 border border-slate-200 rounded-xl text-sm text-slate-800 placeholder-slate-300 outline-none focus:border-slate-400 transition-colors resize-none leading-relaxed"
+                        className="w-full min-h-[88px] px-3.5 py-2.5 border border-slate-200 rounded-xl text-[13px] text-slate-800 placeholder-slate-300 outline-none focus:border-slate-400 transition-colors resize-none leading-relaxed bg-white/80"
                         maxLength={2000}
                       />
-                      <div className="flex justify-end mt-0.5">
+                      <div className="flex justify-end mt-1">
                         <span className="text-[10px] text-slate-300">{memoryData.communicationStyle.length}/2000</span>
                       </div>
                     </div>
 
-                    <div>
-                      <div className="flex items-center gap-2 mb-1.5">
-                        <Icon icon="solar:clipboard-list-linear" width="15" className="text-slate-400" />
-                        <label className="text-[13px] font-medium text-slate-500">Custom Instructions</label>
+                    <div className="bg-slate-50/50 rounded-xl border border-slate-100 p-4">
+                      <div className="flex items-center gap-2 mb-2">
+                        <Icon icon="solar:clipboard-list-linear" width="14" className="text-slate-400" />
+                        <label className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Custom Instructions</label>
                       </div>
                       <textarea
                         value={memoryData.customInstructions}
                         onChange={(e) => setMemoryData(prev => ({ ...prev, customInstructions: e.target.value }))}
                         placeholder="Specific rules Superproxy should always follow..."
-                        className="w-full min-h-[88px] px-3.5 py-2.5 border border-slate-200 rounded-xl text-sm text-slate-800 placeholder-slate-300 outline-none focus:border-slate-400 transition-colors resize-none leading-relaxed"
+                        className="w-full min-h-[88px] px-3.5 py-2.5 border border-slate-200 rounded-xl text-[13px] text-slate-800 placeholder-slate-300 outline-none focus:border-slate-400 transition-colors resize-none leading-relaxed bg-white/80"
                         maxLength={2000}
                       />
-                      <div className="flex justify-end mt-0.5">
+                      <div className="flex justify-end mt-1">
                         <span className="text-[10px] text-slate-300">{memoryData.customInstructions.length}/2000</span>
                       </div>
                     </div>
@@ -628,9 +630,9 @@ export default function AccountProfile({
             {activeTab === 'preferences' && (
               <div className="space-y-6">
                 <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
-                  <div className="p-6 border-b border-slate-100">
-                    <h2 className="text-xl font-bold text-slate-900">Appearance</h2>
-                    <p className="text-sm text-slate-500 mt-1">Customize how the app looks and feels</p>
+                  <div className="px-5 py-4 border-b border-slate-100">
+                    <h2 className="text-[13px] font-semibold text-slate-800 tracking-tight">Appearance</h2>
+                    <p className="text-[11px] text-slate-400 mt-0.5">Customize how the app looks and feels</p>
                   </div>
 
                   <div className="p-6">
@@ -640,8 +642,8 @@ export default function AccountProfile({
                           <Icon icon={isDarkMode ? "solar:moon-bold" : "solar:sun-bold"} width="24" className="text-slate-700" />
                         </div>
                         <div>
-                          <h3 className="text-sm font-semibold text-slate-900">Dark Mode</h3>
-                          <p className="text-xs text-slate-500">Toggle between light and dark theme</p>
+                          <h3 className="text-[13px] font-semibold text-slate-800">Dark Mode</h3>
+                          <p className="text-[11px] text-slate-400">Toggle between light and dark theme</p>
                         </div>
                       </div>
                       <button
@@ -661,9 +663,9 @@ export default function AccountProfile({
                 </div>
 
                 <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
-                  <div className="p-6 border-b border-slate-100">
-                    <h2 className="text-xl font-bold text-slate-900">Notifications</h2>
-                    <p className="text-sm text-slate-500 mt-1">Manage how you receive updates</p>
+                  <div className="px-5 py-4 border-b border-slate-100">
+                    <h2 className="text-[13px] font-semibold text-slate-800 tracking-tight">Notifications</h2>
+                    <p className="text-[11px] text-slate-400 mt-0.5">Manage how you receive updates</p>
                   </div>
 
                   <div className="p-6 space-y-4">
@@ -671,8 +673,8 @@ export default function AccountProfile({
                       <div className="flex items-center gap-3">
                         <Icon icon="solar:letter-linear" width="20" className="text-slate-400" />
                         <div>
-                          <h3 className="text-sm font-semibold text-slate-900">Email Notifications</h3>
-                          <p className="text-xs text-slate-500">Receive email updates about your activity</p>
+                          <h3 className="text-[13px] font-semibold text-slate-800">Email Notifications</h3>
+                          <p className="text-[11px] text-slate-400">Receive email updates about your activity</p>
                         </div>
                       </div>
                       <button
@@ -695,8 +697,8 @@ export default function AccountProfile({
                       <div className="flex items-center gap-3">
                         <Icon icon="solar:bell-linear" width="20" className="text-slate-400" />
                         <div>
-                          <h3 className="text-sm font-semibold text-slate-900">Push Notifications</h3>
-                          <p className="text-xs text-slate-500">Receive push notifications in your browser</p>
+                          <h3 className="text-[13px] font-semibold text-slate-800">Push Notifications</h3>
+                          <p className="text-[11px] text-slate-400">Receive push notifications in your browser</p>
                         </div>
                       </div>
                       <button
@@ -719,8 +721,8 @@ export default function AccountProfile({
                       <div className="flex items-center gap-3">
                         <Icon icon="solar:mailbox-linear" width="20" className="text-slate-400" />
                         <div>
-                          <h3 className="text-sm font-semibold text-slate-900">Marketing Emails</h3>
-                          <p className="text-xs text-slate-500">Receive news and product updates</p>
+                          <h3 className="text-[13px] font-semibold text-slate-800">Marketing Emails</h3>
+                          <p className="text-[11px] text-slate-400">Receive news and product updates</p>
                         </div>
                       </div>
                       <button
@@ -744,9 +746,9 @@ export default function AccountProfile({
             {activeTab === 'security' && (
               <div className="space-y-6">
                 <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
-                  <div className="p-6 border-b border-slate-100">
-                    <h2 className="text-xl font-bold text-slate-900">Security Settings</h2>
-                    <p className="text-sm text-slate-500 mt-1">Manage your account security and authentication</p>
+                  <div className="px-5 py-4 border-b border-slate-100">
+                    <h2 className="text-[13px] font-semibold text-slate-800 tracking-tight">Security Settings</h2>
+                    <p className="text-[11px] text-slate-400 mt-0.5">Manage your account security and authentication</p>
                   </div>
 
                   <div className="p-6 space-y-3">
@@ -756,8 +758,8 @@ export default function AccountProfile({
                           <Icon icon="solar:lock-password-linear" width="22" className="text-blue-600" />
                         </div>
                         <div className="text-left">
-                          <h3 className="text-sm font-semibold text-slate-900 mb-0.5">Change Password</h3>
-                          <p className="text-xs text-slate-500">Update your account password</p>
+                          <h3 className="text-[13px] font-semibold text-slate-800 mb-0.5">Change Password</h3>
+                          <p className="text-[11px] text-slate-400">Update your account password</p>
                         </div>
                       </div>
                       <Icon icon="solar:alt-arrow-right-linear" width="20" className="text-slate-400 group-hover:text-slate-600 transition-colors" />
@@ -769,8 +771,8 @@ export default function AccountProfile({
                           <Icon icon="solar:shield-check-linear" width="22" className="text-emerald-600" />
                         </div>
                         <div className="text-left">
-                          <h3 className="text-sm font-semibold text-slate-900 mb-0.5">Two-Factor Authentication</h3>
-                          <p className="text-xs text-slate-500">Add an extra layer of security</p>
+                          <h3 className="text-[13px] font-semibold text-slate-800 mb-0.5">Two-Factor Authentication</h3>
+                          <p className="text-[11px] text-slate-400">Add an extra layer of security</p>
                         </div>
                       </div>
                       <div className="flex items-center gap-3">
@@ -786,9 +788,9 @@ export default function AccountProfile({
                     <div className="flex items-center justify-between">
                       <div>
                         <h2 className="text-xl font-bold text-slate-900">Active Sessions</h2>
-                        <p className="text-sm text-slate-500 mt-1">Manage where you're logged in</p>
+                        <p className="text-[11px] text-slate-400 mt-0.5">Manage where you're logged in</p>
                       </div>
-                      <button className="text-sm font-semibold text-rose-600 hover:text-rose-700 transition-colors">
+                      <button className="text-[13px] font-semibold text-rose-600 hover:text-rose-700 transition-colors">
                         Log out all sessions
                       </button>
                     </div>
@@ -803,16 +805,16 @@ export default function AccountProfile({
                           </div>
                           <div>
                             <div className="flex items-center gap-2">
-                              <h3 className="text-sm font-semibold text-slate-900">{session.device}</h3>
+                              <h3 className="text-[13px] font-semibold text-slate-800">{session.device}</h3>
                               {session.current && (
                                 <span className="px-2 py-0.5 bg-emerald-100 text-emerald-700 rounded text-xs font-semibold">Current</span>
                               )}
                             </div>
-                            <p className="text-xs text-slate-500 mt-0.5">{session.location} • {session.lastActive}</p>
+                            <p className="text-[11px] text-slate-400 mt-0.5">{session.location} • {session.lastActive}</p>
                           </div>
                         </div>
                         {!session.current && (
-                          <button className="text-sm font-semibold text-slate-600 hover:text-rose-600 transition-colors">
+                          <button className="text-[13px] font-semibold text-slate-500 hover:text-rose-500 transition-colors">
                             Log out
                           </button>
                         )}
@@ -823,7 +825,7 @@ export default function AccountProfile({
                   <div className="px-6 py-5 bg-slate-50 border-t border-slate-100 flex justify-end">
                     <button
                       onClick={() => alert('Logging out...')}
-                      className="inline-flex items-center gap-2 px-10 py-2.5 bg-slate-900 hover:bg-slate-800 rounded-xl transition-all text-white text-sm font-semibold shadow-sm"
+                      className="inline-flex items-center gap-2 px-10 py-2.5 bg-slate-900 hover:bg-slate-800 rounded-xl transition-all text-white text-[13px] font-semibold shadow-sm"
                     >
                       <Icon icon="solar:logout-linear" width="18" />
                       Log Out
@@ -837,6 +839,7 @@ export default function AccountProfile({
               <div className="space-y-6">
                 <PricingCard
                   onUpgradeClick={() => window.open('https://billing.stripe.com', '_blank')}
+                  onViewPlans={onViewPlans}
                 />
 
                 <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
@@ -847,8 +850,8 @@ export default function AccountProfile({
                           <Icon icon="solar:wallet-linear" width="18" className="text-slate-600" />
                         </div>
                         <div>
-                          <h2 className="text-xl font-bold text-slate-900">AI Credits</h2>
-                          <p className="text-sm text-slate-500 mt-1">
+                          <h2 className="text-[13px] font-semibold text-slate-800 tracking-tight">AI Credits</h2>
+                          <p className="text-[11px] text-slate-400 mt-0.5">
                             Credits power every AI feature, including AI calls and Ask AI.
                           </p>
                         </div>
@@ -859,12 +862,7 @@ export default function AccountProfile({
                       </div>
                     </div>
 
-                    <div className="flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50/70 px-4 py-3">
-                      <Icon icon="solar:danger-triangle-linear" width="18" className="text-amber-600 mt-0.5" />
-                      <p className="text-xs font-semibold text-amber-700">
-                        DEV NOTE: Show this section only for Pro subscribers. Remove this note before release.
-                      </p>
-                    </div>
+
                   </div>
 
                   <div className="p-6">
@@ -885,13 +883,13 @@ export default function AccountProfile({
                             </span>
                           )}
 
-                          <div className="text-sm font-semibold text-slate-600">Credits</div>
+                          <div className="text-[13px] font-semibold text-slate-600">Credits</div>
                           <div className="mt-2 flex items-baseline gap-2">
                             <span className="text-3xl font-bold text-slate-900">{pack.credits}</span>
-                            <span className="text-xs text-slate-500">credits</span>
+                            <span className="text-[11px] text-slate-400">credits</span>
                           </div>
                           <div className="mt-3 text-2xl font-bold text-slate-900">${pack.price}</div>
-                          <p className="text-xs text-slate-500 mt-2">{pack.tagline}</p>
+                          <p className="text-[11px] text-slate-400 mt-2">{pack.tagline}</p>
 
                           <button
                             className={`mt-5 w-full rounded-xl px-4 py-2.5 text-xs font-semibold transition-all ${
@@ -909,9 +907,9 @@ export default function AccountProfile({
                 </div>
 
                 <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
-                  <div className="p-6 border-b border-slate-100">
-                    <h2 className="text-xl font-bold text-slate-900">Billing History</h2>
-                    <p className="text-sm text-slate-500 mt-1">View and download your invoices</p>
+                  <div className="px-5 py-4 border-b border-slate-100">
+                    <h2 className="text-[13px] font-semibold text-slate-800 tracking-tight">Billing History</h2>
+                    <p className="text-[11px] text-slate-400 mt-0.5">View and download your invoices</p>
                   </div>
 
                   <div className="p-6">
@@ -919,22 +917,22 @@ export default function AccountProfile({
                       <div className="h-16 w-16 rounded-full bg-slate-100 flex items-center justify-center mx-auto mb-4">
                         <Icon icon="solar:bill-list-linear" width="28" className="text-slate-400" />
                       </div>
-                      <h3 className="text-sm font-semibold text-slate-900 mb-1">No billing history yet</h3>
-                      <p className="text-xs text-slate-500">Your invoices and receipts will appear here</p>
+                      <h3 className="text-[13px] font-semibold text-slate-800 mb-1">No billing history yet</h3>
+                      <p className="text-[11px] text-slate-400">Your invoices and receipts will appear here</p>
                     </div>
                   </div>
                 </div>
 
                 <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
-                  <div className="p-6 border-b border-slate-100">
-                    <h2 className="text-xl font-bold text-slate-900">Payment Method</h2>
-                    <p className="text-sm text-slate-500 mt-1">Manage your payment information</p>
+                  <div className="px-5 py-4 border-b border-slate-100">
+                    <h2 className="text-[13px] font-semibold text-slate-800 tracking-tight">Payment Method</h2>
+                    <p className="text-[11px] text-slate-400 mt-0.5">Manage your payment information</p>
                   </div>
 
                   <div className="p-6">
                     <button className="w-full flex items-center justify-center gap-2 p-5 border-2 border-dashed border-slate-300 rounded-xl text-slate-600 hover:border-slate-400 hover:text-slate-900 transition-all">
                       <Icon icon="solar:card-linear" width="20" />
-                      <span className="text-sm font-semibold">Add Payment Method</span>
+                      <span className="text-[13px] font-semibold">Add Payment Method</span>
                     </button>
                   </div>
                 </div>
@@ -944,9 +942,9 @@ export default function AccountProfile({
             {activeTab === 'workspaces' && (
               <div className="space-y-6">
                 <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
-                  <div className="p-6 border-b border-slate-100">
-                    <h2 className="text-xl font-bold text-slate-900">Your Workspaces</h2>
-                    <p className="text-sm text-slate-500 mt-1">Organizations you've joined or created</p>
+                  <div className="px-5 py-4 border-b border-slate-100">
+                    <h2 className="text-[13px] font-semibold text-slate-800 tracking-tight">Your Workspaces</h2>
+                    <p className="text-[11px] text-slate-400 mt-0.5">Organizations you've joined or created</p>
                   </div>
 
                   <div className="p-6 grid grid-cols-1 gap-4">
@@ -957,8 +955,8 @@ export default function AccountProfile({
                             <img src={company.logo} alt={company.name} className="h-full w-full object-cover" />
                           </div>
                           <div>
-                            <h3 className="text-sm font-bold text-slate-900">{company.name}</h3>
-                            <p className="text-xs text-slate-500 mt-0.5">
+                            <h3 className="text-[13px] font-semibold text-slate-800">{company.name}</h3>
+                            <p className="text-[11px] text-slate-400 mt-0.5">
                               Joined {new Date(company.joined).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                             </p>
                           </div>
@@ -985,7 +983,7 @@ export default function AccountProfile({
                 >
                   <div className="flex items-center gap-3">
                     <Icon icon="solar:danger-triangle-linear" width="20" className="text-slate-400" />
-                    <span className="text-sm font-semibold text-slate-700">Advanced Settings</span>
+                    <span className="text-[13px] font-medium text-slate-800">Advanced Settings</span>
                   </div>
                   <Icon
                     icon="solar:alt-arrow-down-linear"
@@ -1001,20 +999,20 @@ export default function AccountProfile({
                         <Icon icon="solar:danger-triangle-bold" width="24" className="text-rose-600" />
                         <div>
                           <h2 className="text-lg font-bold text-rose-900">Danger Zone</h2>
-                          <p className="text-sm text-rose-600 mt-0.5">Irreversible and destructive actions</p>
+                          <p className="text-[12px] text-rose-600 mt-0.5">Irreversible and destructive actions</p>
                         </div>
                       </div>
                     </div>
 
                     <div className="p-6">
                       <div className="bg-white border-2 border-rose-300 rounded-xl p-5">
-                        <h3 className="text-sm font-bold text-slate-900 mb-2">Delete Account</h3>
+                        <h3 className="text-[13px] font-semibold text-slate-800 mb-2">Delete Account</h3>
                         <p className="text-xs text-slate-600 leading-relaxed mb-4">
                           Once you delete your account, there is no going back. All your data, workspaces, and documents will be permanently erased. This action cannot be undone.
                         </p>
                         <button
                           onClick={onDeleteAccountClick}
-                          className="inline-flex items-center gap-2 px-4 py-2.5 bg-rose-600 hover:bg-rose-700 text-white rounded-xl text-sm font-bold transition-all shadow-sm"
+                          className="inline-flex items-center gap-2 px-4 py-2.5 bg-rose-600 hover:bg-rose-700 text-white rounded-xl text-[13px] font-semibold transition-all shadow-sm"
                         >
                           <Icon icon="solar:trash-bin-minimalistic-bold" width="16" />
                           Delete My Account
@@ -1030,18 +1028,12 @@ export default function AccountProfile({
               <div className="space-y-6">
                 {/* Voice Settings */}
                 <div className="bg-white/80 backdrop-blur-sm border border-slate-200/60 rounded-2xl shadow-sm overflow-hidden">
-                  <div className="p-8 border-b border-slate-100/50 bg-white/40">
-                    <h2 className="text-xl font-bold text-slate-900">How Superproxy Speaks for You</h2>
-                    <p className="text-sm text-slate-500 mt-1">Choose the voice that represents your business in every sales conversation. You can change this anytime.</p>
+                  <div className="px-5 py-4 border-b border-slate-100/50 bg-white/40">
+                    <h2 className="text-[13px] font-semibold text-slate-800 tracking-tight">How Superproxy Speaks for You</h2>
+                    <p className="text-[11px] text-slate-400 mt-0.5">Choose the voice that represents your business in every sales conversation. You can change this anytime.</p>
                   </div>
 
                   <div className="p-8 space-y-6">
-                    <div className="flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50/70 px-4 py-3">
-                      <Icon icon="solar:danger-triangle-linear" width="18" className="text-amber-600 mt-0.5" />
-                      <p className="text-xs font-semibold text-amber-700">
-                        DEV NOTE: For Trial users, disable this tab and show: 'Upgrade to Superproxy Pro to unlock AI features.'
-                      </p>
-                    </div>
                     {isVoiceLocked && (
                       <div className="flex items-start justify-between gap-4 p-4 border border-slate-200 rounded-2xl bg-slate-50/80">
                         <div className="flex items-start gap-3">
@@ -1049,7 +1041,7 @@ export default function AccountProfile({
                             <Icon icon="solar:lock-keyhole-linear" width="18" className="text-slate-600" />
                           </div>
                           <div>
-                            <div className="text-sm font-semibold text-slate-900">AI credits required</div>
+                            <div className="text-[13px] font-semibold text-slate-800">AI credits required</div>
                             <p className="text-xs text-slate-600 mt-0.5">
                               Purchase AI credits to unlock voice selection and previews.
                             </p>
@@ -1118,13 +1110,13 @@ export default function AccountProfile({
                               
                               {/* Voice Details */}
                               <div className="flex-1 min-w-0">
-                                <div className="text-sm font-bold text-slate-900">
+                                <div className="text-[13px] font-semibold text-slate-800">
                                   {voice.name} - {voice.role}
                                 </div>
                                 <div className="text-xs text-slate-600 mt-0.5">
                                   {voice.language} • {voice.gender} • {voice.age}
                                 </div>
-                                <div className="text-xs text-slate-500 mt-1">
+                                <div className="text-[11px] text-slate-400 mt-1">
                                   {voice.traits.join(', ')}
                                 </div>
                               </div>
@@ -1174,7 +1166,7 @@ export default function AccountProfile({
                 {/* Header */}
                 <div>
                   <h2 className="text-lg font-semibold text-slate-800">Connected Tools</h2>
-                  <p className="text-sm text-slate-400 mt-1">Manage your integrations and connected services.</p>
+                  <p className="text-[11px] text-slate-400 mt-1">Manage your integrations and connected services.</p>
                 </div>
 
                 {/* Active connectors */}
@@ -1196,7 +1188,7 @@ export default function AccountProfile({
                           <Icon icon={tool.icon} width="22" />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <div className="text-sm font-semibold text-slate-700">{tool.label}</div>
+                          <div className="text-[13px] font-medium text-slate-800">{tool.label}</div>
                           <div className="text-xs text-slate-400 mt-0.5">{tool.description}</div>
                         </div>
                         <div className="flex items-center gap-3 flex-shrink-0">
@@ -1244,7 +1236,7 @@ export default function AccountProfile({
                           <Icon icon={tool.icon} width="22" />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <div className="text-sm font-semibold text-slate-700">{tool.label}</div>
+                          <div className="text-[13px] font-medium text-slate-800">{tool.label}</div>
                           <div className="text-xs text-slate-400 mt-0.5">{tool.description}</div>
                         </div>
                         <span className="px-2.5 py-1 rounded-lg bg-slate-100 text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Soon</span>
@@ -1270,36 +1262,36 @@ export default function AccountProfile({
                 </div>
 
                 <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
-                  <div className="p-6 border-b border-slate-100">
-                    <h2 className="text-xl font-bold text-slate-900">Send Us a Message</h2>
-                    <p className="text-sm text-slate-500 mt-1">Fill out the form below and we'll get back to you shortly</p>
+                  <div className="px-5 py-4 border-b border-slate-100">
+                    <h2 className="text-[13px] font-semibold text-slate-800 tracking-tight">Send Us a Message</h2>
+                    <p className="text-[11px] text-slate-400 mt-0.5">Fill out the form below and we'll get back to you shortly</p>
                   </div>
 
                   <form onSubmit={handleContactSubmit} className="p-6 space-y-5">
                     <div className="grid grid-cols-2 gap-5">
                       <div>
-                        <label className="block text-sm font-semibold text-slate-900 mb-2">Your Name</label>
+                        <label className="block text-[13px] font-semibold text-slate-800 mb-2">Your Name</label>
                         <input
                           type="text"
                           value={`${profileData.firstName} ${profileData.lastName}`}
                           readOnly
-                          className="w-full px-4 py-3 border border-slate-200 rounded-xl bg-slate-50 text-sm cursor-not-allowed text-slate-600"
+                          className="w-full px-4 py-3 border border-slate-200 rounded-xl bg-slate-50 text-[13px] cursor-not-allowed text-slate-500"
                         />
                       </div>
 
                       <div>
-                        <label className="block text-sm font-semibold text-slate-900 mb-2">Your Email</label>
+                        <label className="block text-[13px] font-semibold text-slate-800 mb-2">Your Email</label>
                         <input
                           type="email"
                           value={profileData.email}
                           readOnly
-                          className="w-full px-4 py-3 border border-slate-200 rounded-xl bg-slate-50 text-sm cursor-not-allowed text-slate-600"
+                          className="w-full px-4 py-3 border border-slate-200 rounded-xl bg-slate-50 text-[13px] cursor-not-allowed text-slate-500"
                         />
                       </div>
                     </div>
 
                     <div>
-                      <label className="block text-sm font-semibold text-slate-900 mb-2">Subject</label>
+                      <label className="block text-[13px] font-semibold text-slate-800 mb-2">Subject</label>
                       <Dropdown
                         value={contactForm.subject}
                         options={[
@@ -1321,19 +1313,19 @@ export default function AccountProfile({
                     </div>
 
                     <div>
-                      <label className="block text-sm font-semibold text-slate-900 mb-2">Message</label>
+                      <label className="block text-[13px] font-semibold text-slate-800 mb-2">Message</label>
                       <textarea
                         value={contactForm.message}
                         onChange={(e) => setContactForm({ ...contactForm, message: e.target.value })}
                         disabled={isSubmittingContact}
-                        className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 text-sm resize-none disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 text-[13px] resize-none disabled:opacity-50 disabled:cursor-not-allowed"
                         rows={6}
                         maxLength={500}
                         placeholder="Describe your question or issue in detail..."
                         required
                       />
                       <div className="flex items-center justify-between mt-2">
-                        <p className="text-xs text-slate-500">Please be as detailed as possible</p>
+                        <p className="text-[11px] text-slate-400">Please be as detailed as possible</p>
                         <p className={`text-xs font-medium ${contactForm.message.length > 450 ? 'text-amber-600' : 'text-slate-500'}`}>
                           {contactForm.message.length}/500
                         </p>
@@ -1341,13 +1333,13 @@ export default function AccountProfile({
                     </div>
 
                     <div>
-                      <label className="block text-sm font-semibold text-slate-900 mb-3">Priority</label>
+                      <label className="block text-[13px] font-semibold text-slate-800 mb-3">Priority</label>
                       <div className="flex items-center gap-4">
                         <button
                           type="button"
                           onClick={() => setContactForm({ ...contactForm, priority: 'normal' })}
                           disabled={isSubmittingContact}
-                          className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl border-2 text-sm font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed ${
+                          className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl border-2 text-[13px] font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed ${
                             contactForm.priority === 'normal'
                               ? 'border-slate-900 bg-slate-900 text-white'
                               : 'border-slate-200 bg-white text-slate-600 hover:border-slate-300'
@@ -1360,7 +1352,7 @@ export default function AccountProfile({
                           type="button"
                           onClick={() => setContactForm({ ...contactForm, priority: 'urgent' })}
                           disabled={isSubmittingContact}
-                          className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl border-2 text-sm font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed ${
+                          className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl border-2 text-[13px] font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed ${
                             contactForm.priority === 'urgent'
                               ? 'border-amber-500 bg-amber-500 text-white'
                               : 'border-slate-200 bg-white text-slate-600 hover:border-slate-300'
@@ -1375,7 +1367,7 @@ export default function AccountProfile({
                     <button
                       type="submit"
                       disabled={isSubmittingContact || !contactForm.message.trim()}
-                      className="w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-slate-900 text-white rounded-xl text-sm font-bold hover:bg-slate-800 transition-all shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-slate-900 text-white rounded-xl text-[13px] font-semibold hover:bg-slate-800 transition-all shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       {isSubmittingContact ? (
                         <>
@@ -1393,9 +1385,9 @@ export default function AccountProfile({
                 </div>
 
                 <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
-                  <div className="p-6 border-b border-slate-100">
-                    <h2 className="text-xl font-bold text-slate-900">Other Ways to Reach Us</h2>
-                    <p className="text-sm text-slate-500 mt-1">Alternative contact methods for your convenience</p>
+                  <div className="px-5 py-4 border-b border-slate-100">
+                    <h2 className="text-[13px] font-semibold text-slate-800 tracking-tight">Other Ways to Reach Us</h2>
+                    <p className="text-[11px] text-slate-400 mt-0.5">Alternative contact methods for your convenience</p>
                   </div>
 
                   <div className="p-6 space-y-4">
@@ -1404,11 +1396,11 @@ export default function AccountProfile({
                         <Icon icon="solar:letter-linear" width="20" className="text-slate-600" />
                       </div>
                       <div className="flex-1">
-                        <h3 className="text-sm font-semibold text-slate-900 mb-1">Email Support</h3>
-                        <p className="text-xs text-slate-500 mb-2">Send us an email directly</p>
+                        <h3 className="text-[13px] font-semibold text-slate-800 mb-1">Email Support</h3>
+                        <p className="text-[11px] text-slate-400 mb-2">Send us an email directly</p>
                         <a
                           href="mailto:support@superproxy.ai"
-                          className="inline-flex items-center gap-1.5 text-sm font-semibold text-blue-600 hover:text-blue-700 transition-colors"
+                          className="inline-flex items-center gap-1.5 text-[13px] font-semibold text-blue-600 hover:text-blue-700 transition-colors"
                         >
                           support@superproxy.ai
                           <Icon icon="solar:arrow-right-up-linear" width="14" />
@@ -1431,7 +1423,7 @@ export default function AccountProfile({
                         <Icon icon="solar:chat-round-dots-bold" width="20" className="text-blue-600" />
                       </div>
                       <div className="flex-1">
-                        <h3 className="text-sm font-semibold text-slate-900 mb-1">Live Chat Support</h3>
+                        <h3 className="text-[13px] font-semibold text-slate-800 mb-1">Live Chat Support</h3>
                         <p className="text-xs text-slate-600 leading-relaxed">
                           Get instant responses from our support team through the live chat feature. Available right here in your account profile for faster assistance.
                         </p>
@@ -1447,23 +1439,24 @@ export default function AccountProfile({
 
       {showSuccessModal && (
         <div
-          className="fixed inset-0 z-[300] flex items-center justify-center p-4 bg-slate-900/20 backdrop-blur-sm animate-in fade-in duration-300"
+          className="fixed inset-0 z-[300] flex items-center justify-center p-4 bg-slate-900/20 backdrop-blur-sm"
           role="dialog"
           aria-modal="true"
+          style={{ animation: 'acct-backdrop 120ms cubic-bezier(0.32, 0.72, 0, 1)' }}
         >
           <div className="fixed inset-0" onClick={() => setShowSuccessModal(false)} />
 
-          <div className="relative bg-white w-full max-w-lg rounded-3xl shadow-2xl border border-white/50 overflow-hidden animate-in fade-in zoom-in-95 duration-300">
+          <div className="relative bg-white w-full max-w-lg rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.12)] border border-white/50 overflow-hidden" style={{ animation: 'acct-modal 180ms cubic-bezier(0.32, 0.72, 0, 1)' }}>
             <div className="p-8 flex flex-col items-center text-center">
               <div className="w-16 h-16 rounded-full bg-emerald-100 flex items-center justify-center mb-5 ring-8 ring-emerald-50">
                 <Icon icon="solar:check-circle-bold" width="32" className="text-emerald-600" />
               </div>
 
-              <h3 className="text-xl font-bold text-slate-900 mb-2">
+              <h3 className="text-base font-bold text-slate-900 mb-2">
                 Message Sent Successfully
               </h3>
 
-              <p className="text-sm text-slate-600 mb-4">
+              <p className="text-[13px] text-slate-500 mb-4">
                 Thank you for contacting us. We've received your message and will respond to <span className="font-semibold text-slate-900">{profileData.email}</span> within 24 hours.
               </p>
 
@@ -1491,7 +1484,7 @@ export default function AccountProfile({
 
               <button
                 onClick={() => setShowSuccessModal(false)}
-                className="w-full px-5 py-3 rounded-xl font-semibold text-sm text-white bg-slate-900 hover:bg-slate-800 transition-all duration-200 active:scale-95"
+                className="w-full px-5 py-3 rounded-xl font-semibold text-[13px] text-white bg-slate-900 hover:bg-slate-800 transition-all duration-200 active:scale-95"
               >
                 Got it, thanks!
               </button>
@@ -1499,6 +1492,17 @@ export default function AccountProfile({
           </div>
         </div>
       )}
+
+      <style>{`
+        @keyframes acct-backdrop {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        @keyframes acct-modal {
+          from { opacity: 0; transform: scale(0.96) translateY(6px); }
+          to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+      `}</style>
     </div>
   );
 }

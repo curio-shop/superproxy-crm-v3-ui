@@ -742,7 +742,7 @@ export default function Workspace({ onRegisterHandlers, onWorkspaceChange }: Wor
                 onClick={() => setShowWorkspaceSwitcher(!showWorkspaceSwitcher)}
                 className="relative group workspace-switcher-container"
               >
-                <div className="h-20 w-20 rounded-2xl bg-white border border-slate-100 ring-1 ring-slate-100 shadow-sm overflow-hidden flex items-center justify-center hover:border-slate-300 transition-all hover:shadow-md p-3">
+                <div className="h-20 w-20 rounded-2xl bg-white border border-slate-100/80 shadow-[0_2px_8px_rgba(0,0,0,0.04),0_8px_24px_rgba(0,0,0,0.03)] overflow-hidden flex items-center justify-center hover:border-slate-300 transition-all hover:shadow-md p-3">
                   {currentWorkspace.logo_url ? (
                     <img
                       src={currentWorkspace.logo_url}
@@ -761,11 +761,11 @@ export default function Workspace({ onRegisterHandlers, onWorkspaceChange }: Wor
                 </div>
 
                 {showWorkspaceSwitcher && (
-                  <div className="absolute top-full left-0 mt-2 w-80 bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden z-50">
+                  <div className="absolute top-full left-0 mt-2 w-80 bg-white rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.12)] border border-slate-200/60 overflow-hidden z-50 animate-in fade-in slide-in-from-top-2 duration-200">
                     <div className="p-3 border-b border-slate-100 bg-slate-50">
                       <div className="flex items-center justify-between">
-                        <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wider">Switch Workspace</h3>
-                        <span className="text-xs text-slate-500">{workspaces.length} workspaces</span>
+                        <h3 className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Switch Workspace</h3>
+                        <span className="text-[11px] text-slate-400">{workspaces.length} workspaces</span>
                       </div>
                     </div>
                     <div className="max-h-96 overflow-y-auto p-2">
@@ -776,9 +776,9 @@ export default function Workspace({ onRegisterHandlers, onWorkspaceChange }: Wor
                             e.stopPropagation();
                             handleSwitchWorkspace(workspace.id);
                           }}
-                          className={`w-full flex items-center gap-3 p-3 rounded-xl transition-all ${
+                          className={`w-full flex items-center gap-3 p-3 rounded-xl transition-all active:scale-[0.98] ${
                             workspace.id === currentWorkspace.id
-                              ? 'bg-slate-900 text-white shadow-md'
+                              ? 'bg-slate-900 text-white shadow-md ring-1 ring-white/10'
                               : 'hover:bg-slate-50 text-slate-900'
                           }`}
                         >
@@ -828,7 +828,7 @@ export default function Workspace({ onRegisterHandlers, onWorkspaceChange }: Wor
               </button>
               <div>
                 <div className="flex items-center gap-2 mb-1">
-                  <h2 className="text-2xl font-bold text-slate-900">{currentWorkspace.name}</h2>
+                  <h2 className="text-xl font-bold text-slate-900 tracking-tight">{currentWorkspace.name}</h2>
                   <button
                     onClick={() => setShowWorkspaceSwitcher(!showWorkspaceSwitcher)}
                     className="p-1.5 hover:bg-slate-100 rounded-lg transition-colors"
@@ -836,17 +836,20 @@ export default function Workspace({ onRegisterHandlers, onWorkspaceChange }: Wor
                     <Icon icon="solar:alt-arrow-down-linear" width="20" className="text-slate-400" />
                   </button>
                 </div>
-                <div className="flex items-center gap-4 text-sm text-slate-600">
+                <div className="flex items-center gap-3 text-[13px] text-slate-500">
                   {currentWorkspace.website && (
-                    <a
-                      href={`https://${currentWorkspace.website}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-1.5 hover:text-slate-900 transition-colors"
-                    >
-                      <Icon icon="solar:link-minimalistic-2-linear" width="14" />
-                      {currentWorkspace.website}
-                    </a>
+                    <>
+                      <a
+                        href={`https://${currentWorkspace.website}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-1.5 hover:text-slate-800 transition-colors"
+                      >
+                        <Icon icon="solar:link-minimalistic-2-linear" width="14" />
+                        {currentWorkspace.website}
+                      </a>
+                      <div className="h-3.5 w-px bg-slate-200"></div>
+                    </>
                   )}
                   <div className="flex items-center gap-1.5">
                     <Icon icon="solar:users-group-rounded-linear" width="14" />
@@ -859,48 +862,51 @@ export default function Workspace({ onRegisterHandlers, onWorkspaceChange }: Wor
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setShowCreateWorkspace(true)}
-                className="flex items-center gap-2 px-3 py-2 bg-slate-50 border border-slate-200 text-slate-500 rounded-xl text-sm font-medium hover:bg-slate-100 hover:text-slate-700 transition-all"
+                className="flex items-center gap-2 px-3 py-2 border border-slate-200 text-slate-600 rounded-xl text-[13px] font-medium hover:bg-slate-50 hover:text-slate-800 hover:border-slate-300 transition-all active:scale-[0.98]"
               >
-                <Icon icon="solar:add-square-linear" width="16" />
+                <Icon icon="solar:add-square-linear" width="15" />
                 <span>Create</span>
               </button>
               <button
                 onClick={() => setShowJoinWorkspace(true)}
-                className="flex items-center gap-2 px-3 py-2 bg-slate-50 border border-slate-200 text-slate-500 rounded-xl text-sm font-medium hover:bg-slate-100 hover:text-slate-700 transition-all"
+                className="flex items-center gap-2 px-3 py-2 border border-slate-200 text-slate-600 rounded-xl text-[13px] font-medium hover:bg-slate-50 hover:text-slate-800 hover:border-slate-300 transition-all active:scale-[0.98]"
               >
-                <Icon icon="solar:add-circle-linear" width="16" />
+                <Icon icon="solar:add-circle-linear" width="15" />
                 <span>Join</span>
               </button>
-              <div className="h-6 w-px bg-slate-200 mx-1"></div>
+              <div className="h-6 w-px bg-slate-200 mx-0.5"></div>
               <button
                 onClick={() => setShowAddMember(true)}
-                className="group inline-flex items-center gap-2 px-4 py-2.5 bg-white hover:bg-slate-900 border-2 border-slate-200 hover:border-slate-900 text-slate-900 hover:text-white rounded-xl text-sm font-semibold transition-all duration-200 shadow-sm hover:shadow-lg hover:shadow-slate-500/20 active:scale-95"
+                className="group inline-flex items-center gap-2 px-4 py-2 bg-white hover:bg-slate-900 border-2 border-slate-200 hover:border-slate-900 text-slate-900 hover:text-white rounded-xl text-[13px] font-semibold transition-all duration-200 shadow-sm hover:shadow-lg hover:shadow-slate-500/20 active:scale-[0.98]"
               >
-                <Icon icon="solar:user-plus-linear" width="16" className="group-hover:rotate-12 transition-transform" />
+                <Icon icon="solar:user-plus-linear" width="15" className="group-hover:rotate-12 transition-transform" />
                 <span>Invite</span>
               </button>
               <button
                 onClick={() => setShowSettings(true)}
-                className="p-2 text-slate-500 hover:text-slate-700 transition-colors"
+                className="w-9 h-9 flex items-center justify-center text-slate-400 hover:text-slate-700 hover:bg-slate-50 rounded-xl border border-transparent hover:border-slate-200 transition-all"
               >
-                <Icon icon="solar:settings-linear" width="20" />
+                <Icon icon="solar:settings-linear" width="18" />
               </button>
             </div>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
-              <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-6">
+            <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
+              <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-5 flex items-center gap-2">
+                <Icon icon="solar:buildings-2-linear" width="14" />
                 Contact Information
               </h3>
 
-              <div className="space-y-4">
+              <div className="space-y-3">
                 {currentWorkspace.email && (
-                  <div className="flex items-start gap-3">
-                    <Icon icon="solar:letter-linear" width="18" className="text-slate-400 mt-0.5" />
-                    <div className="flex-1">
-                      <div className="text-xs font-medium text-slate-500 mb-1">Email</div>
-                      <a href={`mailto:${currentWorkspace.email}`} className="text-sm text-slate-900 hover:text-slate-700 transition-colors">
+                  <div className="flex items-start gap-3 p-3 bg-slate-50/50 rounded-xl border border-slate-100">
+                    <div className="w-8 h-8 rounded-lg bg-white border border-slate-200 flex items-center justify-center flex-shrink-0">
+                      <Icon icon="solar:letter-linear" width="14" className="text-slate-500" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-0.5">Email</p>
+                      <a href={`mailto:${currentWorkspace.email}`} className="text-[13px] font-medium text-slate-900 hover:text-slate-700 transition-colors break-all">
                         {currentWorkspace.email}
                       </a>
                     </div>
@@ -908,11 +914,13 @@ export default function Workspace({ onRegisterHandlers, onWorkspaceChange }: Wor
                 )}
 
                 {currentWorkspace.phone && (
-                  <div className="flex items-start gap-3">
-                    <Icon icon="solar:phone-linear" width="18" className="text-slate-400 mt-0.5" />
-                    <div className="flex-1">
-                      <div className="text-xs font-medium text-slate-500 mb-1">Phone</div>
-                      <a href={`tel:${currentWorkspace.phone}`} className="text-sm text-slate-900 hover:text-slate-700 transition-colors">
+                  <div className="flex items-start gap-3 p-3 bg-slate-50/50 rounded-xl border border-slate-100">
+                    <div className="w-8 h-8 rounded-lg bg-white border border-slate-200 flex items-center justify-center flex-shrink-0">
+                      <Icon icon="solar:phone-linear" width="14" className="text-slate-500" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-0.5">Phone</p>
+                      <a href={`tel:${currentWorkspace.phone}`} className="text-[13px] font-medium text-slate-900 hover:text-slate-700 transition-colors">
                         {currentWorkspace.phone}
                       </a>
                     </div>
@@ -920,32 +928,40 @@ export default function Workspace({ onRegisterHandlers, onWorkspaceChange }: Wor
                 )}
 
                 {currentWorkspace.address && (
-                  <div className="flex items-start gap-3">
-                    <Icon icon="solar:map-point-linear" width="18" className="text-slate-400 mt-0.5" />
-                    <div className="flex-1">
-                      <div className="text-xs font-medium text-slate-500 mb-1">Address</div>
-                      <div className="text-sm text-slate-900">{currentWorkspace.address}</div>
+                  <div className="flex items-start gap-3 p-3 bg-slate-50/50 rounded-xl border border-slate-100">
+                    <div className="w-8 h-8 rounded-lg bg-white border border-slate-200 flex items-center justify-center flex-shrink-0">
+                      <Icon icon="solar:map-point-linear" width="14" className="text-slate-500" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-0.5">Address</p>
+                      <p className="text-[13px] font-medium text-slate-900">{currentWorkspace.address}</p>
                     </div>
                   </div>
                 )}
 
-                <div className="pt-3 border-t border-slate-100">
-                  <div className="flex items-start gap-3">
-                    <Icon icon="solar:calendar-linear" width="18" className="text-slate-400 mt-0.5" />
-                    <div className="flex-1">
-                      <div className="text-xs font-medium text-slate-500 mb-1">Created On</div>
-                      <div className="text-sm text-slate-900">{formatDate(currentWorkspace.created_at)}</div>
-                    </div>
+                <div className="flex items-start gap-3 p-3 bg-slate-50/50 rounded-xl border border-slate-100">
+                  <div className="w-8 h-8 rounded-lg bg-white border border-slate-200 flex items-center justify-center flex-shrink-0">
+                    <Icon icon="solar:calendar-linear" width="14" className="text-slate-500" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-0.5">Created On</p>
+                    <p className="text-[13px] font-medium text-slate-900">{formatDate(currentWorkspace.created_at)}</p>
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className="lg:col-span-2 bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
-              <div className="flex items-center justify-between mb-6">
-                <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider">
-                  Team Members
-                </h3>
+            <div className="lg:col-span-2 bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
+              <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100">
+                <div className="flex items-center gap-2.5">
+                  <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-2">
+                    <Icon icon="solar:users-group-rounded-linear" width="14" />
+                    Team Members
+                  </h3>
+                  <span className="inline-flex items-center px-2 py-0.5 rounded-md bg-slate-100 text-[11px] font-semibold text-slate-600">
+                    {members.length}
+                  </span>
+                </div>
                 {!isOwner && (
                   <div className="relative group">
                     <button
@@ -961,14 +977,14 @@ export default function Workspace({ onRegisterHandlers, onWorkspaceChange }: Wor
                 )}
               </div>
 
-              <div className="space-y-3">
+              <div className="divide-y divide-slate-50">
                 {members.map((member) => (
                   <div
                     key={member.id}
-                    className="flex items-center justify-between p-4 bg-slate-50 rounded-xl hover:bg-slate-100 transition-colors group"
+                    className="flex items-center justify-between px-5 py-3.5 hover:bg-slate-50/70 transition-colors group"
                   >
                     <div className="flex items-center gap-3 min-w-0">
-                      <div className="h-10 w-10 rounded-full overflow-hidden shadow-sm flex-shrink-0 ring-2 ring-white">
+                      <div className="h-8 w-8 rounded-lg overflow-hidden shadow-sm flex-shrink-0 ring-2 ring-white">
                         <img
                           src={member.avatar_url}
                           alt={member.user_name}
@@ -977,16 +993,16 @@ export default function Workspace({ onRegisterHandlers, onWorkspaceChange }: Wor
                       </div>
                       <div className="min-w-0">
                         <div className="flex items-center gap-2">
-                          <span className="text-sm font-semibold text-slate-900 truncate">
+                          <span className="text-[13px] font-medium text-slate-800 truncate">
                             {member.user_name}
                           </span>
                           {member.user_email === currentUserEmail && (
-                            <span className="inline-flex items-center px-1.5 py-0.5 rounded bg-slate-100 text-[10px] font-medium text-slate-600 uppercase tracking-wide flex-shrink-0">
+                            <span className="inline-flex items-center px-1.5 py-0.5 rounded bg-slate-100 text-[10px] font-medium text-slate-500 uppercase tracking-wide flex-shrink-0">
                               You
                             </span>
                           )}
                         </div>
-                        <div className="text-xs text-slate-500 truncate">{member.user_email}</div>
+                        <div className="text-[11px] text-slate-400 font-mono truncate">{member.user_email}</div>
                       </div>
                     </div>
                     <div className="flex items-center gap-2 flex-shrink-0">
@@ -1015,7 +1031,7 @@ export default function Workspace({ onRegisterHandlers, onWorkspaceChange }: Wor
                             </button>
 
                             {openRoleDropdown === member.id && (
-                              <div className="absolute top-full right-0 mt-1 w-36 bg-white border border-slate-200 rounded-xl shadow-lg overflow-hidden z-50">
+                              <div className="absolute top-full right-0 mt-1.5 w-36 bg-white border border-slate-200/60 rounded-xl shadow-[0_8px_32px_rgba(0,0,0,0.12)] overflow-hidden z-50 animate-in fade-in slide-in-from-top-2 duration-200">
                                 <button
                                   onClick={() => {
                                     handleUpdateMemberRole(member.id, 'admin');
@@ -1071,22 +1087,29 @@ export default function Workspace({ onRegisterHandlers, onWorkspaceChange }: Wor
           {currentWorkspace.show_leaderboard && <Leaderboard />}
 
           {currentWorkspace.profile && (
-            <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
-              <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-4">
+            <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
+              <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4 flex items-center gap-2">
+                <Icon icon="solar:document-text-linear" width="14" />
                 Company Profile
               </h3>
-              <p className="text-sm text-slate-700 leading-relaxed">{currentWorkspace.profile}</p>
+              <p className="text-[13px] text-slate-600 leading-relaxed">{currentWorkspace.profile}</p>
             </div>
           )}
 
           <div id="workspace-activity" className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden scroll-mt-6">
-            <div className="p-6 border-b border-slate-100">
-              <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider">
-                Recent Activity
-              </h3>
+            <div className="px-5 py-4 border-b border-slate-100 flex items-center justify-between">
+              <div className="flex items-center gap-2.5">
+                <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-2">
+                  <Icon icon="solar:history-linear" width="14" />
+                  Recent Activity
+                </h3>
+                <span className="inline-flex items-center px-2 py-0.5 rounded-md bg-slate-100 text-[11px] font-semibold text-slate-600">
+                  {activities.length}
+                </span>
+              </div>
             </div>
 
-            <div className="p-6 space-y-6 relative min-h-[400px]">
+            <div className="p-5 space-y-5 relative min-h-[400px]">
               {activities.length === 0 ? (
                 <div className="text-center py-12 text-slate-400">
                   <Icon icon="solar:history-linear" width="32" className="mx-auto mb-3 opacity-50" />
@@ -1094,31 +1117,33 @@ export default function Workspace({ onRegisterHandlers, onWorkspaceChange }: Wor
                 </div>
               ) : (
                 <>
-                  <div className="absolute left-[38px] top-6 bottom-6 w-px bg-slate-200/60"></div>
+                  <div className="absolute left-[33px] top-5 bottom-5 w-px bg-slate-100"></div>
                   {activities
                     .slice((activityPage - 1) * activityPerPage, activityPage * activityPerPage)
                     .map((activity) => {
                       const iconConfig = getActivityIcon(activity.action);
                       return (
-                        <div key={activity.id} className="relative flex gap-4">
+                        <div key={activity.id} className="relative flex gap-3.5">
                           <div className="relative z-10 flex-shrink-0 mt-0.5">
                             <div
-                              className={`h-8 w-8 rounded-full ${iconConfig.iconBg} border flex items-center justify-center ${iconConfig.iconColor} shadow-lg ring-4 ${iconConfig.ringColor}`}
+                              className={`h-7 w-7 rounded-full ${iconConfig.iconBg} border flex items-center justify-center ${iconConfig.iconColor} shadow-sm ring-3 ${iconConfig.ringColor}`}
                             >
-                              <Icon icon={iconConfig.icon} width="14" />
+                              <Icon icon={iconConfig.icon} width="13" />
                             </div>
                           </div>
-                          <div className="flex-1 space-y-1.5">
+                          <div className="flex-1 min-w-0">
                             <div className="flex items-start justify-between gap-2">
-                              <p className="text-sm font-semibold text-slate-900">{activity.action}</p>
-                              <span className="text-xs text-slate-400 flex-shrink-0">
+                              <div className="min-w-0">
+                                <p className="text-[13px] font-semibold text-slate-800">{activity.action}</p>
+                                <p className="text-[12px] text-slate-500 mt-0.5">
+                                  <span className="text-slate-700 font-medium">{activity.user_name}</span>
+                                  {activity.details && <span className="text-slate-400"> — {activity.details}</span>}
+                                </p>
+                              </div>
+                              <span className="text-[10px] text-slate-400 flex-shrink-0 mt-0.5 font-medium">
                                 {formatTimeAgo(activity.created_at)}
                               </span>
                             </div>
-                            <p className="text-sm text-slate-500 leading-relaxed">
-                              <span className="text-slate-900 font-semibold">{activity.user_name}</span>
-                              {activity.details && <span className="text-slate-600"> {activity.details}</span>}
-                            </p>
                           </div>
                         </div>
                       );
@@ -1127,263 +1152,283 @@ export default function Workspace({ onRegisterHandlers, onWorkspaceChange }: Wor
               )}
             </div>
 
-            {activities.length > activityPerPage && (
-              <div className="flex bg-white/80 backdrop-blur-sm border-slate-100 border-t py-4 px-6 items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <span className="text-xs text-slate-500 font-medium">Showing</span>
-                  <span className="inline-flex items-center px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 text-xs font-semibold">
-                    {(activityPage - 1) * activityPerPage + 1}-{Math.min(activityPage * activityPerPage, activities.length)}
+            {activities.length > activityPerPage && (() => {
+              const totalPages = Math.ceil(activities.length / activityPerPage);
+              return (
+                <div className="flex border-t border-slate-100 py-3 px-4 items-center gap-3">
+                  <span className="text-[11px] text-slate-400">
+                    Showing {(activityPage - 1) * activityPerPage + 1}–{Math.min(activityPage * activityPerPage, activities.length)} of {activities.length}
                   </span>
-                  <span className="text-xs text-slate-500 font-medium">of</span>
-                  <span className="inline-flex items-center px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 text-xs font-semibold">
-                    {activities.length}
-                  </span>
+                  <div className="flex items-center gap-1.5">
+                    <button
+                      onClick={() => setActivityPage(Math.max(1, activityPage - 1))}
+                      disabled={activityPage === 1}
+                      className={`w-7 h-7 flex items-center justify-center border border-slate-200 rounded-lg transition-colors ${
+                        activityPage === 1
+                          ? 'text-slate-300'
+                          : 'text-slate-400 hover:text-slate-600 hover:bg-slate-50'
+                      }`}
+                    >
+                      <Icon icon="solar:alt-arrow-left-linear" width="14" />
+                    </button>
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => {
+                      if (totalPages <= 5 || page === 1 || page === totalPages || Math.abs(page - activityPage) <= 1) {
+                        return (
+                          <button
+                            key={page}
+                            onClick={() => setActivityPage(page)}
+                            className={`px-2.5 h-7 rounded-lg text-[11px] transition-colors ${
+                              page === activityPage
+                                ? 'bg-slate-100 border border-slate-200 font-semibold text-slate-800'
+                                : 'border border-slate-200 font-medium text-slate-500 hover:bg-slate-50'
+                            }`}
+                          >
+                            {page}
+                          </button>
+                        );
+                      }
+                      if (page === 2 && activityPage > 3) {
+                        return <span key="start-ellipsis" className="text-slate-300 text-[11px] px-0.5">...</span>;
+                      }
+                      if (page === totalPages - 1 && activityPage < totalPages - 2) {
+                        return <span key="end-ellipsis" className="text-slate-300 text-[11px] px-0.5">...</span>;
+                      }
+                      return null;
+                    })}
+                    <button
+                      onClick={() => setActivityPage(Math.min(totalPages, activityPage + 1))}
+                      disabled={activityPage >= totalPages}
+                      className={`w-7 h-7 flex items-center justify-center border border-slate-200 rounded-lg transition-colors ${
+                        activityPage >= totalPages
+                          ? 'text-slate-300'
+                          : 'text-slate-400 hover:text-slate-600 hover:bg-slate-50'
+                      }`}
+                    >
+                      <Icon icon="solar:alt-arrow-right-linear" width="14" />
+                    </button>
+                  </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={() => setActivityPage(Math.max(1, activityPage - 1))}
-                    disabled={activityPage === 1}
-                    className="p-2 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 hover:border-slate-300 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-white disabled:hover:border-slate-200 transition-all"
-                  >
-                    <Icon icon="solar:alt-arrow-left-linear" width="16" />
-                  </button>
-                  <button
-                    onClick={() => setActivityPage(Math.min(Math.ceil(activities.length / activityPerPage), activityPage + 1))}
-                    disabled={activityPage >= Math.ceil(activities.length / activityPerPage)}
-                    className="p-2 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 hover:border-slate-300 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-white disabled:hover:border-slate-200 transition-all"
-                  >
-                    <Icon icon="solar:alt-arrow-right-linear" width="16" />
-                  </button>
-                </div>
-              </div>
-            )}
+              );
+            })()}
           </div>
         </div>
       </div>
 
       {showSettings && createPortal(
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[1000] p-4">
-          <div className="bg-white rounded-3xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-hidden flex flex-col">
-            <div className="flex items-center justify-between p-6 border-b border-slate-100">
+        <div className="fixed inset-0 z-[200] flex justify-end" role="dialog" aria-modal="true">
+          <div
+            className="fixed inset-0 bg-slate-900/20 backdrop-blur-sm"
+            onClick={() => setShowSettings(false)}
+            style={{ animation: 'ws-backdrop 120ms cubic-bezier(0.32, 0.72, 0, 1)' }}
+          />
+          <div
+            className="relative w-full max-w-[540px] h-full bg-white/80 backdrop-blur-2xl shadow-2xl flex flex-col border-l border-white/60 rounded-l-[32px] ml-auto overflow-hidden"
+            style={{ animation: 'ws-drawer 250ms cubic-bezier(0.32, 0.72, 0, 1)' }}
+          >
+            <div className="px-8 py-6 border-b border-slate-100/50 bg-white/40 backdrop-blur-md z-10 flex items-center justify-between sticky top-0">
               <div className="flex items-center gap-3">
                 <div className="h-10 w-10 rounded-xl bg-slate-900 flex items-center justify-center">
                   <Icon icon="solar:settings-linear" width="18" className="text-white" />
                 </div>
                 <div>
-                  <h2 className="text-lg font-bold text-slate-900">Workspace Settings</h2>
+                  <h2 className="text-lg text-slate-900 tracking-tight font-bold">Workspace Settings</h2>
                   <p className="text-xs text-slate-500 mt-0.5">Manage your workspace information</p>
                 </div>
               </div>
               <button
                 onClick={() => setShowSettings(false)}
-                className="p-2 hover:bg-slate-100 rounded-lg transition-colors"
+                className="w-9 h-9 text-slate-400 hover:text-slate-600 hover:bg-slate-100/50 rounded-xl border border-transparent hover:border-slate-200/60 transition-all flex items-center justify-center"
               >
-                <Icon icon="solar:close-circle-linear" width="20" className="text-slate-400" />
+                <Icon icon="solar:close-circle-linear" width="20" />
               </button>
             </div>
 
-            <div className="flex-1 overflow-y-auto p-6 space-y-6">
-              <div className="space-y-2">
-                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider">
-                  Company Logo
-                </label>
-                <p className="text-xs text-slate-500 mb-3">Upload a square logo (max 5MB). PNG, JPG, or SVG format.</p>
-
-                <div className="flex items-start gap-4">
-                  <div className="relative">
-                    <div className="h-24 w-24 rounded-xl bg-white border border-slate-200 ring-1 ring-slate-100 overflow-hidden flex items-center justify-center p-3 shadow-sm">
-                      {logoPreview ? (
-                        <img
-                          src={logoPreview}
-                          alt="Logo preview"
-                          className="h-full w-full object-contain"
-                        />
-                      ) : (
-                        <Icon icon="solar:gallery-linear" width="24" className="text-slate-400" />
+            <div className="flex-1 overflow-y-auto p-8 custom-scrollbar">
+              <div className="space-y-5">
+                {/* Logo Section */}
+                <div className="bg-white/50 rounded-2xl p-5 border border-white/60 shadow-sm ring-1 ring-slate-100/50">
+                  <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4 flex items-center gap-2">
+                    <Icon icon="solar:gallery-linear" width="14" />
+                    Company Logo
+                  </h4>
+                  <div className="flex items-start gap-4">
+                    <div className="relative">
+                      <div className="h-20 w-20 rounded-xl bg-white border border-slate-200 ring-1 ring-slate-100 overflow-hidden flex items-center justify-center p-2.5 shadow-sm">
+                        {logoPreview ? (
+                          <img src={logoPreview} alt="Logo preview" className="h-full w-full object-contain" />
+                        ) : (
+                          <Icon icon="solar:gallery-linear" width="24" className="text-slate-300" />
+                        )}
+                      </div>
+                      {uploadingLogo && (
+                        <div className="absolute inset-0 bg-white/80 flex items-center justify-center rounded-xl">
+                          <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-slate-900"></div>
+                        </div>
                       )}
                     </div>
-                    {uploadingLogo && (
-                      <div className="absolute inset-0 bg-white/80 flex items-center justify-center rounded-xl">
-                        <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-slate-900"></div>
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="flex-1 space-y-2">
-                    <input
-                      ref={fileInputRef}
-                      type="file"
-                      accept="image/*"
-                      onChange={handleLogoUpload}
-                      className="hidden"
-                      id="logo-upload"
-                    />
-                    <label
-                      htmlFor="logo-upload"
-                      className="inline-flex items-center gap-2 px-4 py-2 bg-slate-900 text-white rounded-lg text-sm font-semibold hover:bg-slate-800 transition-all cursor-pointer"
-                    >
-                      <Icon icon="solar:upload-linear" width="16" />
-                      Upload Logo
-                    </label>
-                    {logoPreview && (
-                      <button
-                        onClick={handleRemoveLogo}
-                        className="inline-flex items-center gap-2 px-4 py-2 bg-slate-100 border border-slate-200 text-slate-700 rounded-lg text-sm font-semibold hover:bg-slate-200 transition-all ml-2"
+                    <div className="flex-1 space-y-2">
+                      <input ref={fileInputRef} type="file" accept="image/*" onChange={handleLogoUpload} className="hidden" id="logo-upload" />
+                      <label
+                        htmlFor="logo-upload"
+                        className="inline-flex items-center gap-2 px-3.5 py-2 bg-slate-900 text-white rounded-xl text-[13px] font-semibold hover:bg-slate-800 transition-all cursor-pointer"
                       >
-                        <Icon icon="solar:trash-bin-trash-linear" width="16" />
-                        Remove
-                      </button>
-                    )}
-                  </div>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div className="col-span-2">
-                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
-                    Company Name
-                  </label>
-                  <input
-                    type="text"
-                    value={editingWorkspace.name || ''}
-                    onChange={(e) => setEditingWorkspace({ ...editingWorkspace, name: e.target.value })}
-                    className="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-400 text-sm"
-                    placeholder="Enter company name"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Email</label>
-                  <input
-                    type="email"
-                    value={editingWorkspace.email || ''}
-                    onChange={(e) => setEditingWorkspace({ ...editingWorkspace, email: e.target.value })}
-                    className="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-400 text-sm"
-                    placeholder="hello@company.com"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Phone</label>
-                  <input
-                    type="tel"
-                    value={editingWorkspace.phone || ''}
-                    onChange={(e) => setEditingWorkspace({ ...editingWorkspace, phone: e.target.value })}
-                    className="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-400 text-sm"
-                    placeholder="+1 (555) 000-0000"
-                  />
-                </div>
-
-                <div className="col-span-2">
-                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Website</label>
-                  <input
-                    type="text"
-                    value={editingWorkspace.website || ''}
-                    onChange={(e) => setEditingWorkspace({ ...editingWorkspace, website: e.target.value })}
-                    className="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-400 text-sm"
-                    placeholder="www.example.com"
-                  />
-                </div>
-
-                <div className="col-span-2">
-                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Address</label>
-                  <textarea
-                    value={editingWorkspace.address || ''}
-                    onChange={(e) => setEditingWorkspace({ ...editingWorkspace, address: e.target.value })}
-                    className="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-400 text-sm resize-none"
-                    rows={2}
-                    placeholder="123 Business Street, City, Country"
-                  />
-                </div>
-
-                <div className="col-span-2">
-                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Company Profile</label>
-                  <textarea
-                    value={editingWorkspace.profile || ''}
-                    onChange={(e) => setEditingWorkspace({ ...editingWorkspace, profile: e.target.value })}
-                    className="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-400 text-sm resize-none"
-                    rows={4}
-                    placeholder="Tell us about your company, what you do, and what makes you unique..."
-                  />
-                  <p className="text-xs text-slate-500 mt-1.5">
-                    A brief description that helps others understand your business
-                  </p>
-                </div>
-              </div>
-
-              <div className="pt-6 mt-6 border-t border-slate-200">
-                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-3">
-                  Display Preferences
-                </label>
-                <div className="flex items-center justify-between p-4 bg-slate-50 border border-slate-200 rounded-xl hover:bg-slate-100 transition-colors">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-1">
-                      <Icon icon="solar:chart-bold" width="16" className="text-slate-600" />
-                      <span className="text-sm font-semibold text-slate-900">Sales Leaderboard</span>
+                        <Icon icon="solar:upload-linear" width="14" />
+                        Upload
+                      </label>
+                      {logoPreview && (
+                        <button
+                          onClick={handleRemoveLogo}
+                          className="inline-flex items-center gap-2 px-3.5 py-2 border border-slate-200 text-slate-600 rounded-xl text-[13px] font-medium hover:bg-slate-50 transition-all ml-2"
+                        >
+                          <Icon icon="solar:trash-bin-trash-linear" width="14" />
+                          Remove
+                        </button>
+                      )}
+                      <p className="text-[11px] text-slate-400">Max 5MB. PNG, JPG, or SVG.</p>
                     </div>
-                    <p className="text-xs text-slate-600">
-                      Show or hide the sales leaderboard section in your workspace
-                    </p>
                   </div>
-                  <button
-                    type="button"
-                    onClick={() => setEditingWorkspace({ ...editingWorkspace, show_leaderboard: !editingWorkspace.show_leaderboard })}
-                    className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-slate-900 focus:ring-offset-2 ${
-                      editingWorkspace.show_leaderboard ? 'bg-slate-900' : 'bg-slate-300'
-                    }`}
-                  >
-                    <span
-                      className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-                        editingWorkspace.show_leaderboard ? 'translate-x-5' : 'translate-x-0'
-                      }`}
-                    />
-                  </button>
                 </div>
-              </div>
 
-              {isOwner && (
-                <div className="pt-6 mt-6 border-t border-slate-200">
-                  <div className="bg-gradient-to-br from-rose-50 to-red-50/30 border border-rose-200/60 rounded-2xl p-6 relative overflow-hidden">
+                {/* Company Details */}
+                <div className="bg-white/50 rounded-2xl p-5 border border-white/60 shadow-sm ring-1 ring-slate-100/50">
+                  <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4 flex items-center gap-2">
+                    <Icon icon="solar:buildings-2-linear" width="14" />
+                    Company Details
+                  </h4>
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Company Name</label>
+                      <input
+                        type="text"
+                        value={editingWorkspace.name || ''}
+                        onChange={(e) => setEditingWorkspace({ ...editingWorkspace, name: e.target.value })}
+                        className="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl focus:outline-none focus:border-slate-400 text-[13px] bg-white/80"
+                        placeholder="Enter company name"
+                      />
+                    </div>
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Email</label>
+                        <input
+                          type="email"
+                          value={editingWorkspace.email || ''}
+                          onChange={(e) => setEditingWorkspace({ ...editingWorkspace, email: e.target.value })}
+                          className="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl focus:outline-none focus:border-slate-400 text-[13px] bg-white/80"
+                          placeholder="hello@company.com"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Phone</label>
+                        <input
+                          type="tel"
+                          value={editingWorkspace.phone || ''}
+                          onChange={(e) => setEditingWorkspace({ ...editingWorkspace, phone: e.target.value })}
+                          className="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl focus:outline-none focus:border-slate-400 text-[13px] bg-white/80"
+                          placeholder="+1 (555) 000-0000"
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <label className="block text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Website</label>
+                      <input
+                        type="text"
+                        value={editingWorkspace.website || ''}
+                        onChange={(e) => setEditingWorkspace({ ...editingWorkspace, website: e.target.value })}
+                        className="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl focus:outline-none focus:border-slate-400 text-[13px] bg-white/80"
+                        placeholder="www.example.com"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Address</label>
+                      <textarea
+                        value={editingWorkspace.address || ''}
+                        onChange={(e) => setEditingWorkspace({ ...editingWorkspace, address: e.target.value })}
+                        className="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl focus:outline-none focus:border-slate-400 text-[13px] resize-none bg-white/80"
+                        rows={2}
+                        placeholder="123 Business Street, City, Country"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Company Profile</label>
+                      <textarea
+                        value={editingWorkspace.profile || ''}
+                        onChange={(e) => setEditingWorkspace({ ...editingWorkspace, profile: e.target.value })}
+                        className="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl focus:outline-none focus:border-slate-400 text-[13px] resize-none bg-white/80"
+                        rows={3}
+                        placeholder="Tell us about your company..."
+                      />
+                      <p className="text-[11px] text-slate-400 mt-1.5">A brief description that helps others understand your business</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Display Preferences */}
+                <div className="bg-white/50 rounded-2xl p-5 border border-white/60 shadow-sm ring-1 ring-slate-100/50">
+                  <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4 flex items-center gap-2">
+                    <Icon icon="solar:tuning-2-linear" width="14" />
+                    Display Preferences
+                  </h4>
+                  <div className="flex items-center justify-between p-3.5 bg-slate-50/50 border border-slate-100 rounded-xl">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-0.5">
+                        <Icon icon="solar:chart-bold" width="14" className="text-slate-500" />
+                        <span className="text-[13px] font-semibold text-slate-800">Sales Leaderboard</span>
+                      </div>
+                      <p className="text-[11px] text-slate-500">Show or hide the leaderboard section</p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setEditingWorkspace({ ...editingWorkspace, show_leaderboard: !editingWorkspace.show_leaderboard })}
+                      className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out ${
+                        editingWorkspace.show_leaderboard ? 'bg-slate-900' : 'bg-slate-300'
+                      }`}
+                    >
+                      <span
+                        className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                          editingWorkspace.show_leaderboard ? 'translate-x-5' : 'translate-x-0'
+                        }`}
+                      />
+                    </button>
+                  </div>
+                </div>
+
+                {/* Danger Zone */}
+                {isOwner && (
+                  <div className="bg-gradient-to-br from-rose-50/80 to-red-50/30 rounded-2xl p-5 border border-rose-200/40 relative overflow-hidden">
                     <div className="absolute top-0 right-0 w-32 h-32 bg-rose-500/5 rounded-full blur-3xl"></div>
                     <div className="relative">
-                      <div className="flex items-start gap-4">
-                        <div className="flex-shrink-0">
-                          <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-rose-500 to-red-600 flex items-center justify-center shadow-lg shadow-rose-500/20">
-                            <Icon icon="solar:danger-bold" width="24" className="text-white" />
-                          </div>
-                        </div>
-                        <div className="flex-1">
-                          <h3 className="text-sm font-bold text-slate-900 mb-1 tracking-tight">Danger Zone</h3>
-                          <p className="text-xs text-slate-600 leading-relaxed mb-4">
-                            Once you delete this workspace, all data including members, invoices, and documents will be permanently removed. This action cannot be undone.
-                          </p>
-                          <button
-                            onClick={() => setShowDeleteWorkspaceConfirm(true)}
-                            className="group inline-flex items-center gap-2 px-4 py-2.5 bg-white hover:bg-rose-600 border-2 border-rose-200 hover:border-rose-600 text-rose-600 hover:text-white rounded-xl text-sm font-semibold transition-all duration-200 shadow-sm hover:shadow-lg hover:shadow-rose-500/20 active:scale-95"
-                          >
-                            <Icon icon="solar:trash-bin-minimalistic-bold" width="16" className="group-hover:rotate-12 transition-transform" />
-                            <span>Delete Workspace</span>
-                          </button>
-                        </div>
-                      </div>
+                      <h4 className="text-xs font-bold text-rose-500 uppercase tracking-wider mb-3 flex items-center gap-2">
+                        <Icon icon="solar:danger-bold" width="14" />
+                        Danger Zone
+                      </h4>
+                      <p className="text-[12px] text-slate-600 leading-relaxed mb-4">
+                        Once you delete this workspace, all data including members, invoices, and documents will be permanently removed.
+                      </p>
+                      <button
+                        onClick={() => setShowDeleteWorkspaceConfirm(true)}
+                        className="group inline-flex items-center gap-2 px-4 py-2 bg-white hover:bg-rose-600 border border-rose-200 hover:border-rose-600 text-rose-600 hover:text-white rounded-xl text-[13px] font-semibold transition-all duration-200 shadow-sm hover:shadow-lg hover:shadow-rose-500/20 active:scale-[0.98]"
+                      >
+                        <Icon icon="solar:trash-bin-minimalistic-bold" width="14" className="group-hover:rotate-12 transition-transform" />
+                        <span>Delete Workspace</span>
+                      </button>
                     </div>
                   </div>
-                </div>
-              )}
+                )}
+              </div>
             </div>
 
-            <div className="flex items-center justify-between p-6 border-t border-slate-100 bg-slate-50">
-              <p className="text-xs text-slate-500">Changes will be saved to your workspace</p>
+            <div className="px-8 py-5 border-t border-slate-100/50 bg-white/40 backdrop-blur-md flex items-center justify-between">
+              <p className="text-[11px] text-slate-400">Changes will be saved to your workspace</p>
               <div className="flex items-center gap-3">
                 <button
                   onClick={() => setShowSettings(false)}
-                  className="px-4 py-2 border border-slate-200 rounded-xl text-sm font-semibold text-slate-700 hover:bg-white transition-all"
+                  className="px-4 py-2 border border-slate-200 rounded-xl text-[13px] font-semibold text-slate-600 hover:bg-slate-50 transition-all active:scale-[0.98]"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={handleSaveSettings}
-                  className="px-4 py-2 bg-slate-900 text-white rounded-xl text-sm font-semibold hover:bg-slate-800 transition-all shadow-sm"
+                  className="px-4 py-2 bg-slate-900 text-white rounded-xl text-[13px] font-semibold hover:bg-slate-800 transition-all shadow-sm active:scale-[0.98]"
                 >
                   Save Changes
                 </button>
@@ -1395,8 +1440,8 @@ export default function Workspace({ onRegisterHandlers, onWorkspaceChange }: Wor
       )}
 
       {showAddMember && createPortal(
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[1000] p-4">
-          <div className="bg-white rounded-3xl shadow-2xl max-w-lg w-full overflow-hidden flex flex-col">
+        <div className="fixed inset-0 bg-slate-900/20 backdrop-blur-sm flex items-center justify-center z-[200] p-4" style={{ animation: 'ws-backdrop 120ms cubic-bezier(0.32, 0.72, 0, 1)' }}>
+          <div className="bg-white rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.12)] max-w-lg w-full overflow-hidden flex flex-col" style={{ animation: 'ws-modal 180ms cubic-bezier(0.32, 0.72, 0, 1)' }}>
             <div className="flex items-center justify-between p-6 border-b border-slate-100">
               <div className="flex items-center gap-3">
                 <Icon icon="solar:user-plus-bold" width="32" className="text-emerald-600" />
@@ -1490,8 +1535,8 @@ export default function Workspace({ onRegisterHandlers, onWorkspaceChange }: Wor
       )}
 
       {showLeaveConfirm && createPortal(
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[1000] p-4">
-          <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full overflow-hidden">
+        <div className="fixed inset-0 bg-slate-900/20 backdrop-blur-sm flex items-center justify-center z-[200] p-4" style={{ animation: 'ws-backdrop 120ms cubic-bezier(0.32, 0.72, 0, 1)' }}>
+          <div className="bg-white rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.12)] max-w-md w-full overflow-hidden" style={{ animation: 'ws-modal 180ms cubic-bezier(0.32, 0.72, 0, 1)' }}>
             <div className="p-6">
               <div className="flex items-start gap-4 mb-4">
                 <div className="h-12 w-12 rounded-xl bg-rose-100 flex items-center justify-center flex-shrink-0">
@@ -1526,8 +1571,8 @@ export default function Workspace({ onRegisterHandlers, onWorkspaceChange }: Wor
       )}
 
       {showJoinWorkspace && createPortal(
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[1000] p-4">
-          <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full overflow-hidden">
+        <div className="fixed inset-0 bg-slate-900/20 backdrop-blur-sm flex items-center justify-center z-[200] p-4" style={{ animation: 'ws-backdrop 120ms cubic-bezier(0.32, 0.72, 0, 1)' }}>
+          <div className="bg-white rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.12)] max-w-md w-full overflow-hidden" style={{ animation: 'ws-modal 180ms cubic-bezier(0.32, 0.72, 0, 1)' }}>
             <div className="flex items-center justify-between p-6 border-b border-slate-100">
               <div className="flex items-center gap-3">
                 <Icon icon="solar:add-circle-bold" width="32" className="text-sky-600" />
@@ -1578,8 +1623,8 @@ export default function Workspace({ onRegisterHandlers, onWorkspaceChange }: Wor
       )}
 
       {showRoleUpdateConfirm && pendingRoleUpdate && createPortal(
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[1000] p-4">
-          <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full overflow-hidden">
+        <div className="fixed inset-0 bg-slate-900/20 backdrop-blur-sm flex items-center justify-center z-[200] p-4" style={{ animation: 'ws-backdrop 120ms cubic-bezier(0.32, 0.72, 0, 1)' }}>
+          <div className="bg-white rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.12)] max-w-md w-full overflow-hidden" style={{ animation: 'ws-modal 180ms cubic-bezier(0.32, 0.72, 0, 1)' }}>
             <div className="p-6">
               <div className="flex items-start gap-4 mb-4">
                 <div className="h-12 w-12 rounded-xl bg-blue-100 flex items-center justify-center flex-shrink-0">
@@ -1617,8 +1662,8 @@ export default function Workspace({ onRegisterHandlers, onWorkspaceChange }: Wor
       )}
 
       {showRemoveMemberConfirm && pendingMemberRemoval && createPortal(
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[1000] p-4">
-          <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full overflow-hidden">
+        <div className="fixed inset-0 bg-slate-900/20 backdrop-blur-sm flex items-center justify-center z-[200] p-4" style={{ animation: 'ws-backdrop 120ms cubic-bezier(0.32, 0.72, 0, 1)' }}>
+          <div className="bg-white rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.12)] max-w-md w-full overflow-hidden" style={{ animation: 'ws-modal 180ms cubic-bezier(0.32, 0.72, 0, 1)' }}>
             <div className="p-6">
               <div className="flex items-start gap-4 mb-4">
                 <div className="h-12 w-12 rounded-xl bg-rose-100 flex items-center justify-center flex-shrink-0">
@@ -1656,8 +1701,8 @@ export default function Workspace({ onRegisterHandlers, onWorkspaceChange }: Wor
       )}
 
       {showDeleteWorkspaceConfirm && createPortal(
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[1000] p-4">
-          <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full overflow-hidden">
+        <div className="fixed inset-0 bg-slate-900/20 backdrop-blur-sm flex items-center justify-center z-[200] p-4" style={{ animation: 'ws-backdrop 120ms cubic-bezier(0.32, 0.72, 0, 1)' }}>
+          <div className="bg-white rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.12)] max-w-md w-full overflow-hidden" style={{ animation: 'ws-modal 180ms cubic-bezier(0.32, 0.72, 0, 1)' }}>
             <div className="p-6">
               <div className="flex items-start gap-4 mb-4">
                 <div className="h-14 w-14 rounded-2xl bg-gradient-to-br from-rose-500 to-red-600 flex items-center justify-center flex-shrink-0 shadow-lg shadow-rose-500/30">
@@ -1706,8 +1751,8 @@ export default function Workspace({ onRegisterHandlers, onWorkspaceChange }: Wor
       )}
 
       {showCreateWorkspace && createPortal(
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[1000] p-4">
-          <div className="bg-white rounded-3xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-hidden flex flex-col">
+        <div className="fixed inset-0 bg-slate-900/20 backdrop-blur-sm flex items-center justify-center z-[200] p-4" style={{ animation: 'ws-backdrop 120ms cubic-bezier(0.32, 0.72, 0, 1)' }}>
+          <div className="bg-white rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.12)] max-w-3xl w-full max-h-[90vh] overflow-hidden flex flex-col" style={{ animation: 'ws-modal 180ms cubic-bezier(0.32, 0.72, 0, 1)' }}>
             <div className="flex items-center justify-between p-6 border-b border-slate-100">
               <div className="flex items-center gap-3">
                 <Icon icon="solar:add-square-bold" width="32" className="text-slate-700" />
@@ -1875,6 +1920,20 @@ export default function Workspace({ onRegisterHandlers, onWorkspaceChange }: Wor
         </div>,
         document.body
       )}
+      <style>{`
+        @keyframes ws-backdrop {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        @keyframes ws-drawer {
+          from { transform: translateX(40px); opacity: 0; }
+          to { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes ws-modal {
+          from { opacity: 0; transform: scale(0.96) translateY(6px); }
+          to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+      `}</style>
     </div>
   );
 }
