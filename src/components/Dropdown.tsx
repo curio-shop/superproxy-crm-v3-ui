@@ -154,12 +154,12 @@ export default function Dropdown({
         type="button"
         onClick={() => !disabled && setIsOpen(!isOpen)}
         disabled={disabled}
-        className={`flex items-center justify-between w-full pl-3 pr-3 h-[42px] rounded-xl border text-slate-700 shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-slate-200 focus:ring-offset-1 group ${
+        className={`flex items-center justify-between w-full pl-3 pr-3 h-[40px] rounded-xl border text-slate-700 shadow-[0_1px_2px_0_rgb(0,0,0,0.04),inset_0_1px_0_0_rgb(255,255,255,0.8)] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-slate-900/[0.08] focus:ring-offset-1 group ${
           error
             ? 'border-red-300 bg-red-50 hover:border-red-400'
             : disabled
             ? 'border-slate-200 bg-slate-100 cursor-not-allowed opacity-60'
-            : 'border-slate-200 bg-white hover:border-slate-300 hover:shadow-md hover:bg-slate-50/50'
+            : 'border-slate-200/80 bg-white hover:border-slate-300 hover:shadow-[0_2px_8px_0_rgb(0,0,0,0.06),inset_0_1px_0_0_rgb(255,255,255,0.8)]'
         } ${buttonClassName}`}
       >
         <div className="flex items-center gap-2.5 flex-1 min-w-0">
@@ -203,19 +203,19 @@ export default function Dropdown({
       {/* Dropdown Menu */}
       {isOpen && (
         <div
-          className={`absolute ${menuAlign === 'left' ? 'left-0' : 'right-0'} mt-2 min-w-[180px] bg-white rounded-xl shadow-xl border border-slate-200/80 py-1.5 z-50 overflow-hidden ${menuClassName}`}
+          className={`absolute ${menuAlign === 'left' ? 'left-0' : 'right-0'} mt-1.5 min-w-[200px] bg-white rounded-2xl shadow-[0_12px_48px_-6px_rgb(0,0,0,0.12),0_0_0_1px_rgb(0,0,0,0.04)] py-2 z-50 overflow-hidden ${menuClassName}`}
           style={{
-            animation: 'fadeIn 200ms ease-out, slideInFromTop 200ms ease-out',
+            animation: 'fadeIn 150ms ease-out, slideInFromTop 150ms ease-out',
           }}
         >
           {/* Search Input */}
           {searchable && (
-            <div className="px-3 pb-2 pt-1.5">
+            <div className="px-2 pb-1.5 pt-0.5">
               <div className="relative">
                 <Icon
                   icon="solar:magnifer-linear"
-                  width="16"
-                  className="absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400"
+                  width="15"
+                  className="absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-300"
                 />
                 <input
                   ref={searchInputRef}
@@ -223,17 +223,18 @@ export default function Dropdown({
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search..."
-                  className="w-full pl-9 pr-3 py-2 text-sm rounded-lg border border-slate-200 focus:border-slate-300 focus:ring-2 focus:ring-slate-100 focus:outline-none transition-all"
+                  className="w-full pl-9 pr-3 py-2 text-[13px] rounded-lg bg-slate-50 border-0 focus:bg-slate-100/80 focus:ring-0 focus:outline-none transition-all duration-200 placeholder:text-slate-300"
                 />
               </div>
+              <div className="mt-1.5 border-b border-slate-100" />
             </div>
           )}
 
           {/* Options List */}
-          <div className="max-h-60 overflow-y-auto custom-scrollbar">
+          <div className="max-h-60 overflow-y-auto custom-scrollbar px-1.5">
             {filteredOptions.length === 0 ? (
-              <div className="px-3 py-6 text-center text-sm text-slate-400">
-                No options found
+              <div className="px-3 py-8 text-center text-[13px] text-slate-300">
+                No results found
               </div>
             ) : (
               filteredOptions.map((option) => {
@@ -262,26 +263,26 @@ export default function Dropdown({
                     type="button"
                     onClick={() => !optionDisabled && handleSelect(option.value)}
                     disabled={optionDisabled}
-                    className={`w-full flex items-center justify-between px-3 py-2 text-left transition-all duration-150 ${
+                    className={`w-full flex items-center justify-between px-2.5 py-2.5 text-left rounded-lg transition-all duration-150 ${
                       selected
-                        ? 'bg-blue-50/80 text-blue-700'
+                        ? 'bg-slate-100 text-slate-900'
                         : optionDisabled
-                        ? 'text-slate-400 cursor-not-allowed'
-                        : 'hover:bg-slate-50 text-slate-700'
+                        ? 'text-slate-300 cursor-not-allowed'
+                        : 'hover:bg-slate-50 text-slate-600'
                     }`}
                   >
-                    <div className="flex items-center gap-2 flex-1 min-w-0">
+                    <div className="flex items-center gap-2.5 flex-1 min-w-0">
                       {option.icon && (
                         <Icon
                           icon={option.icon}
                           width="16"
-                          className={selected ? 'text-blue-600' : 'text-slate-400'}
+                          className={selected ? 'text-slate-700' : 'text-slate-400'}
                         />
                       )}
                       <div className="flex-1 min-w-0">
                         <span
-                          className={`text-sm font-medium ${
-                            selected ? 'font-semibold' : ''
+                          className={`text-[13px] ${
+                            selected ? 'font-semibold text-slate-900' : 'font-medium'
                           }`}
                         >
                           {option.label}
@@ -295,9 +296,9 @@ export default function Dropdown({
                     </div>
                     {selected && (
                       <Icon
-                        icon="solar:check-circle-bold"
+                        icon="solar:check-read-linear"
                         width="16"
-                        className="text-blue-600 flex-shrink-0"
+                        className="text-slate-500 flex-shrink-0"
                       />
                     )}
                   </button>

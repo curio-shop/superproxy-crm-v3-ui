@@ -144,19 +144,19 @@ export default function QuoteView({ onBackToQuotes }: QuoteViewProps) {
   };
 
   return (
-    <div className="min-h-screen bg-slate-100 flex flex-col relative">
+    <div className="min-h-screen bg-[#f7f7f8] flex flex-col relative">
       <div className="fixed top-6 right-6 z-50 flex items-center gap-2">
         <button
           onClick={onBackToQuotes}
-          className="relative w-11 h-11 flex items-center justify-center bg-white rounded-xl shadow-lg border border-slate-200 hover:bg-slate-50 transition-colors group/tooltip"
+          className="relative w-9 h-9 flex items-center justify-center bg-white rounded-xl shadow-sm border border-slate-200 hover:bg-slate-50 hover:border-slate-300 transition-colors group/tooltip"
         >
-          <Icon icon="solar:arrow-left-linear" width="20" className="text-slate-600" />
+          <Icon icon="solar:arrow-left-linear" width="18" className="text-slate-500" />
           <span className="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-2.5 py-1.5 bg-slate-900 text-white text-xs font-medium rounded-lg opacity-0 pointer-events-none group-hover/tooltip:opacity-100 transition-opacity whitespace-nowrap shadow-lg">
             Back to Quotes
           </span>
         </button>
 
-        <div className="flex items-center gap-1 bg-white rounded-xl shadow-lg border border-slate-200 px-2 py-1.5">
+        <div className="flex items-center gap-1 bg-white rounded-xl shadow-sm border border-slate-200 px-2 py-1">
           <button
             onClick={handleZoomOut}
             className="relative w-8 h-8 flex items-center justify-center hover:bg-slate-100 rounded-lg transition-colors text-slate-600 font-semibold text-lg group/tooltip"
@@ -189,9 +189,9 @@ export default function QuoteView({ onBackToQuotes }: QuoteViewProps) {
         </div>
 
         <button
-          className="relative w-11 h-11 flex items-center justify-center bg-white rounded-xl shadow-lg border border-slate-200 hover:bg-slate-50 transition-colors group/tooltip"
+          className="relative w-9 h-9 flex items-center justify-center bg-white rounded-xl shadow-sm border border-slate-200 hover:bg-slate-50 hover:border-slate-300 transition-colors group/tooltip"
         >
-          <Icon icon="solar:chat-round-line-linear" width="20" className="text-slate-600" />
+          <Icon icon="solar:chat-round-line-linear" width="18" className="text-slate-500" />
           <span className="absolute top-full right-0 mt-2 px-2.5 py-1.5 bg-slate-900 text-white text-xs font-medium rounded-lg opacity-0 pointer-events-none group-hover/tooltip:opacity-100 transition-opacity whitespace-nowrap shadow-lg">
             Show/Hide Comments
           </span>
@@ -341,10 +341,10 @@ export default function QuoteView({ onBackToQuotes }: QuoteViewProps) {
                   setValidationErrors({ name: '', email: '', feedback: '' });
                 }
               }}
-              className="flex items-center gap-2 px-5 py-3 bg-white hover:bg-slate-50 text-slate-700 hover:text-slate-900 border border-slate-200 rounded-xl font-semibold text-sm transition-all shadow-lg active:scale-95"
+              className="flex items-center gap-1.5 px-4 py-2 bg-white hover:bg-slate-50 text-slate-500 hover:text-slate-700 border border-slate-200 hover:border-slate-300 rounded-xl font-medium text-[13px] transition-all shadow-sm active:scale-[0.98]"
             >
-              <Icon icon="solar:chat-round-dots-bold" width="18" className="text-blue-600" />
-              <span>Leave Feedback</span>
+              <Icon icon="solar:chat-round-dots-linear" width="15" className="text-slate-400" />
+              <span>Feedback</span>
             </button>
 
             {showFeedbackModal && (
@@ -356,17 +356,12 @@ export default function QuoteView({ onBackToQuotes }: QuoteViewProps) {
                     setValidationErrors({ name: '', email: '', feedback: '' });
                   }}
                 ></div>
-                <div className="group absolute bottom-full right-[-3.5rem] mb-3 w-[420px] bg-white rounded-2xl shadow-2xl border border-blue-100 z-50 animate-in slide-in-from-bottom-4 fade-in duration-300">
+                <div className="group absolute bottom-full right-[-3.5rem] mb-3 w-[400px] bg-white rounded-2xl shadow-[0_24px_80px_rgba(0,0,0,0.12),0_0_0_1px_rgba(0,0,0,0.03)] border border-slate-200 z-50 animate-in slide-in-from-bottom-4 fade-in duration-300">
                   <div className="px-5 py-4 border-b border-slate-100">
                     <div className="flex items-start justify-between">
-                      <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-sky-500 to-blue-600 flex items-center justify-center flex-shrink-0 shadow-sm">
-                          <Icon icon="solar:chat-round-dots-bold" width="18" className="text-white" />
-                        </div>
-                        <div>
-                          <h2 className="text-base font-bold text-slate-900">Leave Feedback</h2>
-                          <p className="text-xs text-slate-500 mt-0.5">We'd love to hear your thoughts</p>
-                        </div>
+                      <div>
+                          <h2 className="text-[13px] font-semibold text-slate-700">Leave Feedback</h2>
+                          <p className="text-[11px] text-slate-400 mt-0.5">Share your thoughts about this quote</p>
                       </div>
                       <button
                         onClick={() => {
@@ -459,7 +454,7 @@ export default function QuoteView({ onBackToQuotes }: QuoteViewProps) {
 
                     <button
                       onClick={handleSubmitFeedback}
-                      className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-semibold text-sm transition-all shadow-lg hover:shadow-xl active:scale-95"
+                      className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl font-semibold text-[13px] transition-all shadow-sm active:scale-[0.98]"
                     >
                       <Icon icon="solar:plain-2-linear" width="16" />
                       Submit Feedback
@@ -473,7 +468,7 @@ export default function QuoteView({ onBackToQuotes }: QuoteViewProps) {
           <div className="relative">
             <button
               onClick={() => setShowActionMenu(!showActionMenu)}
-              className="relative flex items-center justify-center w-11 h-11 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 rounded-xl shadow-lg transition-colors group/tooltip"
+              className="relative flex items-center justify-center w-9 h-9 bg-white hover:bg-slate-50 text-slate-500 border border-slate-200 hover:border-slate-300 rounded-xl shadow-sm transition-colors group/tooltip"
             >
               <Icon icon="solar:menu-dots-bold" width="18" />
               <span className="absolute top-full right-0 mt-2 px-2.5 py-1.5 bg-slate-900 text-white text-xs font-medium rounded-lg opacity-0 pointer-events-none group-hover/tooltip:opacity-100 transition-opacity whitespace-nowrap shadow-lg">
@@ -487,58 +482,27 @@ export default function QuoteView({ onBackToQuotes }: QuoteViewProps) {
                   className="fixed inset-0 z-40"
                   onClick={() => setShowActionMenu(false)}
                 ></div>
-                <div className="absolute bottom-14 right-0 w-52 bg-white/95 backdrop-blur-xl rounded-xl shadow-lg border border-slate-200/60 py-1.5 z-50 animate-in fade-in slide-in-from-bottom-2 duration-200 ring-1 ring-black/5">
-                  <button
-                    onClick={handlePrint}
-                    className="w-full px-3 py-2 text-left text-sm font-medium text-slate-800 hover:bg-sky-50/80 hover:text-sky-700 flex items-center gap-2.5 transition-all duration-200 group"
-                  >
-                    <div className="w-7 h-7 rounded-lg bg-sky-50 flex items-center justify-center group-hover:bg-sky-100 group-hover:scale-105 transition-all duration-200">
-                      <Icon icon="solar:printer-linear" width="15" className="text-sky-600 group-hover:text-sky-700" />
-                    </div>
-                    <span>Print</span>
+                <div className="absolute bottom-12 right-0 w-48 bg-white rounded-xl shadow-[0_8px_32px_rgba(0,0,0,0.12)] border border-slate-200/60 py-1 z-50 animate-in fade-in slide-in-from-bottom-2 duration-200">
+                  <button onClick={handlePrint} className="w-full flex items-center gap-2 px-3 py-2 text-[13px] text-slate-600 hover:bg-slate-50 hover:text-slate-800 transition-colors">
+                    <Icon icon="solar:printer-linear" width="14" className="text-slate-400" />
+                    Print
                   </button>
-
-                  <button
-                    onClick={handleCopyLink}
-                    className="w-full px-3 py-2 text-left text-sm font-medium text-slate-800 hover:bg-emerald-50/80 hover:text-emerald-700 flex items-center gap-2.5 transition-all duration-200 group"
-                  >
-                    <div className="w-7 h-7 rounded-lg bg-emerald-50 flex items-center justify-center group-hover:bg-emerald-100 group-hover:scale-105 transition-all duration-200">
-                      <Icon icon="solar:copy-linear" width="15" className="text-emerald-600 group-hover:text-emerald-700" />
-                    </div>
-                    <span>{copiedLink ? 'Link Copied!' : 'Copy Link'}</span>
-                    {copiedLink && <Icon icon="solar:check-circle-bold" width="14" className="text-emerald-600 ml-auto" />}
+                  <button onClick={handleCopyLink} className="w-full flex items-center gap-2 px-3 py-2 text-[13px] text-slate-600 hover:bg-slate-50 hover:text-slate-800 transition-colors">
+                    <Icon icon="solar:copy-linear" width="14" className="text-slate-400" />
+                    {copiedLink ? 'Copied!' : 'Copy Link'}
                   </button>
-
-                  <button
-                    onClick={handleDownloadPDF}
-                    className="w-full px-3 py-2 text-left text-sm font-medium text-slate-800 hover:bg-blue-50/80 hover:text-blue-700 flex items-center gap-2.5 transition-all duration-200 group"
-                  >
-                    <div className="w-7 h-7 rounded-lg bg-blue-50 flex items-center justify-center group-hover:bg-blue-100 group-hover:scale-105 transition-all duration-200">
-                      <Icon icon="solar:download-linear" width="15" className="text-blue-600 group-hover:text-blue-700" />
-                    </div>
-                    <span>Download PDF</span>
+                  <button onClick={handleDownloadPDF} className="w-full flex items-center gap-2 px-3 py-2 text-[13px] text-slate-600 hover:bg-slate-50 hover:text-slate-800 transition-colors">
+                    <Icon icon="solar:download-linear" width="14" className="text-slate-400" />
+                    Download PDF
                   </button>
-
-                  <div className="h-px bg-slate-200/60 my-1.5"></div>
-
-                  <button
-                    onClick={handleCreatePresentation}
-                    className="w-full px-3 py-2 text-left text-sm font-medium text-slate-800 hover:bg-purple-50/80 hover:text-purple-700 flex items-center gap-2.5 transition-all duration-200 group"
-                  >
-                    <div className="w-7 h-7 rounded-lg bg-purple-50 flex items-center justify-center group-hover:bg-purple-100 group-hover:scale-105 transition-all duration-200">
-                      <Icon icon="solar:presentation-graph-linear" width="15" className="text-purple-600 group-hover:text-purple-700" />
-                    </div>
-                    <span>Create Presentation</span>
+                  <div className="my-1 border-t border-slate-100 mx-2" />
+                  <button onClick={handleCreatePresentation} className="w-full flex items-center gap-2 px-3 py-2 text-[13px] text-slate-600 hover:bg-slate-50 hover:text-slate-800 transition-colors">
+                    <Icon icon="solar:presentation-graph-linear" width="14" className="text-slate-400" />
+                    Presentation
                   </button>
-
-                  <button
-                    onClick={handleSendEmail}
-                    className="w-full px-3 py-2 text-left text-sm font-medium text-slate-800 hover:bg-orange-50/80 hover:text-orange-700 flex items-center gap-2.5 transition-all duration-200 group"
-                  >
-                    <div className="w-7 h-7 rounded-lg bg-orange-50 flex items-center justify-center group-hover:bg-orange-100 group-hover:scale-105 transition-all duration-200">
-                      <Icon icon="solar:letter-linear" width="15" className="text-orange-600 group-hover:text-orange-700" />
-                    </div>
-                    <span>Email Quote</span>
+                  <button onClick={handleSendEmail} className="w-full flex items-center gap-2 px-3 py-2 text-[13px] text-slate-600 hover:bg-slate-50 hover:text-slate-800 transition-colors">
+                    <Icon icon="solar:letter-linear" width="14" className="text-slate-400" />
+                    Email Quote
                   </button>
                 </div>
               </>

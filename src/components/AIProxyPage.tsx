@@ -256,16 +256,22 @@ interface Message {
 }
 
 const THINKING_PHRASES = [
-  'cooking', 'vibing', 'caffeinating', 'summoning', 'manifesting',
-  'scheming', 'plotting', 'conjuring', 'percolating', 'discombobulating',
-  'ruminating', 'cogitating', 'spelunking', 'conspiring', 'wrangling',
-  'excavating', 'gangnam-styling', 'levitating', 'interpolating', 'extrapolating',
-  'channeling', 'delving', 'ciphering', 'prospecting', 'triangulating',
-  'mining', 'harvesting', 'sleuthing', 'decoding', 'enchanting',
-  'bewitching', 'yolo-ing', 'buffering', 'noodling', 'marinating',
-  'simmering', 'untangling', 'in its feelings', 'overclocking', 'recalibrating',
-  'defragging', 'dropping it like it\'s hot', 'time-traveling', 'locked in', 'in beast mode',
-  'rizzing', 'main charactering', 'rolling in the deep', 'speedrunning', 'watchamacalliting',
+  'Brewing something up', 'Almost there', 'One moment', 'Bear with me',
+  'Give me a sec', 'Working some magic', 'Let me check on that',
+  'Pulling some strings', 'Getting the good stuff', 'On the case',
+  'Digging in', 'On it', 'Hang tight', 'Working on it',
+  'Looking into it', 'Just a moment', 'Cooking something up',
+  'Connecting the dots', 'Piecing it together', 'Getting that for you',
+  'One sec', 'Hold that thought', 'Rounding things up',
+  'Checking on that', 'Putting it together', 'Grabbing the details',
+  'Let me look', 'Sorting it out', 'Doing a quick check',
+  'Pulling that up', 'Almost got it', 'Working my way through',
+  'Let me dig into that', 'Getting things lined up', 'Right on it',
+  'Rummaging through the data', 'Tracking that down', 'Spinning up',
+  'Getting the wheels turning', 'Scouting for answers', 'Firing it up',
+  'Lining things up', 'Chasing that down', 'Making it happen',
+  'Fetching the details', 'Running a quick check', 'Crunching away',
+  'Sniffing that out', 'Wrapping my head around it',
 ];
 
 const ACTION_CHIPS = [
@@ -569,7 +575,8 @@ export default function AIProxyPage({ onNavigateToNotifications, onViewContact, 
         documentCard: response.documentCard,
       }]);
       setIsTyping(false);
-    }, 1400);
+      inputRef.current?.focus();
+    }, 3500);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -597,10 +604,10 @@ export default function AIProxyPage({ onNavigateToNotifications, onViewContact, 
           <div className="relative">
             <button
               onClick={() => setShowNotifications(!showNotifications)}
-              className="group hover:text-slate-800 transition-all flex outline-none focus:ring-2 focus:ring-slate-100 text-slate-500 bg-white w-10 h-10 rounded-xl relative items-center justify-center shadow-sm hover:shadow-[0_4px_16px_rgba(0,0,0,0.10)] active:scale-95"
+              className="group transition-all flex outline-none text-slate-400 hover:text-slate-600 w-9 h-9 rounded-xl border border-slate-200 relative items-center justify-center hover:bg-slate-50 hover:border-slate-300 active:scale-[0.97]"
             >
-              <Icon icon="solar:bell-linear" width="22" className="transition-transform group-hover:scale-105 group-active:scale-95" />
-              <span className="absolute top-2 right-2.5 w-2 h-2 bg-rose-500 rounded-full ring-2 ring-white">
+              <Icon icon="solar:bell-linear" width="18" />
+              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-rose-500 rounded-full ring-2 ring-white">
                 <span className="absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75 animate-ping"></span>
               </span>
             </button>
@@ -626,7 +633,7 @@ export default function AIProxyPage({ onNavigateToNotifications, onViewContact, 
               </div>
 
               {/* Heading */}
-              <h1 className="text-[2.6rem] font-bold text-slate-900 text-center leading-[1.15] tracking-tight mb-3" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+              <h1 className="text-[2.6rem] text-slate-900 text-center leading-[1.15] tracking-tight mb-3" style={{ fontFamily: "'DM Serif Text', serif" }}>
                 Ready when you are, Richard.
               </h1>
 
@@ -671,7 +678,7 @@ export default function AIProxyPage({ onNavigateToNotifications, onViewContact, 
                 {/* Toolbar */}
                 <div className="flex items-center gap-1 px-3 py-2.5">
                   <button className="flex items-center justify-center text-slate-400 hover:text-slate-700 transition-colors px-1">
-                    <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <svg width="18" height="18" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path d="M11 4V18M4 11H18" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round"/>
                     </svg>
                   </button>
@@ -721,18 +728,18 @@ export default function AIProxyPage({ onNavigateToNotifications, onViewContact, 
         <div className="ml-auto flex items-center gap-2">
           <button
             onClick={() => { setMessages([]); setInputValue(''); setProxySelected(null); }}
-            className="group transition-all flex items-center gap-1.5 outline-none focus:ring-2 focus:ring-slate-100 text-slate-700 px-2.5 h-10 rounded-xl hover:bg-white hover:shadow-[0_4px_16px_rgba(0,0,0,0.10)] active:scale-95"
+            className="group transition-all flex items-center gap-1.5 outline-none text-slate-400 hover:text-slate-600 border border-slate-200 hover:border-slate-300 hover:bg-slate-50 px-3 h-9 rounded-xl active:scale-[0.97]"
           >
-            <Icon icon="solar:pen-new-square-linear" width="16" className="flex-shrink-0 transition-transform group-hover:scale-105 group-active:scale-95" />
-            <span className="text-sm font-medium">New Task</span>
+            <Icon icon="solar:pen-new-square-linear" width="15" className="flex-shrink-0" />
+            <span className="text-[13px] font-medium">New Task</span>
           </button>
           <div className="relative">
             <button
               onClick={() => setShowNotifications(!showNotifications)}
-              className="group hover:text-slate-800 transition-all flex outline-none focus:ring-2 focus:ring-slate-100 text-slate-500 bg-white w-10 h-10 rounded-xl relative items-center justify-center shadow-sm hover:shadow-[0_4px_16px_rgba(0,0,0,0.10)] active:scale-95"
+              className="group transition-all flex outline-none text-slate-400 hover:text-slate-600 w-9 h-9 rounded-xl border border-slate-200 relative items-center justify-center hover:bg-slate-50 hover:border-slate-300 active:scale-[0.97]"
             >
-              <Icon icon="solar:bell-linear" width="22" className="transition-transform group-hover:scale-105 group-active:scale-95" />
-              <span className="absolute top-2 right-2.5 w-2 h-2 bg-rose-500 rounded-full ring-2 ring-white">
+              <Icon icon="solar:bell-linear" width="18" />
+              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-rose-500 rounded-full ring-2 ring-white">
                 <span className="absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75 animate-ping"></span>
               </span>
             </button>
@@ -963,21 +970,28 @@ export default function AIProxyPage({ onNavigateToNotifications, onViewContact, 
           {isTyping && (
             <div className="animate-in fade-in duration-300">
               <style>{`
-                @keyframes glare {
+                @keyframes spark-shimmer {
+                  0%, 100% { opacity: 0.3; transform: scale(0.85); }
+                  50% { opacity: 1; transform: scale(1.15); }
+                }
+                @keyframes text-shimmer {
                   0% { background-position: 200% center; }
                   100% { background-position: -200% center; }
                 }
-                .thinking-glare-text {
-                  background: linear-gradient(90deg, #1e293b 0%, #1e293b 30%, #818cf8 50%, #1e293b 70%, #1e293b 100%);
+                .thinking-shimmer-text {
+                  background: linear-gradient(90deg, #64748b 0%, #64748b 30%, #f1f5f9 50%, #64748b 70%, #64748b 100%);
                   background-size: 300% auto;
                   -webkit-background-clip: text;
                   -webkit-text-fill-color: transparent;
                   background-clip: text;
-                  animation: glare 3s ease-in-out infinite;
+                  animation: text-shimmer 3s ease-in-out infinite;
                 }
               `}</style>
-              <div className="flex items-center">
-                <span className="text-[15px] font-normal thinking-glare-text">Superproxy is {thinkingPhrase}...</span>
+              <div className="flex items-center gap-2">
+                <span style={{ animation: 'spark-shimmer 3s ease-in-out infinite' }} className="text-slate-400">
+                  <SparkIcon size={12} />
+                </span>
+                <span className="text-[13px] font-normal thinking-shimmer-text">{thinkingPhrase}...</span>
               </div>
             </div>
           )}
@@ -998,10 +1012,10 @@ export default function AIProxyPage({ onNavigateToNotifications, onViewContact, 
             <div className="flex items-center gap-2.5 px-4 py-2.5 bg-slate-100/80 rounded-t-2xl border-b border-slate-100">
               <Icon icon="solar:bolt-linear" width="13" className="text-slate-400 flex-shrink-0" />
               <span className="text-xs text-slate-500 flex-1">
-                <span className="font-semibold text-slate-600">159K</span> tokens remaining
+                <span className="font-semibold text-slate-600">159K</span> credits remaining
               </span>
-              <button className="text-xs font-semibold text-indigo-500 hover:text-indigo-600 transition-colors whitespace-nowrap">
-                Running low? Extend your usage
+              <button className="text-[11px] font-semibold text-slate-600 hover:text-slate-800 transition-colors whitespace-nowrap">
+                Get more credits
               </button>
             </div>
             <div className="px-4 pt-3 pb-1">
@@ -1014,7 +1028,7 @@ export default function AIProxyPage({ onNavigateToNotifications, onViewContact, 
                 onBlur={() => setIsFocused(false)}
                 placeholder="Keep the conversation going"
                 disabled={isTyping}
-                className="w-full bg-transparent text-slate-800 placeholder-slate-400 text-[15px] resize-none outline-none leading-6 min-h-[28px] max-h-32 disabled:opacity-60"
+                className="w-full bg-transparent text-slate-800 placeholder-slate-300 text-[14px] resize-none outline-none leading-6 min-h-[28px] max-h-32 disabled:opacity-60"
                 rows={1}
                 style={{ height: 'auto' }}
                 onInput={(e) => {
@@ -1026,7 +1040,7 @@ export default function AIProxyPage({ onNavigateToNotifications, onViewContact, 
             </div>
             <div className="flex items-center gap-1 px-3 py-2.5">
               <button className="flex items-center justify-center text-slate-400 hover:text-slate-700 transition-colors px-1">
-                <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <svg width="18" height="18" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M11 4V18M4 11H18" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round"/>
                 </svg>
               </button>

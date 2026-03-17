@@ -145,12 +145,26 @@ const mockCallHistory: CallHistoryRecord[] = [
   },
 ];
 
+type CallFilter = 'all' | 'cold_call' | 'follow_up' | 'payment_reminder';
+
+const CALL_FILTERS: { value: CallFilter; label: string }[] = [
+  { value: 'all', label: 'All' },
+  { value: 'cold_call', label: 'Cold Calls' },
+  { value: 'follow_up', label: 'Follow-ups' },
+  { value: 'payment_reminder', label: 'Reminders' },
+];
+
 export default function CallHistory({ contactId, onViewCall }: CallHistoryProps) {
   const [viewType, setViewType] = useState<'card' | 'list'>('card');
+  const [callFilter, setCallFilter] = useState<CallFilter>('all');
 
-  const calls = contactId
+  const filteredByContact = contactId
     ? mockCallHistory.filter(call => call.contact_id === contactId)
     : mockCallHistory;
+
+  const calls = callFilter === 'all'
+    ? filteredByContact
+    : filteredByContact.filter(call => call.call_type === callFilter);
 
   const formatDuration = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -187,16 +201,16 @@ export default function CallHistory({ contactId, onViewCall }: CallHistoryProps)
 
   const getOutcomeBadge = (outcome: string) => {
     const badges: Record<string, { label: string; color: string }> = {
-      interested: { label: 'Interested', color: 'bg-purple-50 text-purple-700 border-purple-200' },
-      follow_up: { label: 'Follow Up', color: 'bg-amber-50 text-amber-700 border-amber-200' },
-      not_interested: { label: 'Not Interested', color: 'bg-slate-50 text-slate-600 border-slate-200' },
-      no_answer: { label: 'Missed Call', color: 'bg-rose-50 text-rose-700 border-rose-200' },
-      completed: { label: 'Completed', color: 'bg-emerald-50 text-emerald-700 border-emerald-200' },
+      interested: { label: 'Interested', color: 'bg-purple-50 text-purple-600' },
+      follow_up: { label: 'Follow Up', color: 'bg-amber-50 text-amber-600' },
+      not_interested: { label: 'Not Interested', color: 'bg-slate-100 text-slate-500' },
+      no_answer: { label: 'Missed', color: 'bg-rose-50 text-rose-600' },
+      completed: { label: 'Completed', color: 'bg-emerald-50 text-emerald-600' },
     };
 
     const badge = badges[outcome] || badges.completed;
     return (
-      <span className={`inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium border ${badge.color}`}>
+      <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-medium ${badge.color}`}>
         {badge.label}
       </span>
     );
@@ -216,281 +230,178 @@ export default function CallHistory({ contactId, onViewCall }: CallHistoryProps)
   };
 
   return (
-    <div className="flex-1 overflow-y-auto custom-scrollbar bg-slate-50/30">
-      <div className="w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="max-w-7xl mx-auto space-y-6">
+    <div className="flex-1 overflow-y-auto custom-scrollbar">
+      <div className="w-full mx-auto px-6 py-6">
+        <div className="max-w-7xl mx-auto space-y-4">
+          {/* Toolbar */}
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2 text-sm text-slate-500">
-              <Phone className="w-4 h-4" />
-              <span className="font-medium">{calls.length} outbound calls</span>
+            <div className="flex items-center gap-3">
+              <div className="flex items-center bg-slate-100 rounded-lg p-0.5">
+                {CALL_FILTERS.map((filter) => (
+                  <button
+                    key={filter.value}
+                    onClick={() => setCallFilter(filter.value)}
+                    className={`px-3 py-1.5 rounded-md text-[12px] font-medium transition-all ${
+                      callFilter === filter.value
+                        ? 'bg-white text-slate-700 shadow-sm'
+                        : 'text-slate-400 hover:text-slate-600'
+                    }`}
+                  >
+                    {filter.label}
+                  </button>
+                ))}
+              </div>
+              <span className="text-[11px] text-slate-400">{calls.length} calls</span>
             </div>
-
-            <div className="flex items-center gap-1.5 bg-white border border-slate-200 rounded-lg p-1 shadow-sm">
+            <div className="flex items-center gap-1 bg-slate-100 rounded-lg p-0.5">
               <button
                 onClick={() => setViewType('card')}
-                className={`p-1.5 rounded transition-all ${
-                  viewType === 'card' ? 'bg-slate-100 text-slate-700 shadow-sm' : 'text-slate-400 hover:text-slate-600 hover:bg-slate-50'
-                }`}
+                className={`p-1.5 rounded-md transition-all ${viewType === 'card' ? 'bg-white text-slate-700 shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
               >
-                <LayoutGrid className="w-4 h-4" />
+                <Icon icon="solar:widget-4-linear" width="14" />
               </button>
               <button
                 onClick={() => setViewType('list')}
-                className={`p-1.5 rounded transition-all ${
-                  viewType === 'list' ? 'bg-slate-100 text-slate-700 shadow-sm' : 'text-slate-400 hover:text-slate-600 hover:bg-slate-50'
-                }`}
+                className={`p-1.5 rounded-md transition-all ${viewType === 'list' ? 'bg-white text-slate-700 shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
               >
-                <List className="w-4 h-4" />
+                <Icon icon="solar:list-linear" width="14" />
               </button>
             </div>
           </div>
 
           {calls.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-24 px-4">
-              <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center mb-5 shadow-inner">
-                <Phone className="w-9 h-9 text-slate-400" />
+            <div className="flex flex-col items-center justify-center py-20 px-4">
+              <div className="w-12 h-12 rounded-xl bg-slate-100 flex items-center justify-center mb-4">
+                <Icon icon="solar:phone-linear" width="22" className="text-slate-400" />
               </div>
-              <h3 className="text-xl font-bold text-slate-900 mb-2">No calls yet</h3>
-              <p className="text-sm text-slate-500 text-center max-w-md leading-relaxed">
+              <h3 className="text-sm font-semibold text-slate-700 mb-1">No calls yet</h3>
+              <p className="text-[13px] text-slate-400 text-center max-w-sm">
                 {contactId
                   ? 'Start calling this contact to see call history here.'
                   : 'Your call history will appear here once you start making calls.'}
               </p>
             </div>
           ) : viewType === 'card' ? (
-            <div className="max-w-5xl mx-auto space-y-4">
+            <div className="max-w-4xl mx-auto space-y-2">
               {calls.map((call) => (
                 <div
                   key={call.id}
-                  className="group bg-white rounded-2xl p-6 border border-slate-200/60 hover:border-slate-300 hover:shadow-lg hover:shadow-slate-200/50 transition-all duration-200 cursor-pointer"
+                  className="group bg-white rounded-xl p-4 border border-slate-200/60 hover:border-slate-300 hover:shadow-sm transition-all duration-150 cursor-pointer"
                   onClick={() => onViewCall?.(call)}
                 >
-                  <div className="flex items-start gap-5">
-                    <div
-                      className={`flex-shrink-0 w-14 h-14 rounded-xl bg-gradient-to-br ${
-                        call.contact.avatar_color === 'blue'
-                          ? 'from-blue-400 to-blue-600'
-                          : call.contact.avatar_color === 'pink'
-                          ? 'from-pink-400 to-pink-600'
-                          : call.contact.avatar_color === 'amber'
-                          ? 'from-amber-400 to-amber-600'
-                          : call.contact.avatar_color === 'emerald'
-                          ? 'from-emerald-400 to-emerald-600'
-                          : 'from-slate-400 to-slate-600'
-                      } flex items-center justify-center text-white font-bold text-base shadow-lg ring-4 ring-white`}
-                    >
-                      {call.contact.initials}
-                    </div>
-
+                  <div className="flex items-start justify-between gap-4 mb-2.5">
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-start justify-between gap-4 mb-3">
-                        <div className="flex-1 min-w-0">
-                          <h3 className="text-lg font-bold text-slate-900 truncate mb-1">
-                            {call.contact.name}
-                          </h3>
-                          {call.contact.company_name && (
-                            <p className="text-sm font-medium text-slate-500 truncate">{call.contact.company_name}</p>
-                          )}
-                        </div>
-                        <div className="flex items-center gap-2.5 flex-shrink-0">
-                          {getSentimentIcon(call.sentiment)}
-                          <span className="text-sm font-medium text-slate-500">{formatDate(call.created_at)}</span>
-                        </div>
+                      <div className="flex items-center gap-2">
+                        <h3 className="text-[13px] font-semibold text-slate-800 truncate">{call.contact.name}</h3>
+                        {call.contact.company_name && (
+                          <span className="text-[11px] text-slate-400 truncate">{call.contact.company_name}</span>
+                        )}
                       </div>
-
-                      <div className="flex items-center gap-2.5 mb-4 flex-wrap">
-                        <div className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-50 rounded-lg border border-slate-200/80">
-                          <Clock className="w-3.5 h-3.5 text-slate-500" />
-                          <span className="text-xs font-semibold text-slate-700">{formatDuration(call.duration)}</span>
-                        </div>
-                        {getOutcomeBadge(call.outcome)}
-                        <span className="text-xs font-medium text-slate-500 px-2.5 py-1.5 bg-slate-50 rounded-lg border border-slate-200/80">
-                          {getCallTypeLabel(call.call_type)}
-                        </span>
-                      </div>
-
-                      {call.notes && (
-                        <p className="text-sm text-slate-600 leading-relaxed line-clamp-2 mb-4">{call.notes}</p>
-                      )}
-
-                      {call.next_action && (
-                        <div className="flex items-start gap-3 p-4 bg-blue-50/80 rounded-xl border border-blue-200/60">
-                          <Icon icon="solar:checklist-minimalistic-bold" className="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5" />
-                          <div className="flex-1 min-w-0">
-                            <p className="text-xs font-semibold text-blue-900 mb-1">Next Action</p>
-                            <p className="text-sm text-blue-700 leading-relaxed">{call.next_action}</p>
-                          </div>
-                        </div>
-                      )}
-
-                      {call.transcript && (
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            onViewCall?.(call);
-                          }}
-                          className="mt-4 flex items-center gap-2 text-sm font-semibold text-blue-600 hover:text-blue-700 transition-colors group-hover:gap-3"
-                        >
-                          <Icon icon="solar:document-text-bold" className="w-4 h-4" />
-                          View Details
-                          <ChevronRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
-                        </button>
-                      )}
+                    </div>
+                    <div className="flex items-center gap-2 flex-shrink-0">
+                      {getSentimentIcon(call.sentiment)}
+                      <span className="text-[11px] text-slate-400">{formatDate(call.created_at)}</span>
                     </div>
                   </div>
+
+                  <div className="flex items-center gap-2 mb-3 flex-wrap">
+                    <span className="text-[11px] font-medium text-slate-500">{formatDuration(call.duration)}</span>
+                    <span className="text-slate-300">·</span>
+                    {getOutcomeBadge(call.outcome)}
+                    <span className="text-slate-300">·</span>
+                    <span className="text-[11px] text-slate-400">{getCallTypeLabel(call.call_type)}</span>
+                  </div>
+
+                  {call.notes && (
+                    <p className="text-[13px] text-slate-500 leading-relaxed line-clamp-2 mb-3">{call.notes}</p>
+                  )}
+
+                  {call.next_action && (
+                    <div className="border-l-2 border-slate-200 pl-3 py-1">
+                      <p className="text-[11px] font-medium text-slate-400 mb-0.5">Next action</p>
+                      <p className="text-[13px] text-slate-600 leading-relaxed">{call.next_action}</p>
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
           ) : (
-            <div className="flex-1 shadow-slate-200/20 overflow-hidden flex flex-col bg-white/50 border-white/60 border rounded-[24px] relative shadow-xl">
-              <div className="overflow-x-auto flex-1 custom-scrollbar">
+            <div className="overflow-hidden bg-white border border-slate-200 rounded-2xl shadow-sm">
+              <div className="overflow-x-auto custom-scrollbar">
                 <table className="min-w-full divide-y divide-slate-100">
-                  <thead className="bg-slate-50/80">
-                    <tr className="text-left text-[11px] font-bold text-slate-500 uppercase tracking-wider">
-                      <th scope="col" className="px-6 py-4">
-                        Contact
-                      </th>
-                      <th scope="col" className="px-6 py-4">
-                        Call Type
-                      </th>
-                      <th scope="col" className="px-6 py-4">
-                        Duration
-                      </th>
-                      <th scope="col" className="px-6 py-4">
-                        Outcome
-                      </th>
-                      <th scope="col" className="px-6 py-4">
-                        Sentiment
-                      </th>
-                      <th scope="col" className="px-6 py-4">
-                        Notes
-                      </th>
-                      <th scope="col" className="px-6 py-4">
-                        Date
-                      </th>
-                      <th scope="col" className="px-6 py-4 w-16">
-                        Actions
-                      </th>
+                  <thead>
+                    <tr className="text-left text-[11px] font-medium text-slate-400 uppercase tracking-wider">
+                      <th className="px-4 py-3">Contact</th>
+                      <th className="px-4 py-3">Type</th>
+                      <th className="px-4 py-3">Duration</th>
+                      <th className="px-4 py-3">Outcome</th>
+                      <th className="px-4 py-3">Sentiment</th>
+                      <th className="px-4 py-3">Notes</th>
+                      <th className="px-4 py-3">Date</th>
+                      <th className="px-4 py-3 w-12"></th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-100 bg-white">
-                    {calls.map((call) => {
-                      const avatarColors = {
-                        blue: { bg: 'bg-blue-50', text: 'text-blue-600', ring: 'ring-blue-100' },
-                        pink: { bg: 'bg-pink-50', text: 'text-pink-600', ring: 'ring-pink-100' },
-                        amber: { bg: 'bg-amber-50', text: 'text-amber-600', ring: 'ring-amber-100' },
-                        emerald: { bg: 'bg-emerald-50', text: 'text-emerald-600', ring: 'ring-emerald-100' },
-                        slate: { bg: 'bg-slate-100', text: 'text-slate-600', ring: 'ring-slate-200' },
-                      };
-                      const avatarStyle = avatarColors[call.contact.avatar_color as keyof typeof avatarColors] || avatarColors.slate;
-
-                      return (
-                        <tr
-                          key={call.id}
-                          className="hover:bg-slate-50/50 transition-colors group cursor-pointer"
-                          onClick={() => onViewCall?.(call)}
-                        >
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="flex items-center gap-3">
-                              <div
-                                className={`h-9 w-9 rounded-full ${avatarStyle.bg} ${avatarStyle.text} flex items-center justify-center text-xs font-semibold ring-2 ${avatarStyle.ring} shadow-sm group-hover:shadow-md transition-shadow`}
-                              >
-                                {call.contact.initials}
-                              </div>
-                              <div className="min-w-0">
-                                <div className="text-sm font-semibold text-slate-900 truncate">
-                                  {call.contact.name}
-                                </div>
-                                {call.contact.company_name && (
-                                  <div className="text-xs text-slate-500 truncate">
-                                    {call.contact.company_name}
-                                  </div>
-                                )}
-                              </div>
-                            </div>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <span className="text-xs font-medium text-slate-700">
-                              {getCallTypeLabel(call.call_type)}
-                            </span>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="flex items-center gap-1.5">
-                              <Clock className="w-3.5 h-3.5 text-slate-400" />
-                              <span className="text-xs font-medium text-slate-700">
-                                {formatDuration(call.duration)}
-                              </span>
-                            </div>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            {getOutcomeBadge(call.outcome)}
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="flex items-center gap-2">
-                              {getSentimentIcon(call.sentiment)}
-                              <span className="text-xs font-medium text-slate-600 capitalize">
-                                {call.sentiment}
-                              </span>
-                            </div>
-                          </td>
-                          <td className="px-6 py-4 max-w-xs">
-                            {call.notes ? (
-                              <p className="text-xs text-slate-600 truncate">
-                                {call.notes}
-                              </p>
-                            ) : (
-                              <span className="text-sm text-slate-300">-</span>
+                  <tbody className="divide-y divide-slate-50">
+                    {calls.map((call) => (
+                      <tr
+                        key={call.id}
+                        className="hover:bg-slate-50/60 transition-colors cursor-pointer"
+                        onClick={() => onViewCall?.(call)}
+                      >
+                        <td className="px-4 py-3 whitespace-nowrap">
+                          <div className="min-w-0">
+                            <div className="text-[13px] font-medium text-slate-700 truncate">{call.contact.name}</div>
+                            {call.contact.company_name && (
+                              <div className="text-[11px] text-slate-400 truncate">{call.contact.company_name}</div>
                             )}
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <span className="text-xs text-slate-600">
-                              {formatDate(call.created_at)}
-                            </span>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-right">
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                onViewCall?.(call);
-                              }}
-                              className="flex items-center justify-center w-8 h-8 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 hover:ring-1 hover:ring-slate-200 transition-all focus:outline-none"
-                            >
-                              <Icon icon="solar:eye-linear" width="16" />
-                            </button>
-                          </td>
-                        </tr>
-                      );
-                    })}
+                          </div>
+                        </td>
+                        <td className="px-4 py-3 whitespace-nowrap">
+                          <span className="text-[11px] text-slate-500">{getCallTypeLabel(call.call_type)}</span>
+                        </td>
+                        <td className="px-4 py-3 whitespace-nowrap">
+                          <span className="text-[11px] font-medium text-slate-600">{formatDuration(call.duration)}</span>
+                        </td>
+                        <td className="px-4 py-3 whitespace-nowrap">{getOutcomeBadge(call.outcome)}</td>
+                        <td className="px-4 py-3 whitespace-nowrap">
+                          <div className="flex items-center gap-1.5">
+                            {getSentimentIcon(call.sentiment)}
+                            <span className="text-[11px] text-slate-500 capitalize">{call.sentiment}</span>
+                          </div>
+                        </td>
+                        <td className="px-4 py-3 max-w-[200px]">
+                          {call.notes ? (
+                            <p className="text-[11px] text-slate-500 truncate">{call.notes}</p>
+                          ) : (
+                            <span className="text-[11px] text-slate-300">—</span>
+                          )}
+                        </td>
+                        <td className="px-4 py-3 whitespace-nowrap">
+                          <span className="text-[11px] text-slate-400">{formatDate(call.created_at)}</span>
+                        </td>
+                        <td className="px-4 py-3 whitespace-nowrap">
+                          <button
+                            onClick={(e) => { e.stopPropagation(); onViewCall?.(call); }}
+                            className="w-7 h-7 flex items-center justify-center rounded-lg text-slate-300 hover:text-slate-600 hover:bg-slate-100 transition-colors"
+                          >
+                            <Icon icon="solar:arrow-right-up-linear" width="14" />
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
                   </tbody>
                 </table>
               </div>
 
-              <div className="flex bg-white/80 backdrop-blur-sm border-slate-100 border-t py-4 px-6 items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <span className="text-xs text-slate-500 font-medium">Showing</span>
-                  <span className="inline-flex items-center px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 text-xs font-semibold">
-                    1-{calls.length}
-                  </span>
-                  <span className="text-xs text-slate-500 font-medium">of</span>
-                  <span className="inline-flex items-center px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 text-xs font-semibold">
-                    {calls.length}
-                  </span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <button
-                    className="w-8 h-8 flex items-center justify-center border border-slate-200 rounded-lg text-slate-400 hover:bg-slate-50 hover:text-slate-600 hover:border-slate-300 transition-all disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:border-slate-200"
-                    disabled
-                  >
-                    <Icon icon="solar:alt-arrow-left-linear" width="16" />
+              <div className="flex border-t border-slate-100 py-3 px-4 items-center justify-between">
+                <span className="text-[11px] text-slate-400">Showing 1–{calls.length} of {calls.length}</span>
+                <div className="flex items-center gap-1.5">
+                  <button className="w-7 h-7 flex items-center justify-center border border-slate-200 rounded-lg text-slate-300 transition-colors" disabled>
+                    <Icon icon="solar:alt-arrow-left-linear" width="14" />
                   </button>
-                  <button className="px-3 h-8 bg-slate-900 border border-slate-900 rounded-lg text-xs font-bold text-white shadow-sm hover:bg-slate-800 transition-colors">
-                    1
-                  </button>
-                  <button
-                    className="w-8 h-8 flex items-center justify-center border border-slate-200 rounded-lg text-slate-500 hover:bg-slate-50 hover:text-slate-900 hover:border-slate-300 transition-all"
-                    disabled
-                  >
-                    <Icon icon="solar:alt-arrow-right-linear" width="16" />
+                  <button className="px-2.5 h-7 bg-slate-900 rounded-lg text-[11px] font-semibold text-white">1</button>
+                  <button className="w-7 h-7 flex items-center justify-center border border-slate-200 rounded-lg text-slate-300 transition-colors" disabled>
+                    <Icon icon="solar:alt-arrow-right-linear" width="14" />
                   </button>
                 </div>
               </div>

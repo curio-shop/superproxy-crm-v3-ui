@@ -3,6 +3,7 @@ import { Icon } from '@iconify/react';
 import Sidebar from './components/Sidebar';
 import Header from './components/Header';
 import SimpleHeader from './components/SimpleHeader';
+import DashboardHeader from './components/DashboardHeader';
 import StatsCard from './components/StatsCard';
 import ChartCard from './components/ChartCard';
 import TeamActivity from './components/TeamActivity';
@@ -15,6 +16,7 @@ import Presentations from './components/Presentations';
 import Workspace, { Workspace as WorkspaceType } from './components/Workspace';
 import AccountProfile from './components/AccountProfile';
 import CallHistory, { CallHistoryRecord } from './components/CallHistory';
+import PricingPage from './components/PricingPage';
 import CallDetailsDrawer from './components/CallDetailsDrawer';
 import AddContactDrawer from './components/AddContactDrawer';
 import AddCompanyDrawer from './components/AddCompanyDrawer';
@@ -43,6 +45,7 @@ import DeleteConfirmationModal from './components/DeleteConfirmationModal';
 import DeleteAccountModal from './components/DeleteAccountModal';
 import ConnectToolsModal from './components/ConnectToolsModal';
 import FloatingChatButton from './components/FloatingChatButton';
+import FloatingAIWidget from './components/FloatingAIWidget';
 import SupportChatDialog from './components/SupportChatDialog';
 import Notifications from './components/Notifications';
 import CurrencyPage from './components/CurrencyPage';
@@ -81,6 +84,7 @@ function AppContent() {
   const [selectedQuoteForAI, setSelectedQuoteForAI] = useState<Quotation | null>(null);
   const [selectedInvoiceForAI, setSelectedInvoiceForAI] = useState<Invoice | null>(null);
   const [aiChatOriginPage, setAiChatOriginPage] = useState<'quotations' | 'invoices'>('quotations');
+  const [pricingOriginPage, setPricingOriginPage] = useState('home');
   const [isViewContactDrawerOpen, setIsViewContactDrawerOpen] = useState(false);
   const [isViewCompanyDrawerOpen, setIsViewCompanyDrawerOpen] = useState(false);
   const [isViewProductDrawerOpen, setIsViewProductDrawerOpen] = useState(false);
@@ -398,12 +402,8 @@ function AppContent() {
 
   return (
     <div className="h-screen text-slate-600 antialiased selection:bg-sky-200 selection:text-slate-900 overflow-hidden">
-        <div className="fixed inset-0 -z-10 h-full w-full bg-[#f8fafc]">
-          <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] rounded-full bg-indigo-100/60 blur-[100px] mix-blend-multiply"></div>
-          <div className="absolute top-[10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-violet-100/60 blur-[100px] mix-blend-multiply"></div>
-          <div className="absolute -bottom-20 left-[20%] w-[40%] h-[40%] rounded-full bg-indigo-50/70 blur-[100px] mix-blend-multiply"></div>
-        </div>
-        <div className="flex gap-3 h-screen pt-3 pr-3 pb-3 pl-3 gap-x-3 gap-y-3">
+        <div className="fixed inset-0 -z-10 h-full w-full bg-[#f7f7f8]"></div>
+        <div className="flex h-screen pl-3">
           <Sidebar
             activePage={activePage}
             onPageChange={(page) => {
@@ -412,6 +412,9 @@ function AppContent() {
                 setPreSelectedQuote(null);
                 setPreSelectedInvoice(null);
                 setEmailOriginPage(activePage);
+              }
+              if (page === 'pricing') {
+                setPricingOriginPage(activePage);
               }
               setActivePage(page);
             }}
@@ -423,7 +426,7 @@ function AppContent() {
             onOpenInvoiceTemplate={() => { setTemplateBuilderType('invoice'); setIsTemplateBuilderOpen(true); }}
           />
 
-        <main className="flex-1 flex flex-col min-w-0 bg-white/80 overflow-hidden relative z-30 rounded-[24px] shadow-[0_8px_40px_rgba(0,0,0,0.08),0_2px_12px_rgba(0,0,0,0.04)] border border-slate-200/50 backdrop-blur-lg" style={{ scrollbarGutter: 'stable' }}>
+        <main className="flex-1 flex flex-col min-w-0 bg-white overflow-hidden relative z-30" style={{ scrollbarGutter: 'stable' }}>
           {activePage === 'account' ? (
             <SimpleHeader
               title="Account Settings"
@@ -461,7 +464,7 @@ function AppContent() {
               subtitle="Manage display currency, convert between currencies, and view live exchange rates."
               onNavigateToNotifications={() => setActivePage('notifications')}
             />
-          ) : activePage === 'new-email' ? null : activePage === 'ai-chat' ? null : activePage === 'ai-proxy' ? null : (
+          ) : activePage === 'new-email' ? null : activePage === 'ai-chat' ? null : activePage === 'ai-proxy' ? null : activePage === 'pricing' ? null : activePage === 'home' ? null : (
             <Header
               activePage={activePage}
               onOpenDrawer={() => {}}
@@ -474,10 +477,16 @@ function AppContent() {
           )}
 
           {activePage === 'home' ? (
-            <div className="flex-1 overflow-y-auto md:p-8 custom-scrollbar pt-6 pr-6 pb-6 pl-6 space-y-8" style={{ scrollbarGutter: 'stable' }}>
-            <div className="grid grid-cols-12 gap-6">
-              <div className="col-span-12 xl:col-span-8 space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="flex-1 overflow-y-auto custom-scrollbar bg-[#fafafa] flex flex-col" style={{ scrollbarGutter: 'stable' }}>
+            <DashboardHeader
+              isTeamView={isTeamView}
+              onToggleView={setIsTeamView}
+              onNavigateToNotifications={() => setActivePage('notifications')}
+            />
+            <div className="px-6 py-6 flex-1 flex flex-col">
+            <div className="grid grid-cols-12 gap-5 flex-1">
+              <div className="col-span-12 xl:col-span-8 flex flex-col gap-5">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   <StatsCard
                     title="Total Quotations"
                     value="$3,810,710"
@@ -545,6 +554,7 @@ function AppContent() {
                   }}
                 />
               </div>
+            </div>
             </div>
             </div>
           ) : activePage === 'contacts' ? (
@@ -734,7 +744,10 @@ function AppContent() {
               onDeleteAccountClick={handleOpenDeleteAccountModal}
               connectedTools={connectedTools}
               onConnectedToolsChange={setConnectedTools}
+              onViewPlans={() => { setPricingOriginPage('account'); setActivePage('pricing'); }}
             />
+          ) : activePage === 'pricing' ? (
+            <PricingPage onBack={() => setActivePage(pricingOriginPage)} />
           ) : activePage === 'call-history' ? (
             <CallHistory onBack={() => setActivePage('contacts')} onViewCall={handleViewCall} />
           ) : activePage === 'ai-chat' ? (
@@ -852,6 +865,7 @@ function AppContent() {
         isDeleting={isDeletingEntity}
       />
       <MinimizedCallsBar />
+      <FloatingAIWidget isVisible={activePage !== 'ai-proxy' && activePage !== 'ai-chat'} />
       <FloatingChatButton
         unreadCount={chatUnreadCount}
         onClick={() => setIsSupportChatOpen(!isSupportChatOpen)}

@@ -33,7 +33,7 @@ export default function AddProductDrawer({ isOpen, onClose }: AddProductDrawerPr
       >
         <div className="px-8 py-6 border-b border-slate-100/50 bg-white/40 backdrop-blur-md z-10 flex items-center justify-between sticky top-0">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-600 shadow-sm">
+            <div className="w-10 h-10 rounded-xl bg-slate-100 border border-slate-200/60 flex items-center justify-center text-slate-600 shadow-sm">
               <Icon icon="solar:box-linear" width="20" />
             </div>
             <div>
@@ -67,7 +67,7 @@ export default function AddProductDrawer({ isOpen, onClose }: AddProductDrawerPr
                   </label>
                   <input
                     type="text"
-                    className="block w-full rounded-xl border-slate-200 bg-white/80 px-3 py-2 text-sm text-slate-700 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all placeholder:text-slate-400"
+                    className="block w-full rounded-xl border-slate-200 bg-white/80 px-3 py-2 text-sm text-slate-700 focus:border-slate-400 focus:ring-2 focus:ring-slate-200 transition-all placeholder:text-slate-400"
                     placeholder="e.g. Nike Air Max 270"
                   />
                 </div>
@@ -79,7 +79,7 @@ export default function AddProductDrawer({ isOpen, onClose }: AddProductDrawerPr
                     </label>
                     <input
                       type="text"
-                      className="block w-full rounded-xl border-slate-200 bg-white/80 px-3 py-2 text-sm text-slate-700 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all placeholder:text-slate-400"
+                      className="block w-full rounded-xl border-slate-200 bg-white/80 px-3 py-2 text-sm text-slate-700 focus:border-slate-400 focus:ring-2 focus:ring-slate-200 transition-all placeholder:text-slate-400"
                       placeholder="e.g. NK-2024-001"
                     />
                   </div>
@@ -89,7 +89,7 @@ export default function AddProductDrawer({ isOpen, onClose }: AddProductDrawerPr
                     </label>
                     <input
                       type="text"
-                      className="block w-full rounded-xl border-slate-200 bg-white/80 px-3 py-2 text-sm text-slate-700 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all placeholder:text-slate-400"
+                      className="block w-full rounded-xl border-slate-200 bg-white/80 px-3 py-2 text-sm text-slate-700 focus:border-slate-400 focus:ring-2 focus:ring-slate-200 transition-all placeholder:text-slate-400"
                       placeholder="e.g. 123456789"
                     />
                   </div>
@@ -180,7 +180,7 @@ export default function AddProductDrawer({ isOpen, onClose }: AddProductDrawerPr
                     <input
                       type="number"
                       step="0.01"
-                      className="block w-full rounded-xl border-slate-200 bg-white/80 px-3 py-2 text-sm text-slate-700 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all placeholder:text-slate-400 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                      className="block w-full rounded-xl border-slate-200 bg-white/80 px-3 py-2 text-sm text-slate-700 focus:border-slate-400 focus:ring-2 focus:ring-slate-200 transition-all placeholder:text-slate-400 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                       placeholder="0.00"
                     />
                   </div>
@@ -191,7 +191,7 @@ export default function AddProductDrawer({ isOpen, onClose }: AddProductDrawerPr
                     <input
                       type="number"
                       step="0.1"
-                      className="block w-full rounded-xl border-slate-200 bg-white/80 px-3 py-2 text-sm text-slate-700 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all placeholder:text-slate-400 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                      className="block w-full rounded-xl border-slate-200 bg-white/80 px-3 py-2 text-sm text-slate-700 focus:border-slate-400 focus:ring-2 focus:ring-slate-200 transition-all placeholder:text-slate-400 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                       placeholder="e.g. 30"
                     />
                   </div>
@@ -204,7 +204,7 @@ export default function AddProductDrawer({ isOpen, onClose }: AddProductDrawerPr
                   <input
                     type="number"
                     step="0.01"
-                    className="block w-full rounded-xl border-slate-200 bg-white/80 px-3 py-2 text-sm text-slate-700 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all placeholder:text-slate-400 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                    className="block w-full rounded-xl border-slate-200 bg-white/80 px-3 py-2 text-sm text-slate-700 focus:border-slate-400 focus:ring-2 focus:ring-slate-200 transition-all placeholder:text-slate-400 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                     placeholder="0.00"
                   />
                 </div>
@@ -224,7 +224,7 @@ export default function AddProductDrawer({ isOpen, onClose }: AddProductDrawerPr
                     </label>
                     <input
                       type="number"
-                      className="block w-full rounded-xl border-slate-200 bg-white/80 px-3 py-2 text-sm text-slate-700 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all placeholder:text-slate-400 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                      className="block w-full rounded-xl border-slate-200 bg-white/80 px-3 py-2 text-sm text-slate-700 focus:border-slate-400 focus:ring-2 focus:ring-slate-200 transition-all placeholder:text-slate-400 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                       placeholder="e.g. 100"
                     />
                   </div>
@@ -234,7 +234,7 @@ export default function AddProductDrawer({ isOpen, onClose }: AddProductDrawerPr
                     </label>
                     <input
                       type="number"
-                      className="block w-full rounded-xl border-slate-200 bg-white/80 px-3 py-2 text-sm text-slate-700 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all placeholder:text-slate-400 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                      className="block w-full rounded-xl border-slate-200 bg-white/80 px-3 py-2 text-sm text-slate-700 focus:border-slate-400 focus:ring-2 focus:ring-slate-200 transition-all placeholder:text-slate-400 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                       placeholder="e.g. 20"
                     />
                   </div>
@@ -246,7 +246,7 @@ export default function AddProductDrawer({ isOpen, onClose }: AddProductDrawerPr
                   </label>
                   <input
                     type="text"
-                    className="block w-full rounded-xl border-slate-200 bg-white/80 px-3 py-2 text-sm text-slate-700 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all placeholder:text-slate-400"
+                    className="block w-full rounded-xl border-slate-200 bg-white/80 px-3 py-2 text-sm text-slate-700 focus:border-slate-400 focus:ring-2 focus:ring-slate-200 transition-all placeholder:text-slate-400"
                     placeholder="e.g. Nike Inc."
                   />
                 </div>
@@ -257,7 +257,7 @@ export default function AddProductDrawer({ isOpen, onClose }: AddProductDrawerPr
                   </label>
                   <input
                     type="text"
-                    className="block w-full rounded-xl border-slate-200 bg-white/80 px-3 py-2 text-sm text-slate-700 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all placeholder:text-slate-400"
+                    className="block w-full rounded-xl border-slate-200 bg-white/80 px-3 py-2 text-sm text-slate-700 focus:border-slate-400 focus:ring-2 focus:ring-slate-200 transition-all placeholder:text-slate-400"
                     placeholder="e.g. Aisle A, Shelf 12"
                   />
                 </div>
@@ -276,7 +276,7 @@ export default function AddProductDrawer({ isOpen, onClose }: AddProductDrawerPr
                   </label>
                   <textarea
                     rows={4}
-                    className="block w-full rounded-xl border-slate-200 bg-white/80 px-3 py-2 text-sm text-slate-700 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all placeholder:text-slate-400 resize-none"
+                    className="block w-full rounded-xl border-slate-200 bg-white/80 px-3 py-2 text-sm text-slate-700 focus:border-slate-400 focus:ring-2 focus:ring-slate-200 transition-all placeholder:text-slate-400 resize-none"
                     placeholder="e.g. Premium quality footwear with advanced cushioning technology..."
                   />
                 </div>
@@ -304,13 +304,13 @@ export default function AddProductDrawer({ isOpen, onClose }: AddProductDrawerPr
                 Product Images
               </h4>
               <div className="space-y-3">
-                <div className="border-2 border-dashed border-slate-200 rounded-xl p-6 text-center hover:border-indigo-300 hover:bg-indigo-50/30 transition-all cursor-pointer group">
+                <div className="border-2 border-dashed border-slate-200 rounded-xl p-6 text-center hover:border-slate-300 hover:bg-slate-50 transition-all cursor-pointer group">
                   <div className="flex flex-col items-center gap-2">
-                    <div className="w-12 h-12 rounded-full bg-slate-100 group-hover:bg-indigo-100 flex items-center justify-center text-slate-400 group-hover:text-indigo-600 transition-colors">
+                    <div className="w-12 h-12 rounded-full bg-slate-100 group-hover:bg-slate-200 flex items-center justify-center text-slate-400 group-hover:text-slate-600 transition-colors">
                       <Icon icon="solar:upload-linear" width="24" />
                     </div>
                     <div>
-                      <p className="text-sm font-semibold text-slate-700 group-hover:text-indigo-600 transition-colors">
+                      <p className="text-sm font-semibold text-slate-700 group-hover:text-slate-900 transition-colors">
                         Click to upload
                       </p>
                       <p className="text-xs text-slate-400 mt-0.5">PNG, JPG up to 5MB</p>
@@ -325,7 +325,7 @@ export default function AddProductDrawer({ isOpen, onClose }: AddProductDrawerPr
         </div>
 
         <div className="px-8 py-5 border-t border-slate-100/50 bg-white/80 backdrop-blur-xl flex items-center gap-3 absolute bottom-0 w-full z-20">
-          <button className="flex-1 rounded-xl bg-gradient-to-b from-indigo-600 to-indigo-700 hover:from-indigo-500 hover:to-indigo-600 border-t border-white/20 text-white px-4 py-2.5 text-sm font-semibold tracking-wide shadow-lg shadow-indigo-600/20 transition-all active:scale-[0.98] flex items-center justify-center gap-2">
+          <button className="flex-1 rounded-xl bg-slate-900 hover:bg-slate-800 text-white px-4 py-2.5 text-sm font-semibold tracking-wide shadow-lg shadow-slate-900/10 transition-all active:scale-[0.98] flex items-center justify-center gap-2">
             <Icon icon="solar:check-circle-linear" width="18" />
             Create Product
           </button>

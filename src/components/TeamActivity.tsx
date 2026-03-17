@@ -90,55 +90,39 @@ interface TeamActivityProps {
 
 export default function TeamActivity({ onViewFullActivity }: TeamActivityProps) {
   return (
-    <div className="glass-card rounded-2xl h-full flex flex-col rounded-[20px]">
-      <div className="p-6 border-b flex items-center justify-between border-slate-100/50">
-        <div className="flex items-center gap-2">
-          <div className="p-2 bg-indigo-50 text-indigo-600 rounded-lg">
-            <Icon icon="solar:pulse-2-bold" width="18" />
-          </div>
-          <h3 className="font-semibold text-slate-900 font-display">Team Activity</h3>
-        </div>
-        <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-0.5 text-xs font-medium text-emerald-700 ring-1 ring-inset ring-emerald-600/20">
-          <span className="relative flex h-1.5 w-1.5">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span>
-          </span>
-          Real-time
-        </span>
+    <div className="bg-white rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.04),0_8px_24px_rgba(0,0,0,0.03)] border border-slate-100/80 h-full flex flex-col">
+      <div className="px-4 py-3.5 border-b border-slate-100 flex items-center justify-between">
+        <h3 className="text-[13px] font-semibold text-slate-700">Team Activity</h3>
+        <span className="text-[10px] text-slate-400">Live</span>
       </div>
-      <div className="flex-1 overflow-y-auto p-6 space-y-8 relative">
-        <div className="absolute left-[39px] top-8 bottom-8 w-px bg-slate-200/60"></div>
+      <div className="flex-1 overflow-y-auto p-4 space-y-4">
         {activities.map((activity) => (
-          <div key={activity.id} className="relative flex gap-4">
-            <div className="relative z-10 flex-shrink-0 mt-1">
-              <div
-                className={`h-8 w-8 rounded-full ${activity.iconBg} border flex items-center justify-center ${activity.iconColor} shadow-lg shadow-${activity.iconColor.split('-')[1]}-500/10 ring-4 ${activity.ringColor}`}
-              >
-                <Icon icon={activity.icon} width="14" />
+          <div key={activity.id} className="flex gap-3">
+            <div className="flex-shrink-0 mt-0.5">
+              <div className={`h-6 w-6 rounded-md ${activity.iconBg} flex items-center justify-center ${activity.iconColor}`}>
+                <Icon icon={activity.icon} width="12" />
               </div>
             </div>
-            <div className="flex-1 space-y-1">
-              <div className="flex items-center justify-between">
-                <p className="text-sm font-semibold text-slate-900">{activityTitles[activity.type]}</p>
-                <span className="text-xs text-slate-400">{activity.time}</span>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center justify-between mb-0.5">
+                <p className="text-[13px] font-medium text-slate-700">{activityTitles[activity.type]}</p>
+                <span className="text-[10px] text-slate-400 flex-shrink-0">{activity.time}</span>
               </div>
-              <p className="text-sm text-slate-500 leading-relaxed font-medium">
-                <span className="text-slate-900 font-semibold hover:text-indigo-600 cursor-pointer transition">
-                  {activity.user}
-                </span>{' '}
-                {activity.action} <span className="text-slate-700">{activity.target}</span>
+              <p className="text-[12px] text-slate-400 leading-relaxed">
+                <span className="text-slate-600 font-medium">{activity.user}</span>{' '}
+                {activity.action} <span className="text-slate-500">{activity.target}</span>
                 {activity.type === 'presentation' || activity.type === 'published' ? '.' : ''}
               </p>
             </div>
           </div>
         ))}
       </div>
-      <div className="p-4 border-t border-slate-100/50">
+      <div className="px-4 py-3 border-t border-slate-100">
         <button
           onClick={onViewFullActivity}
-          className="w-full py-2.5 rounded-xl bg-slate-50 border border-slate-200/60 text-sm font-semibold text-slate-600 hover:text-slate-900 hover:bg-white hover:shadow-md transition flex items-center justify-center gap-2"
+          className="w-full py-2 rounded-xl text-[12px] font-medium text-slate-500 hover:text-slate-700 hover:bg-slate-50 transition-colors"
         >
-          See Full Activity
+          See all activity
         </button>
       </div>
     </div>

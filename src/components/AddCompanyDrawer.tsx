@@ -31,7 +31,7 @@ export default function AddCompanyDrawer({ isOpen, onClose }: AddCompanyDrawerPr
       >
         <div className="px-8 py-6 border-b border-slate-100/50 bg-white/40 backdrop-blur-md z-10 flex items-center justify-between sticky top-0">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-600 shadow-sm">
+            <div className="w-10 h-10 rounded-xl bg-slate-100 border border-slate-200/60 flex items-center justify-center text-slate-600 shadow-sm">
               <Icon icon="solar:buildings-2-linear" width="20" />
             </div>
             <div>
@@ -65,7 +65,7 @@ export default function AddCompanyDrawer({ isOpen, onClose }: AddCompanyDrawerPr
                   </label>
                   <input
                     type="text"
-                    className="block w-full rounded-xl border-slate-200 bg-white/80 px-3 py-2 text-sm text-slate-700 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all placeholder:text-slate-400"
+                    className="block w-full rounded-xl border-slate-200 bg-white/80 px-3 py-2 text-sm text-slate-700 focus:border-slate-400 focus:ring-2 focus:ring-slate-200 transition-all placeholder:text-slate-400"
                     placeholder="e.g. Acme Inc."
                   />
                 </div>
@@ -74,7 +74,7 @@ export default function AddCompanyDrawer({ isOpen, onClose }: AddCompanyDrawerPr
                   <label className="text-[11px] font-semibold text-slate-500 uppercase tracking-wide">
                     Phone Number
                   </label>
-                  <div className="flex rounded-xl shadow-sm border border-slate-200 bg-white/80 focus-within:border-indigo-500 focus-within:ring-4 focus-within:ring-indigo-500/10 transition-all">
+                  <div className="flex rounded-xl shadow-sm border border-slate-200 bg-white/80 focus-within:border-slate-400 focus-within:ring-2 focus-within:ring-slate-200 transition-all">
                     <div className="relative flex items-center border-r border-slate-200 px-3">
                       <span className="text-xs font-medium text-slate-500">
                         +63
@@ -120,7 +120,7 @@ export default function AddCompanyDrawer({ isOpen, onClose }: AddCompanyDrawerPr
                     </label>
                     <input
                       type="text"
-                      className="block w-full rounded-xl border-slate-200 bg-white/80 px-3 py-2 text-sm text-slate-700 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all placeholder:text-slate-400"
+                      className="block w-full rounded-xl border-slate-200 bg-white/80 px-3 py-2 text-sm text-slate-700 focus:border-slate-400 focus:ring-2 focus:ring-slate-200 transition-all placeholder:text-slate-400"
                       placeholder="e.g. New York"
                     />
                   </div>
@@ -130,7 +130,7 @@ export default function AddCompanyDrawer({ isOpen, onClose }: AddCompanyDrawerPr
                     </label>
                     <input
                       type="text"
-                      className="block w-full rounded-xl border-slate-200 bg-white/80 px-3 py-2 text-sm text-slate-700 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all placeholder:text-slate-400"
+                      className="block w-full rounded-xl border-slate-200 bg-white/80 px-3 py-2 text-sm text-slate-700 focus:border-slate-400 focus:ring-2 focus:ring-slate-200 transition-all placeholder:text-slate-400"
                       placeholder="e.g. NY"
                     />
                   </div>
@@ -140,7 +140,7 @@ export default function AddCompanyDrawer({ isOpen, onClose }: AddCompanyDrawerPr
                     </label>
                     <input
                       type="text"
-                      className="block w-full rounded-xl border-slate-200 bg-white/80 px-3 py-2 text-sm text-slate-700 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all placeholder:text-slate-400"
+                      className="block w-full rounded-xl border-slate-200 bg-white/80 px-3 py-2 text-sm text-slate-700 focus:border-slate-400 focus:ring-2 focus:ring-slate-200 transition-all placeholder:text-slate-400"
                       placeholder="e.g. 10001"
                     />
                   </div>
@@ -152,7 +152,7 @@ export default function AddCompanyDrawer({ isOpen, onClose }: AddCompanyDrawerPr
                   </label>
                   <input
                     type="url"
-                    className="block w-full rounded-xl border-slate-200 bg-white/80 px-3 py-2 text-sm text-slate-700 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all placeholder:text-slate-400"
+                    className="block w-full rounded-xl border-slate-200 bg-white/80 px-3 py-2 text-sm text-slate-700 focus:border-slate-400 focus:ring-2 focus:ring-slate-200 transition-all placeholder:text-slate-400"
                     placeholder="e.g. www.company.com or company.com"
                   />
                 </div>
@@ -199,7 +199,7 @@ export default function AddCompanyDrawer({ isOpen, onClose }: AddCompanyDrawerPr
                   </label>
                   <textarea
                     rows={4}
-                    className="block w-full rounded-xl border-slate-200 bg-white/80 px-3 py-2 text-sm text-slate-700 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all placeholder:text-slate-400 resize-none"
+                    className="block w-full rounded-xl border-slate-200 bg-white/80 px-3 py-2 text-sm text-slate-700 focus:border-slate-400 focus:ring-2 focus:ring-slate-200 transition-all placeholder:text-slate-400 resize-none"
                     placeholder="e.g. Brief description about the company..."
                   />
                 </div>
@@ -220,7 +220,7 @@ export default function AddCompanyDrawer({ isOpen, onClose }: AddCompanyDrawerPr
                 </div>
                 <input
                   type="text"
-                  className="block w-full pl-10 pr-3 py-2 rounded-xl border-slate-200 bg-white/80 text-sm text-slate-700 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all placeholder:text-slate-400"
+                  className="block w-full pl-10 pr-3 py-2 rounded-xl border-slate-200 bg-white/80 text-sm text-slate-700 focus:border-slate-400 focus:ring-2 focus:ring-slate-200 transition-all placeholder:text-slate-400"
                   placeholder="Select contacts to associate"
                 />
               </div>
@@ -231,7 +231,7 @@ export default function AddCompanyDrawer({ isOpen, onClose }: AddCompanyDrawerPr
         </div>
 
         <div className="px-8 py-5 border-t border-slate-100/50 bg-white/80 backdrop-blur-xl flex items-center gap-3 absolute bottom-0 w-full z-20">
-          <button className="flex-1 rounded-xl bg-gradient-to-b from-indigo-600 to-indigo-700 hover:from-indigo-500 hover:to-indigo-600 border-t border-white/20 text-white px-4 py-2.5 text-sm font-semibold tracking-wide shadow-lg shadow-indigo-600/20 transition-all active:scale-[0.98] flex items-center justify-center gap-2">
+          <button className="flex-1 rounded-xl bg-slate-900 hover:bg-slate-800 text-white px-4 py-2.5 text-sm font-semibold tracking-wide shadow-lg shadow-slate-900/10 transition-all active:scale-[0.98] flex items-center justify-center gap-2">
             <Icon icon="solar:check-circle-linear" width="18" />
             Create Company
           </button>

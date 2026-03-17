@@ -83,66 +83,55 @@ export default function Presentations({ showRecordModal, onCloseRecordModal, onO
 
   return (
     <div className="flex-1 overflow-y-auto custom-scrollbar p-6 space-y-6">
-      <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
-        <div className="flex flex-wrap gap-2">
-          <button
-            onClick={() => setFilterType('all')}
-            className={`px-4 py-2 rounded-xl font-semibold text-sm transition-all ${
-              filterType === 'all'
-                ? 'bg-blue-50/80 text-blue-700 shadow-sm border border-blue-200'
-                : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 hover:border-slate-300 hover:shadow-sm'
-            }`}
-          >
-            All
-            <span className={`ml-2 text-xs ${filterType === 'all' ? 'opacity-75' : 'opacity-60'}`}>({presentations.length})</span>
-          </button>
-          <button
-            onClick={() => setFilterType('quote')}
-            className={`px-4 py-2 rounded-xl font-semibold text-sm transition-all flex items-center gap-1.5 ${
-              filterType === 'quote'
-                ? 'bg-blue-600 text-white shadow-sm shadow-blue-600/20 border border-blue-500'
-                : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 hover:border-slate-300 hover:shadow-sm'
-            }`}
-          >
-            <Icon icon="solar:document-text-bold" className="w-4 h-4" />
-            Quotes
-            <span className={`ml-1 text-xs ${filterType === 'quote' ? 'opacity-75' : 'opacity-60'}`}>({presentations.filter((p) => p.type === 'quote').length})</span>
-          </button>
-          <button
-            onClick={() => setFilterType('invoice')}
-            className={`px-4 py-2 rounded-xl font-semibold text-sm transition-all flex items-center gap-1.5 ${
-              filterType === 'invoice'
-                ? 'bg-emerald-600 text-white shadow-sm shadow-emerald-600/20 border border-emerald-500'
-                : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 hover:border-slate-300 hover:shadow-sm'
-            }`}
-          >
-            <Icon icon="solar:bill-list-bold" className="w-4 h-4" />
-            Invoices
-            <span className={`ml-1 text-xs ${filterType === 'invoice' ? 'opacity-75' : 'opacity-60'}`}>({presentations.filter((p) => p.type === 'invoice').length})</span>
-          </button>
+      {/* Toolbar */}
+      <div className="flex flex-col sm:flex-row gap-3 items-center justify-between">
+        <div className="flex items-center gap-3 w-full sm:w-auto">
+          <div className="group w-full sm:w-80 relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-slate-500 transition-colors" />
+            <input
+              type="text"
+              placeholder="Search walkthroughs..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="block w-full pl-10 pr-3 py-2.5 border border-slate-200 rounded-xl leading-5 bg-white text-slate-600 placeholder-slate-400 focus:outline-none focus:border-slate-400 sm:text-sm transition-colors hover:border-slate-300"
+            />
+          </div>
+
+          {/* Type filter */}
+          <div className="flex items-center bg-slate-100 rounded-lg p-0.5">
+            <button
+              onClick={() => setFilterType('all')}
+              className={`px-3 py-1.5 rounded-md text-[12px] font-medium transition-all ${filterType === 'all' ? 'bg-white text-slate-700 shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
+            >
+              All
+            </button>
+            <button
+              onClick={() => setFilterType('quote')}
+              className={`px-3 py-1.5 rounded-md text-[12px] font-medium transition-all ${filterType === 'quote' ? 'bg-white text-slate-700 shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
+            >
+              Quotes
+            </button>
+            <button
+              onClick={() => setFilterType('invoice')}
+              className={`px-3 py-1.5 rounded-md text-[12px] font-medium transition-all ${filterType === 'invoice' ? 'bg-white text-slate-700 shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
+            >
+              Invoices
+            </button>
+          </div>
         </div>
 
-        <div className="flex items-center gap-3">
-          <SortDropdown
-            value={sortBy}
-            options={sortOptions}
-            onChange={(value) => setSortBy(value as SortType)}
-          />
-
-          <div className="flex items-center gap-1.5 bg-white border border-slate-200 rounded-lg p-1 shadow-sm">
+        <div className="flex items-center gap-2">
+          {/* View toggle */}
+          <div className="flex items-center bg-slate-100 rounded-lg p-0.5">
             <button
               onClick={() => setViewMode('grid')}
-              className={`p-1.5 rounded transition-all ${
-                viewMode === 'grid' ? 'bg-slate-100 text-slate-700 shadow-sm' : 'text-slate-400 hover:text-slate-600 hover:bg-slate-50'
-              }`}
+              className={`p-1.5 rounded-md transition-all ${viewMode === 'grid' ? 'bg-white text-slate-700 shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
             >
               <Grid3x3 className="w-4 h-4" />
             </button>
             <button
               onClick={() => setViewMode('list')}
-              className={`p-1.5 rounded transition-all ${
-                viewMode === 'list' ? 'bg-slate-100 text-slate-700 shadow-sm' : 'text-slate-400 hover:text-slate-600 hover:bg-slate-50'
-              }`}
+              className={`p-1.5 rounded-md transition-all ${viewMode === 'list' ? 'bg-white text-slate-700 shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
             >
               <List className="w-4 h-4" />
             </button>
@@ -150,43 +139,29 @@ export default function Presentations({ showRecordModal, onCloseRecordModal, onO
 
           <button
             onClick={() => onOpenRecordModal?.()}
-            className="flex items-center gap-2 bg-gradient-to-b from-indigo-600 to-indigo-700 hover:from-indigo-500 hover:to-indigo-600 border-t border-white/20 text-white px-5 py-2.5 rounded-xl shadow-lg shadow-indigo-600/20 transition-all active:scale-95"
+            className="flex items-center gap-2 border border-slate-200 text-slate-600 hover:text-slate-800 hover:border-slate-300 hover:bg-slate-50 px-4 py-2 rounded-xl transition-all active:scale-[0.98]"
           >
-            <Icon icon="solar:videocamera-record-bold" width="18" className="text-indigo-100" />
-            <span className="text-sm font-semibold tracking-wide">Record New</span>
+            <Icon icon="solar:videocamera-record-linear" width="15" className="text-slate-400" />
+            <span className="text-[13px] font-medium">Record</span>
           </button>
         </div>
       </div>
 
-      <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center">
-        <div className="w-full sm:w-auto sm:min-w-[320px] sm:max-w-md relative group">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-blue-600 transition-colors" />
-          <input
-            type="text"
-            placeholder="Search presentations..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-9 pr-4 py-2 bg-white border border-slate-200 rounded-lg text-slate-600 placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-blue-600/10 focus:border-blue-600/50 text-sm shadow-sm transition-all hover:border-slate-300"
-          />
-        </div>
-
-        <ScopeFilter value={scope} onChange={setScope} />
-      </div>
-
+      {/* Empty state */}
       {filteredAndSortedPresentations.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20">
-          <div className="w-20 h-20 bg-gradient-to-br from-slate-100 to-slate-200 rounded-2xl flex items-center justify-center mb-6">
-            <Video className="w-10 h-10 text-slate-500" />
+          <div className="w-12 h-12 bg-slate-100 rounded-xl flex items-center justify-center mb-4">
+            <Video className="w-5 h-5 text-slate-400" />
           </div>
-          <h3 className="text-xl font-bold text-slate-900 mb-2">No presentations found</h3>
-          <p className="text-slate-500 mb-6 text-center max-w-md">
+          <h3 className="text-sm font-semibold text-slate-700 mb-1">No walkthroughs found</h3>
+          <p className="text-[13px] text-slate-400 text-center max-w-sm">
             {searchQuery
-              ? 'Try adjusting your search query or filters'
-              : 'Get started by recording your first video presentation'}
+              ? 'Try adjusting your search or filters.'
+              : 'Record your first video walkthrough to get started.'}
           </p>
         </div>
       ) : (
-        <div className={viewMode === 'grid' ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6' : 'space-y-4'}>
+        <div className={viewMode === 'grid' ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4' : 'space-y-3'}>
           {filteredAndSortedPresentations.map((presentation) => (
             <PresentationCard
               key={presentation.id}

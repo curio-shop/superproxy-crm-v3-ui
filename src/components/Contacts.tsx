@@ -84,101 +84,66 @@ export default function Contacts({ isTeamView, homeFilterPreference, onColdCallC
     setOpenMenuId(null);
   };
 
-  const avatarColors = {
-    blue: { bg: 'bg-blue-50', text: 'text-blue-600', ring: 'ring-blue-100' },
-    pink: { bg: 'bg-pink-50', text: 'text-pink-600', ring: 'ring-pink-100' },
-    amber: { bg: 'bg-amber-50', text: 'text-amber-600', ring: 'ring-amber-100' },
-    emerald: { bg: 'bg-emerald-50', text: 'text-emerald-600', ring: 'ring-emerald-100' },
-    slate: { bg: 'bg-slate-100', text: 'text-slate-600', ring: 'ring-slate-200' },
-  };
-
-  const ownerColors = {
-    slate: { bg: 'bg-slate-100', text: 'text-slate-700', border: 'border-slate-200' },
-    emerald: { bg: 'bg-emerald-50', text: 'text-emerald-700', border: 'border-emerald-200' },
-    indigo: { bg: 'bg-blue-50', text: 'text-blue-700', border: 'border-blue-200' },
-    purple: { bg: 'bg-purple-50', text: 'text-purple-700', border: 'border-purple-200' },
-  };
-
   const contacts: ContactDetail[] = [
     {
-      id: '1',
-      name: 'Let Cruz',
-      initials: 'LC',
-      company: 'VCC Construction',
-      title: 'CEO',
-      email: 'vcc.letcruz@myyahoo.com',
-      phone: '+639064636955',
-      owner: { name: 'Ivan Gonzales', initials: 'IG', color: 'slate' },
-      avatarColor: 'blue',
+      id: '1', name: 'Let Cruz', initials: 'LC', company: 'VCC Construction', title: 'CEO',
+      email: 'vcc.letcruz@myyahoo.com', phone: '+639064636955',
+      owner: { name: 'Ivan Gonzales', initials: 'IG', color: 'slate' }, avatarColor: 'slate',
     },
     {
-      id: '2',
-      name: 'Hailey Collins',
-      initials: 'HC',
-      company: 'Notion',
-      title: 'Client',
-      email: 'hailey@riggedparts.com',
-      phone: '+17135558235',
-      owner: { name: 'Pete Salvador', initials: 'PS', color: 'emerald' },
-      avatarColor: 'pink',
+      id: '2', name: 'Hailey Collins', initials: 'HC', company: 'Notion', title: 'Head of Partnerships',
+      email: 'hailey.collins@notion.so', phone: '+17135558235',
+      owner: { name: 'Pete Salvador', initials: 'PS', color: 'slate' }, avatarColor: 'slate',
     },
     {
-      id: '3',
-      name: 'Wang Wen',
-      initials: 'WW',
-      company: 'SpaceX',
-      title: 'Client',
-      email: 'melwyn.arrubio@yahoo.com',
-      phone: '+639175328910',
-      owner: { name: 'Jayzel Tacan', initials: 'JT', color: 'indigo' },
-      avatarColor: 'amber',
+      id: '3', name: 'Wang Wen', initials: 'WW', company: 'SpaceX', title: 'Procurement Lead',
+      email: 'wang.wen@spacex.com', phone: '+639175328910',
+      owner: { name: 'Jayzel Tacan', initials: 'JT', color: 'slate' }, avatarColor: 'slate',
     },
     {
-      id: '4',
-      name: 'Khim Tanglao',
-      initials: 'KT',
-      company: 'Metriccon Corp',
-      title: 'Purchasing Manager',
-      email: 'metriccon.purchasing@gmail.com',
-      phone: '+639088938387',
-      owner: { name: 'John Wee', initials: 'JW', color: 'purple' },
-      avatarColor: 'slate',
+      id: '4', name: 'Khim Tanglao', initials: 'KT', company: 'Metriccon Corp', title: 'Purchasing Manager',
+      email: 'khim.tanglao@metriccon.com', phone: '+639088938387',
+      owner: { name: 'John Wee', initials: 'JW', color: 'slate' }, avatarColor: 'slate',
     },
     {
-      id: '5',
-      name: 'Mac Mill',
-      initials: 'MM',
-      company: 'Apple',
-      title: 'Purchaser',
-      email: 'mac@m.gom',
-      owner: {
-        name: 'Melwyn Arrubio',
-        avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&q=80',
-        color: 'slate',
-      },
-      avatarColor: 'emerald',
+      id: '5', name: 'Mac Mill', initials: 'MM', company: 'Apple', title: 'Senior Buyer',
+      email: 'mac.mill@apple.com', phone: '+14085551234',
+      owner: { name: 'Melwyn Arrubio', initials: 'MA', color: 'slate' }, avatarColor: 'slate',
     },
     {
-      id: '6',
-      name: 'Micaela Pena',
-      initials: 'MP',
-      company: 'BuildRight Inc',
-      title: 'Project Manager',
-      email: 'micaela.pena@gmail.com',
-      phone: '+639171337142',
-      owner: { name: 'Ivan Gonzales', initials: 'IG', color: 'slate' },
-      avatarColor: 'slate',
+      id: '6', name: 'Micaela Pena', initials: 'MP', company: 'BuildRight Inc', title: 'Project Manager',
+      email: 'micaela.pena@buildright.com', phone: '+639171337142',
+      owner: { name: 'Ivan Gonzales', initials: 'IG', color: 'slate' }, avatarColor: 'slate',
     },
     {
-      id: '7',
-      name: 'Gillian Guiang',
-      initials: 'GG',
-      company: 'Design Studio',
-      title: 'Interior Designer',
-      email: 'gillian@designstudio.com',
-      phone: '+639178102367',
-      owner: { name: 'Jayzel Tacan', initials: 'JT', color: 'indigo' },
-      avatarColor: 'slate',
+      id: '7', name: 'Gillian Guiang', initials: 'GG', company: 'Design Studio', title: 'Interior Designer',
+      email: 'gillian@designstudio.com', phone: '+639178102367',
+      owner: { name: 'Jayzel Tacan', initials: 'JT', color: 'slate' }, avatarColor: 'slate',
+    },
+    {
+      id: '8', name: 'Sarah Chen', initials: 'SC', company: 'Apex Technologies', title: 'VP of Engineering',
+      email: 'sarah.chen@apextech.io', phone: '+6591234567',
+      owner: { name: 'Pete Salvador', initials: 'PS', color: 'slate' }, avatarColor: 'slate',
+    },
+    {
+      id: '9', name: 'Marcus Johnson', initials: 'MJ', company: 'Nova Retail Group', title: 'Operations Director',
+      email: 'marcus@novaretail.com', phone: '+17025559876',
+      owner: { name: 'Ivan Gonzales', initials: 'IG', color: 'slate' }, avatarColor: 'slate',
+    },
+    {
+      id: '10', name: 'Elena Rodriguez', initials: 'ER', company: 'SkyLink Partners', title: 'Managing Partner',
+      email: 'elena.r@skylinkpartners.com', phone: '+34612345678',
+      owner: { name: 'John Wee', initials: 'JW', color: 'slate' }, avatarColor: 'slate',
+    },
+    {
+      id: '11', name: 'James Whitfield', initials: 'JW', company: 'Crestwood Holdings', title: 'CFO',
+      email: 'j.whitfield@crestwood.co', phone: '+442071234567',
+      owner: { name: 'Jayzel Tacan', initials: 'JT', color: 'slate' }, avatarColor: 'slate',
+    },
+    {
+      id: '12', name: 'Aiko Tanaka', initials: 'AT', company: 'Meridian Logistics', title: 'Supply Chain Manager',
+      email: 'aiko.tanaka@meridian.jp', phone: '+81312345678',
+      owner: { name: 'Pete Salvador', initials: 'PS', color: 'slate' }, avatarColor: 'slate',
     },
   ];
 
@@ -186,298 +151,173 @@ export default function Contacts({ isTeamView, homeFilterPreference, onColdCallC
     <div className="flex-1 overflow-hidden flex flex-col p-6" style={{ scrollbarGutter: 'stable' }}>
       <div className="flex flex-col sm:flex-row gap-3 items-center justify-between mb-6">
         <div className="flex items-center gap-3 w-full sm:w-auto">
-          <div className="group w-full sm:w-auto max-w-2xl relative">
+          <div className="group w-full sm:w-80 relative">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
               <Icon
                 icon="solar:magnifer-linear"
                 width="16"
-                className="text-slate-400 group-focus-within:text-indigo-500 transition-colors"
+                className="text-slate-400 group-focus-within:text-slate-500 transition-colors"
               />
             </div>
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="block w-full pl-10 pr-3 py-2.5 border border-slate-200 rounded-xl leading-5 bg-white text-slate-600 placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500/50 sm:text-sm shadow-sm transition-all hover:border-slate-300 hover:shadow-md"
+              className="block w-full pl-10 pr-3 py-2.5 border border-slate-200 rounded-xl leading-5 bg-white text-slate-600 placeholder-slate-400 focus:outline-none focus:border-slate-400 sm:text-sm transition-colors hover:border-slate-300"
               placeholder="Search contacts..."
             />
           </div>
 
-          <ScopeFilter
-            value={scopeFilter}
-            onChange={(scope) => {
-              setScopeFilter(scope);
-              setHasManuallyChanged(true);
-            }}
-            defaultScope="personal"
-            availableScopes={['personal', 'team']}
-          />
+          <div className="flex items-center bg-slate-100 rounded-lg p-0.5">
+            <button
+              onClick={() => { setScopeFilter('personal'); setHasManuallyChanged(true); }}
+              className={`px-3 py-1.5 rounded-md text-[12px] font-medium transition-all ${
+                scopeFilter === 'personal'
+                  ? 'bg-white text-slate-700 shadow-sm'
+                  : 'text-slate-400 hover:text-slate-600'
+              }`}
+            >
+              Personal
+            </button>
+            <button
+              onClick={() => { setScopeFilter('team'); setHasManuallyChanged(true); }}
+              className={`px-3 py-1.5 rounded-md text-[12px] font-medium transition-all ${
+                scopeFilter === 'team'
+                  ? 'bg-white text-slate-700 shadow-sm'
+                  : 'text-slate-400 hover:text-slate-600'
+              }`}
+            >
+              Team
+            </button>
+          </div>
         </div>
 
         <div className="flex items-center gap-2">
           <button
             onClick={() => onOpenAddContact?.()}
-            className="flex items-center gap-2 bg-gradient-to-b from-indigo-600 to-indigo-700 hover:from-indigo-500 hover:to-indigo-600 border-t border-white/20 text-white px-5 py-2.5 rounded-xl shadow-lg shadow-indigo-600/20 transition-all active:scale-95"
+            className="flex items-center gap-2 border border-slate-200 text-slate-600 hover:text-slate-800 hover:border-slate-300 hover:bg-slate-50 px-4 py-2 rounded-xl transition-all active:scale-[0.98]"
           >
-            <Icon icon="solar:add-circle-linear" width="18" className="text-indigo-100" />
-            <span className="text-sm font-semibold tracking-wide">Add Contact</span>
+            <Icon icon="solar:add-circle-linear" width="15" className="text-slate-400" />
+            <span className="text-[13px] font-medium">Add Contact</span>
           </button>
         </div>
       </div>
 
-      <div className="flex-1 shadow-slate-200/20 overflow-hidden flex flex-col bg-white/50 border-white/60 border rounded-[24px] relative shadow-xl">
+      <div className="flex-1 overflow-hidden flex flex-col bg-white border border-slate-200 rounded-2xl shadow-sm">
         <div className="overflow-x-auto flex-1 custom-scrollbar">
           <table className="min-w-full divide-y divide-slate-100">
-            <thead className="bg-slate-50/80">
-              <tr className="text-left text-[11px] font-bold text-slate-500 uppercase tracking-wider">
-                <th scope="col" className="pl-6 pr-3 py-4 w-12">
-                  <label className="custom-checkbox flex items-center cursor-pointer">
-                    <input type="checkbox" className="sr-only" />
-                    <div className="w-4 h-4 border-2 border-slate-300 rounded-md bg-white flex items-center justify-center transition-all hover:border-slate-400 hover:bg-slate-50">
-                      <svg
-                        className="w-2.5 h-2.5 text-white hidden pointer-events-none"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="3"
-                          d="M5 13l4 4L19 7"
-                        />
-                      </svg>
-                    </div>
-                  </label>
-                </th>
-                <th scope="col" className="px-6 py-4">
-                  Name
-                </th>
-                <th scope="col" className="px-6 py-4">
-                  Company
-                </th>
-                <th scope="col" className="px-6 py-4">
-                  Title
-                </th>
-                <th scope="col" className="px-6 py-4">
-                  Email
-                </th>
-                <th scope="col" className="px-6 py-4">
-                  Phone No.
-                </th>
-                <th scope="col" className="px-6 py-4 w-48">
-                  Owner
-                </th>
-                <th scope="col" className="px-6 py-4 w-16">
-                  ACTIONS
-                </th>
+            <thead>
+              <tr className="text-left text-[11px] font-medium text-slate-400 uppercase tracking-wider">
+                <th scope="col" className="pl-5 pr-2 py-3">Name</th>
+                <th scope="col" className="px-4 py-3">Company</th>
+                <th scope="col" className="px-4 py-3">Title</th>
+                <th scope="col" className="px-4 py-3">Email</th>
+                <th scope="col" className="px-4 py-3">Phone</th>
+                <th scope="col" className="px-4 py-3 w-12"></th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100 bg-white">
-              {contacts.map((contact) => {
-                const avatarStyle = avatarColors[contact.avatarColor as keyof typeof avatarColors];
-                const ownerStyle = ownerColors[contact.owner.color as keyof typeof ownerColors];
-
-                return (
-                  <tr key={contact.id} className="hover:bg-slate-50/50 transition-colors group">
-                    <td className="pl-6 pr-3 py-4 whitespace-nowrap">
-                      <label className="custom-checkbox flex items-center cursor-pointer">
-                        <input type="checkbox" className="sr-only" />
-                        <div className="w-4 h-4 border border-slate-300 rounded-md bg-white flex items-center justify-center transition-all group-hover:border-slate-400">
-                          <svg
-                            className="w-2.5 h-2.5 text-white hidden pointer-events-none"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth="3"
-                              d="M5 13l4 4L19 7"
-                            />
-                          </svg>
+            <tbody className="divide-y divide-slate-50">
+              {contacts.map((contact) => (
+                  <tr
+                    key={contact.id}
+                    className="hover:bg-slate-50/70 transition-colors group cursor-pointer"
+                    onClick={() => onViewContact?.(contact)}
+                  >
+                    <td className="pl-5 pr-2 py-3 whitespace-nowrap">
+                      <div className="flex items-center gap-2.5">
+                        <div className="h-7 w-7 rounded-lg bg-slate-100 text-slate-500 flex items-center justify-center text-[10px] font-semibold flex-shrink-0">
+                          {contact.initials}
                         </div>
-                      </label>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="flex items-center gap-3">
-                        <div className="relative">
-                          <div
-                            className={`h-9 w-9 rounded-full ${avatarStyle.bg} ${avatarStyle.text} flex items-center justify-center text-xs font-semibold ring-2 ${avatarStyle.ring} shadow-sm group-hover:shadow-md transition-shadow`}
-                          >
-                            {contact.initials}
-                          </div>
-                        </div>
-                        <div className="flex flex-col">
-                          <div className="text-sm font-semibold text-slate-900">{contact.name}</div>
-                        </div>
+                        <span className="text-[13px] font-medium text-slate-800">{contact.name}</span>
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-4 py-3 whitespace-nowrap">
                       {contact.company ? (
-                        <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-100 border border-slate-200 group-hover:border-slate-300 transition-colors">
-                          <Icon icon="solar:buildings-2-linear" width="14" className="text-slate-500" />
-                          <span className="text-xs font-semibold text-slate-700">{contact.company}</span>
-                        </div>
+                        <span className="text-[13px] text-slate-500">{contact.company}</span>
                       ) : (
-                        <span className="text-sm text-slate-300">-</span>
+                        <span className="text-[13px] text-slate-300">—</span>
                       )}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-4 py-3 whitespace-nowrap">
                       {contact.title ? (
-                        <span className="inline-flex items-center px-2.5 py-1 rounded-md bg-blue-50 text-blue-700 text-xs font-medium border border-blue-100">
-                          {contact.title}
-                        </span>
+                        <span className="text-[13px] text-slate-500">{contact.title}</span>
                       ) : (
-                        <span className="text-sm text-slate-300">-</span>
+                        <span className="text-[13px] text-slate-300">—</span>
                       )}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-4 py-3 max-w-[200px]">
                       {contact.email ? (
-                        <div className="flex items-center gap-2 text-sm text-slate-600">
-                          <Icon icon="solar:letter-linear" width="14" className="text-slate-400" />
-                          <span>{truncateEmail(contact.email)}</span>
-                        </div>
+                        <span className="text-[13px] text-slate-600 block truncate" title={contact.email}>{contact.email}</span>
                       ) : (
-                        <span className="text-sm text-slate-300">-</span>
+                        <span className="text-[13px] text-slate-300">—</span>
                       )}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-4 py-3 whitespace-nowrap">
                       {contact.phone ? (
-                        <div className="flex items-center gap-2 text-slate-600">
-                          <Icon icon="solar:phone-calling-linear" width="14" className="text-slate-400" />
-                          <span className="font-mono text-[11px]">{contact.phone}</span>
-                        </div>
+                        <span className="text-[13px] text-slate-500 font-mono">{contact.phone}</span>
                       ) : (
-                        <span className="text-sm text-slate-300">-</span>
+                        <span className="text-[13px] text-slate-300">—</span>
                       )}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="flex items-center gap-2">
-                        {contact.owner.avatar ? (
-                          <img
-                            src={contact.owner.avatar}
-                            alt=""
-                            className="h-6 w-6 rounded-full object-cover ring-2 ring-white shadow-sm"
-                          />
-                        ) : (
-                          <div
-                            className={`h-6 w-6 rounded-full ${ownerStyle.bg} border ${ownerStyle.border} flex items-center justify-center text-[9px] font-bold ${ownerStyle.text}`}
-                          >
-                            {contact.owner.initials}
-                          </div>
-                        )}
-                        <span className="text-xs font-medium text-slate-600">{contact.owner.name}</span>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right">
+                    <td className="px-4 py-3 whitespace-nowrap">
                       <div className="relative" ref={openMenuId === contact.id ? menuRef : null}>
                         <button
-                          onClick={() => toggleMenu(contact.id)}
-                          className={`flex items-center justify-center w-8 h-8 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 hover:ring-1 hover:ring-slate-200 transition-all focus:outline-none ${
-                            openMenuId === contact.id ? 'bg-slate-100 text-slate-700 ring-1 ring-slate-200' : ''
+                          onClick={(e) => { e.stopPropagation(); toggleMenu(contact.id); }}
+                          className={`flex items-center justify-center w-7 h-7 rounded-lg border transition-colors ${
+                            openMenuId === contact.id
+                              ? 'bg-slate-100 border-slate-200 text-slate-600'
+                              : 'border-slate-200 text-slate-400 hover:text-slate-600 hover:bg-slate-50 hover:border-slate-300'
                           }`}
                         >
-                          <Icon icon="solar:menu-dots-bold" width="16" />
+                          <Icon icon="solar:menu-dots-bold" width="14" />
                         </button>
 
                         {openMenuId === contact.id && (
-                          <div className="absolute right-0 mt-2 w-48 bg-white/95 backdrop-blur-xl rounded-xl shadow-lg border border-slate-200/60 py-1.5 z-50 animate-in fade-in slide-in-from-top-2 duration-200 ring-1 ring-black/5">
-                            <button
-                              onClick={() => handleAction('View Contact', contact)}
-                              className="w-full flex items-center gap-2.5 px-3 py-2 text-left text-sm text-slate-700 hover:bg-blue-50/80 hover:text-blue-700 transition-all duration-200 group"
-                            >
-                              <div className="w-7 h-7 flex items-center justify-center rounded-lg bg-slate-100 text-slate-600 group-hover:bg-blue-100 group-hover:text-blue-600 group-hover:scale-105 transition-all duration-200">
-                                <Icon icon="solar:eye-linear" width="15" />
-                              </div>
-                              <span className="font-semibold">View Contact</span>
+                          <div className="absolute right-0 mt-1.5 w-44 bg-white rounded-xl shadow-[0_8px_32px_rgba(0,0,0,0.12)] border border-slate-200/60 py-1 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+                            <button onClick={(e) => { e.stopPropagation(); handleAction('View Contact', contact); }} className="w-full flex items-center gap-2 px-3 py-2 text-[13px] text-slate-600 hover:bg-slate-50 hover:text-slate-800 transition-colors">
+                              <Icon icon="solar:eye-linear" width="14" className="text-slate-400" />
+                              View
                             </button>
-
-                            <button
-                              onClick={() => handleAction('Edit Contact', contact)}
-                              className="w-full flex items-center gap-2.5 px-3 py-2 text-left text-sm text-slate-700 hover:bg-sky-50/80 hover:text-sky-700 transition-all duration-200 group"
-                            >
-                              <div className="w-7 h-7 flex items-center justify-center rounded-lg bg-slate-100 text-slate-600 group-hover:bg-sky-100 group-hover:text-sky-600 group-hover:scale-105 transition-all duration-200">
-                                <Icon icon="solar:pen-linear" width="15" />
-                              </div>
-                              <span className="font-semibold">Edit Contact</span>
+                            <button onClick={(e) => { e.stopPropagation(); handleAction('Edit Contact', contact); }} className="w-full flex items-center gap-2 px-3 py-2 text-[13px] text-slate-600 hover:bg-slate-50 hover:text-slate-800 transition-colors">
+                              <Icon icon="solar:pen-linear" width="14" className="text-slate-400" />
+                              Edit
                             </button>
-
-                            <div className="my-1.5 border-t border-slate-100 mx-2" />
-
-                            <button
-                              onClick={() => handleAction('Send Email', contact)}
-                              className="w-full flex items-center gap-2.5 px-3 py-2 text-left text-sm text-slate-700 hover:bg-slate-50/80 hover:text-slate-900 transition-all duration-200 group"
-                            >
-                              <div className="w-7 h-7 flex items-center justify-center rounded-lg bg-slate-100 text-slate-600 group-hover:bg-slate-200 group-hover:scale-105 transition-all duration-200">
-                                <Icon icon="solar:letter-linear" width="15" />
-                              </div>
-                              <span className="font-medium">Send Email</span>
+                            <div className="my-1 border-t border-slate-100 mx-2" />
+                            <button onClick={(e) => { e.stopPropagation(); handleAction('Send Email', contact); }} className="w-full flex items-center gap-2 px-3 py-2 text-[13px] text-slate-600 hover:bg-slate-50 hover:text-slate-800 transition-colors">
+                              <Icon icon="solar:letter-linear" width="14" className="text-slate-400" />
+                              Send Email
                             </button>
-
-                            <button
-                              onClick={() => handleAction('AI Cold Call', contact)}
-                              className="w-full flex items-center gap-2.5 px-3 py-2 text-left text-sm text-slate-700 hover:bg-slate-50/80 hover:text-slate-900 transition-all duration-200 group"
-                            >
-                              <div className="w-7 h-7 flex items-center justify-center rounded-lg bg-slate-100 text-slate-600 group-hover:bg-slate-200 group-hover:scale-105 transition-all duration-200">
-                                <Icon icon="solar:phone-calling-linear" width="15" />
-                              </div>
-                              <span className="font-medium">AI Cold Call</span>
+                            <button onClick={(e) => { e.stopPropagation(); handleAction('AI Cold Call', contact); }} className="w-full flex items-center gap-2 px-3 py-2 text-[13px] text-slate-600 hover:bg-slate-50 hover:text-slate-800 transition-colors">
+                              <Icon icon="solar:phone-calling-linear" width="14" className="text-slate-400" />
+                              AI Cold Call
                             </button>
-
-                            <div className="my-1.5 border-t border-slate-100 mx-2" />
-
-                            <button
-                              onClick={() => handleAction('Delete Contact', contact)}
-                              className="w-full flex items-center gap-2.5 px-3 py-2 text-left text-sm text-rose-600 hover:bg-rose-50/80 hover:text-rose-700 transition-all duration-200 group"
-                            >
-                              <div className="w-7 h-7 flex items-center justify-center rounded-lg bg-rose-50 text-rose-500 group-hover:bg-rose-100 group-hover:scale-105 transition-all duration-200">
-                                <Icon icon="solar:trash-bin-minimalistic-linear" width="15" />
-                              </div>
-                              <span className="font-semibold">Delete Contact</span>
+                            <div className="my-1 border-t border-slate-100 mx-2" />
+                            <button onClick={(e) => { e.stopPropagation(); handleAction('Delete Contact', contact); }} className="w-full flex items-center gap-2 px-3 py-2 text-[13px] text-red-500 hover:bg-red-50 hover:text-red-600 transition-colors">
+                              <Icon icon="solar:trash-bin-minimalistic-linear" width="14" />
+                              Delete
                             </button>
                           </div>
                         )}
                       </div>
                     </td>
                   </tr>
-                );
-              })}
+              ))}
             </tbody>
           </table>
         </div>
 
-        <div className="flex bg-white/80 backdrop-blur-sm border-slate-100 border-t py-4 px-6 items-center justify-between">
-          <div className="flex items-center gap-2">
-            <span className="text-xs text-slate-500 font-medium">Showing</span>
-            <span className="inline-flex items-center px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 text-xs font-semibold">
-              1-7
-            </span>
-            <span className="text-xs text-slate-500 font-medium">of</span>
-            <span className="inline-flex items-center px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 text-xs font-semibold">
-              97
-            </span>
-          </div>
-          <div className="flex items-center gap-2">
-            <button
-              className="w-8 h-8 flex items-center justify-center border border-slate-200 rounded-lg text-slate-400 hover:bg-slate-50 hover:text-slate-600 hover:border-slate-300 transition-all disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:border-slate-200"
-              disabled
-            >
-              <Icon icon="solar:alt-arrow-left-linear" width="16" />
+        <div className="flex border-t border-slate-100 py-3 px-4 items-center gap-3">
+          <span className="text-[11px] text-slate-400">Showing 1–12 of 97</span>
+          <div className="flex items-center gap-1.5">
+            <button className="w-7 h-7 flex items-center justify-center border border-slate-200 rounded-lg text-slate-300 transition-colors" disabled>
+              <Icon icon="solar:alt-arrow-left-linear" width="14" />
             </button>
-            <button className="px-3 h-8 bg-slate-900 border border-slate-900 rounded-lg text-xs font-bold text-white shadow-sm hover:bg-slate-800 transition-colors">
-              1
-            </button>
-            <button className="px-3 h-8 border border-slate-200 rounded-lg text-xs font-semibold text-slate-600 hover:bg-slate-50 hover:text-slate-900 hover:border-slate-300 transition-all">
-              2
-            </button>
-            <span className="text-slate-300 text-xs px-1">...</span>
-            <button className="px-3 h-8 border border-slate-200 rounded-lg text-xs font-semibold text-slate-600 hover:bg-slate-50 hover:text-slate-900 hover:border-slate-300 transition-all">
-              12
-            </button>
-            <button className="w-8 h-8 flex items-center justify-center border border-slate-200 rounded-lg text-slate-500 hover:bg-slate-50 hover:text-slate-900 hover:border-slate-300 transition-all">
-              <Icon icon="solar:alt-arrow-right-linear" width="16" />
+            <button className="px-2.5 h-7 bg-slate-100 border border-slate-200 rounded-lg text-[11px] font-semibold text-slate-800">1</button>
+            <button className="px-2.5 h-7 border border-slate-200 rounded-lg text-[11px] font-medium text-slate-500 hover:bg-slate-50 transition-colors">2</button>
+            <span className="text-slate-300 text-[11px] px-0.5">...</span>
+            <button className="px-2.5 h-7 border border-slate-200 rounded-lg text-[11px] font-medium text-slate-500 hover:bg-slate-50 transition-colors">12</button>
+            <button className="w-7 h-7 flex items-center justify-center border border-slate-200 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-50 transition-colors">
+              <Icon icon="solar:alt-arrow-right-linear" width="14" />
             </button>
           </div>
         </div>

@@ -211,35 +211,30 @@ const badgeConfig = {
     color: 'text-orange-500',
     bg: 'bg-orange-50',
     label: 'Hot Streak',
-    description: '15+ days active',
   },
   rising_star: {
     icon: 'solar:graph-up-bold',
     color: 'text-emerald-500',
     bg: 'bg-emerald-50',
     label: 'Rising Star',
-    description: 'Biggest improvement',
   },
   deal_closer: {
     icon: 'solar:handshake-bold',
     color: 'text-blue-500',
     bg: 'bg-blue-50',
     label: 'Deal Closer',
-    description: '35%+ success rate',
   },
   speed_demon: {
     icon: 'solar:bolt-bold',
     color: 'text-amber-500',
     bg: 'bg-amber-50',
     label: 'Speed Demon',
-    description: 'Fast response time',
   },
   revenue_king: {
     icon: 'solar:crown-bold',
     color: 'text-yellow-600',
     bg: 'bg-yellow-50',
     label: 'Revenue King',
-    description: 'Highest revenue',
   },
 };
 
@@ -253,263 +248,235 @@ const formatCurrency = (amount: number) => {
   return `$${amount}`;
 };
 
+const getRankIndicator = (rank: number) => {
+  switch (rank) {
+    case 1:
+      return { icon: 'solar:crown-bold', color: 'text-amber-500', bg: 'bg-amber-50 border-amber-100' };
+    case 2:
+      return { icon: 'solar:medal-star-bold', color: 'text-slate-400', bg: 'bg-slate-50 border-slate-200' };
+    case 3:
+      return { icon: 'solar:medal-ribbons-star-bold', color: 'text-orange-400', bg: 'bg-orange-50 border-orange-100' };
+    default:
+      return null;
+  }
+};
+
 export default function Leaderboard() {
   const [selectedPeriod, setSelectedPeriod] = useState<PeriodType>('month');
   const [isExpanded, setIsExpanded] = useState(true);
-  const [showRemaining, setShowRemaining] = useState(false);
+  const [showAll, setShowAll] = useState(false);
 
   const topTen = mockLeaderboardData.slice(0, 10);
   const topThree = topTen.slice(0, 3);
   const remaining = topTen.slice(3);
-
+  const topRevenue = topTen[0]?.total_revenue || 1;
   const totalTeamRevenue = mockLeaderboardData.reduce((sum, entry) => sum + entry.total_revenue, 0);
-
-  const getPodiumStyles = (rank: number) => {
-    switch (rank) {
-      case 1:
-        return {
-          gradient: 'from-amber-50/50 to-yellow-100/50',
-          border: 'border-amber-200/60',
-          iconBg: 'bg-gradient-to-br from-amber-400 to-yellow-500',
-          icon: 'solar:cup-star-bold',
-          height: 'h-56',
-        };
-      case 2:
-        return {
-          gradient: 'from-slate-100/50 to-slate-200/50',
-          border: 'border-slate-300/60',
-          iconBg: 'bg-gradient-to-br from-slate-400 to-slate-500',
-          icon: 'solar:medal-star-bold',
-          height: 'h-56',
-        };
-      case 3:
-        return {
-          gradient: 'from-orange-50/50 to-orange-100/50',
-          border: 'border-orange-200/60',
-          iconBg: 'bg-gradient-to-br from-orange-400 to-orange-500',
-          icon: 'solar:medal-ribbons-star-bold',
-          height: 'h-56',
-        };
-      default:
-        return {
-          gradient: 'from-white to-slate-50',
-          border: 'border-slate-200',
-          iconBg: 'bg-slate-300',
-          icon: 'solar:cup-bold',
-          height: 'h-56',
-        };
-    }
-  };
-
-  const toggleExpanded = () => {
-    setIsExpanded(!isExpanded);
-  };
 
   return (
     <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
-      <div className="p-5 border-b border-slate-100">
-        <div className="flex items-center justify-between flex-wrap gap-4">
-          <div className="flex items-center gap-3">
-            <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-amber-400 to-yellow-500 flex items-center justify-center shadow-md">
-              <Icon icon="solar:cup-star-bold" width="18" className="text-white" />
-            </div>
-            <div>
-              <h3 className="text-lg font-bold text-slate-900">Sales Leaderboard</h3>
-              <p className="text-xs text-slate-600 mt-0.5">
-                Top 10 Leaders • {formatCurrency(totalTeamRevenue)}
-              </p>
-            </div>
-          </div>
+      {/* Header */}
+      <div className="px-5 py-4 border-b border-slate-100 flex items-center justify-between">
+        <div className="flex items-center gap-2.5">
+          <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-2">
+            <Icon icon="solar:cup-star-bold" width="14" className="text-amber-500" />
+            Top Performers
+          </h3>
+        </div>
 
-          <div className="flex items-center gap-2">
-            <div className="flex items-center gap-1 p-1 bg-slate-100 rounded-lg">
-              {[
-                { value: 'week' as PeriodType, label: 'Week' },
-                { value: 'month' as PeriodType, label: 'Month' },
-                { value: 'all_time' as PeriodType, label: 'All Time' },
-              ].map((period) => (
-                <button
-                  key={period.value}
-                  onClick={() => setSelectedPeriod(period.value)}
-                  className={`px-2.5 py-1 rounded-md text-xs font-semibold transition-all ${
-                    selectedPeriod === period.value
-                      ? 'bg-slate-900 text-white shadow-sm'
-                      : 'text-slate-600 hover:text-slate-900'
-                  }`}
-                >
-                  {period.label}
-                </button>
-              ))}
-            </div>
-
-            <button
-              onClick={toggleExpanded}
-              className="p-1.5 hover:bg-slate-100 rounded-lg transition-colors"
-            >
-              <Icon
-                icon={isExpanded ? 'solar:alt-arrow-up-linear' : 'solar:alt-arrow-down-linear'}
-                width="18"
-                className="text-slate-400"
-              />
-            </button>
+        <div className="flex items-center gap-2">
+          <div className="flex items-center bg-slate-100 rounded-lg p-0.5">
+            {[
+              { value: 'week' as PeriodType, label: 'Week' },
+              { value: 'month' as PeriodType, label: 'Month' },
+              { value: 'all_time' as PeriodType, label: 'All Time' },
+            ].map((period) => (
+              <button
+                key={period.value}
+                onClick={() => setSelectedPeriod(period.value)}
+                className={`px-2.5 py-1 rounded-md text-[11px] font-semibold transition-all ${
+                  selectedPeriod === period.value
+                    ? 'bg-white text-slate-700 shadow-sm'
+                    : 'text-slate-400 hover:text-slate-600'
+                }`}
+              >
+                {period.label}
+              </button>
+            ))}
           </div>
+          <button
+            onClick={() => setIsExpanded(!isExpanded)}
+            className="w-7 h-7 flex items-center justify-center hover:bg-slate-50 rounded-lg transition-colors"
+          >
+            <Icon
+              icon={isExpanded ? 'solar:alt-arrow-up-linear' : 'solar:alt-arrow-down-linear'}
+              width="16"
+              className="text-slate-400"
+            />
+          </button>
         </div>
       </div>
 
       {isExpanded && (
-        <div className="p-4 space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-            {topThree.map((entry) => {
-              const styles = getPodiumStyles(entry.rank);
-              const topBadge = entry.badges[0];
-
-              return (
-                <div
-                  key={entry.id}
-                  className={`relative bg-gradient-to-br ${styles.gradient} border ${styles.border} rounded-xl p-6 hover:shadow-md transition-all duration-200 hover:scale-102 ${styles.height} flex flex-col overflow-hidden`}
-                >
-                  {/* Parallel concentric circles - balanced spacing */}
-                  {/* Outer circle */}
-                  <div 
-                    className="absolute -top-10 -right-10 w-40 h-40 rounded-full border-[2.5px] opacity-8 pointer-events-none select-none"
-                    style={{
-                      borderColor: entry.rank === 1 ? '#fbbf24' : entry.rank === 2 ? '#94a3b8' : '#fb923c'
-                    }}
-                  ></div>
-                  
-                  {/* Inner circle - 20px spacing for balance */}
-                  <div 
-                    className="absolute -top-5 -right-5 w-20 h-20 rounded-full border-[2.5px] opacity-10 pointer-events-none select-none"
-                    style={{
-                      borderColor: entry.rank === 1 ? '#fbbf24' : entry.rank === 2 ? '#94a3b8' : '#fb923c'
-                    }}
-                  ></div>
-                  
-                  {/* Rank number - color-coded */}
-                  <div 
-                    className="absolute top-2 right-3 text-7xl font-black opacity-12 leading-none pointer-events-none select-none"
-                    style={{
-                      color: entry.rank === 1 ? '#f59e0b' : entry.rank === 2 ? '#64748b' : '#fb923c'
-                    }}
-                  >
-                    {entry.rank}
-                  </div>
-
-                  <div className="flex flex-col items-center text-center flex-1 relative z-10">
-                    <div className="relative mb-4">
-                      <div className="relative h-16 w-16 rounded-full overflow-hidden shadow-lg ring-4 ring-white">
-                        <img
-                          src={entry.member_avatar_url}
-                          alt={entry.member_name}
-                          className="h-full w-full object-cover"
-                        />
-                      </div>
-                      <div
-                        className={`absolute -bottom-1 -right-1 h-8 w-8 ${styles.iconBg} rounded-full flex items-center justify-center shadow-md ring-3 ring-white`}
-                      >
-                        <Icon icon={styles.icon} width="14" className="text-white" />
-                      </div>
+        <div>
+          {/* Rankings Table */}
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className="border-b border-slate-100">
+                  <th className="text-left text-[11px] font-medium text-slate-400 uppercase tracking-wider pl-5 pr-2 py-3 w-10">#</th>
+                  <th className="text-left text-[11px] font-medium text-slate-400 uppercase tracking-wider px-2 py-3">Member</th>
+                  <th className="text-right text-[11px] font-medium text-slate-400 uppercase tracking-wider px-4 py-3">
+                    <div className="relative inline-flex items-center gap-1 group/tooltip cursor-default">
+                      Revenue
+                      <Icon icon="solar:info-circle-linear" width="11" className="text-slate-300 group-hover/tooltip:text-slate-500 transition-colors" />
+                      <span className="absolute top-full right-0 mt-2 px-2.5 py-1.5 bg-slate-900 text-white text-[11px] font-medium rounded-lg opacity-0 pointer-events-none group-hover/tooltip:opacity-100 transition-opacity whitespace-nowrap shadow-lg z-50 normal-case tracking-normal">
+                        Total value of closed-won deals
+                      </span>
                     </div>
-
-                    <div className="mb-5">
-                      <h4 className="text-base font-bold text-slate-900 mb-1.5">{entry.member_name}</h4>
-                      {topBadge && (
-                        <div className="flex items-center justify-center">
-                          {(() => {
-                            const config = badgeConfig[topBadge as keyof typeof badgeConfig];
-                            return (
-                              <div
-                                className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md ${config.bg}`}
-                                title={config.description}
-                              >
-                                <Icon icon={config.icon} width="10" className={config.color} />
-                                <span className={`text-[10px] font-semibold ${config.color}`}>
-                                  {config.label}
-                                </span>
-                              </div>
-                            );
-                          })()}
-                        </div>
-                      )}
+                  </th>
+                  <th className="text-right text-[11px] font-medium text-slate-400 uppercase tracking-wider px-4 py-3 hidden sm:table-cell">
+                    <div className="relative inline-flex items-center gap-1 group/tooltip cursor-default">
+                      Deals
+                      <Icon icon="solar:info-circle-linear" width="11" className="text-slate-300 group-hover/tooltip:text-slate-500 transition-colors" />
+                      <span className="absolute top-full right-0 mt-2 px-2.5 py-1.5 bg-slate-900 text-white text-[11px] font-medium rounded-lg opacity-0 pointer-events-none group-hover/tooltip:opacity-100 transition-opacity whitespace-nowrap shadow-lg z-50 normal-case tracking-normal">
+                        Number of quotations marked as won
+                      </span>
                     </div>
-
-                    <div className="space-y-3 flex-1 flex flex-col justify-center w-full">
-                      <div>
-                        <p className="text-xs font-medium text-slate-600 mb-1">Total Revenue</p>
-                        <p className="text-2xl font-bold text-slate-900 mb-3">{formatCurrency(entry.total_revenue)}</p>
-                      </div>
-
-                      <div className="flex items-center justify-center gap-4">
-                        <div>
-                          <p className="text-xs text-slate-600">Deals Won</p>
-                          <p className="text-lg font-bold text-slate-900">{entry.deals_won}</p>
-                        </div>
-                      </div>
+                  </th>
+                  <th className="text-right text-[11px] font-medium text-slate-400 uppercase tracking-wider px-4 py-3 hidden md:table-cell">
+                    <div className="relative inline-flex items-center gap-1 group/tooltip cursor-default">
+                      Win Rate
+                      <Icon icon="solar:info-circle-linear" width="11" className="text-slate-300 group-hover/tooltip:text-slate-500 transition-colors" />
+                      <span className="absolute top-full right-0 mt-2 px-2.5 py-1.5 bg-slate-900 text-white text-[11px] font-medium rounded-lg opacity-0 pointer-events-none group-hover/tooltip:opacity-100 transition-opacity whitespace-nowrap shadow-lg z-50 normal-case tracking-normal">
+                        Deals won ÷ quotations sent
+                      </span>
                     </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+                  </th>
+                  <th className="text-right text-[11px] font-medium text-slate-400 uppercase tracking-wider pl-4 pr-5 py-3 hidden lg:table-cell w-[140px]"></th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-50">
+                {(showAll ? topTen : topThree).map((entry) => {
+                  const rankIndicator = getRankIndicator(entry.rank);
+                  const revenuePercent = Math.round((entry.total_revenue / topRevenue) * 100);
+                  const topBadge = entry.badges[0];
 
-          {remaining.length > 0 && (
-            <div className="pt-2">
-              <button
-                onClick={() => setShowRemaining(!showRemaining)}
-                className="w-full flex items-center justify-center gap-2 py-2.5 text-sm font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-50 rounded-lg transition-colors group"
-              >
-                <span>
-                  {showRemaining ? 'Hide' : 'Show'} Ranks 4-10
-                </span>
-                <Icon
-                  icon={showRemaining ? 'solar:alt-arrow-up-linear' : 'solar:alt-arrow-down-linear'}
-                  width="16"
-                  className="text-slate-400 group-hover:text-slate-600 transition-colors"
-                />
-              </button>
+                  return (
+                    <tr
+                      key={entry.id}
+                      className={`hover:bg-slate-50/70 transition-colors group ${
+                        entry.rank === 1 ? 'bg-amber-50/20' : ''
+                      }`}
+                    >
+                      {/* Rank */}
+                      <td className="pl-5 pr-2 py-3">
+                        {rankIndicator ? (
+                          <div className={`w-7 h-7 rounded-lg border ${rankIndicator.bg} flex items-center justify-center`}>
+                            <Icon icon={rankIndicator.icon} width="14" className={rankIndicator.color} />
+                          </div>
+                        ) : (
+                          <div className="w-7 h-7 rounded-lg flex items-center justify-center">
+                            <span className="text-[13px] font-semibold text-slate-300">{entry.rank}</span>
+                          </div>
+                        )}
+                      </td>
 
-              {showRemaining && (
-                <div className="space-y-1 bg-slate-50/50 rounded-xl p-3 mt-2">
-                  {remaining.map((entry) => {
-                    return (
-                      <div
-                        key={entry.id}
-                        className="relative bg-white border border-slate-200/60 rounded-lg p-3 flex items-center gap-3 hover:border-slate-300 transition-colors overflow-hidden"
-                      >
-                        <div className="absolute top-1 right-2 text-5xl font-black text-slate-900 opacity-[0.03] leading-none pointer-events-none select-none">
-                          {entry.rank}
+                      {/* Member */}
+                      <td className="px-2 py-3">
+                        <div className="flex items-center gap-2.5">
+                          <div className={`h-8 w-8 rounded-lg overflow-hidden shadow-sm flex-shrink-0 ${
+                            entry.rank === 1 ? 'ring-2 ring-amber-200' : 'ring-2 ring-white'
+                          }`}>
+                            <img
+                              src={entry.member_avatar_url}
+                              alt={entry.member_name}
+                              className="h-full w-full object-cover"
+                            />
+                          </div>
+                          <div className="min-w-0">
+                            <div className="flex items-center gap-1.5">
+                              <span className="text-[13px] font-medium text-slate-800 truncate">{entry.member_name}</span>
+                              {topBadge && (() => {
+                                const config = badgeConfig[topBadge as keyof typeof badgeConfig];
+                                return (
+                                  <div className={`hidden sm:inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded ${config.bg}`}>
+                                    <Icon icon={config.icon} width="10" className={config.color} />
+                                    <span className={`text-[9px] font-semibold ${config.color}`}>{config.label}</span>
+                                  </div>
+                                );
+                              })()}
+                            </div>
+                            <div className="text-[11px] text-slate-400 truncate">{entry.member_email}</div>
+                          </div>
                         </div>
+                      </td>
 
-                        <div className="h-9 w-9 rounded-full overflow-hidden shadow-sm flex-shrink-0 ring-2 ring-slate-100">
-                          <img
-                            src={entry.member_avatar_url}
-                            alt={entry.member_name}
-                            className="h-full w-full object-cover"
+                      {/* Revenue */}
+                      <td className="px-4 py-3 text-right">
+                        <span className={`text-[13px] font-semibold ${
+                          entry.rank === 1 ? 'text-slate-900' : 'text-slate-700'
+                        }`}>
+                          {formatCurrency(entry.total_revenue)}
+                        </span>
+                      </td>
+
+                      {/* Deals Won */}
+                      <td className="px-4 py-3 text-right hidden sm:table-cell">
+                        <span className="text-[13px] text-slate-500">{entry.deals_won}</span>
+                      </td>
+
+                      {/* Win Rate */}
+                      <td className="px-4 py-3 text-right hidden md:table-cell">
+                        <span className={`text-[13px] ${
+                          entry.success_rate >= 35 ? 'text-emerald-600 font-medium' : 'text-slate-500'
+                        }`}>
+                          {entry.success_rate.toFixed(1)}%
+                        </span>
+                      </td>
+
+                      {/* Revenue Bar */}
+                      <td className="pl-4 pr-5 py-3 hidden lg:table-cell">
+                        <div className="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
+                          <div
+                            className={`h-full rounded-full transition-all duration-500 ${
+                              entry.rank === 1
+                                ? 'bg-amber-400'
+                                : entry.rank === 2
+                                  ? 'bg-slate-400'
+                                  : entry.rank === 3
+                                    ? 'bg-orange-300'
+                                    : 'bg-slate-200'
+                            }`}
+                            style={{ width: `${revenuePercent}%` }}
                           />
                         </div>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
 
-                        <div className="flex-1 text-left min-w-0">
-                          <span className="text-sm font-semibold text-slate-900 block truncate">{entry.member_name}</span>
-                        </div>
-
-                        <div className="flex items-center gap-5 flex-shrink-0">
-                          <div className="flex items-baseline gap-1.5">
-                            <span className="text-xs font-medium text-slate-500">Revenue:</span>
-                            <span className="text-sm font-bold text-slate-900">{formatCurrency(entry.total_revenue)}</span>
-                          </div>
-
-                          <div className="flex items-baseline gap-1.5">
-                            <span className="text-xs font-medium text-slate-500">Deals Won:</span>
-                            <span className="text-sm font-bold text-slate-900">{entry.deals_won}</span>
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
-            </div>
-          )}
+          {/* Footer */}
+          <div className="flex border-t border-slate-100 py-2.5 px-4 items-center justify-between">
+            <span className="text-[11px] text-slate-400">
+              Showing {showAll ? '1–10' : '1–3'} of {topTen.length}
+            </span>
+            {remaining.length > 0 && (
+              <button
+                onClick={() => setShowAll(!showAll)}
+                className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-semibold text-slate-500 hover:text-slate-700 hover:bg-slate-50 transition-colors"
+              >
+                <span>{showAll ? 'Show Less' : `Show Ranks 4–10`}</span>
+                <Icon
+                  icon={showAll ? 'solar:alt-arrow-up-linear' : 'solar:alt-arrow-down-linear'}
+                  width="12"
+                  className="text-slate-400"
+                />
+              </button>
+            )}
+          </div>
         </div>
       )}
     </div>

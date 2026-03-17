@@ -773,7 +773,7 @@ export default function EmailHistoryDrawer({ isOpen, onClose, onComposeEmail, co
                           {selectedEmail.attachmentSize}
                         </p>
                       </div>
-                      <button className="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white flex items-center justify-center transition-all shadow-sm hover:shadow-md">
+                      <button className="w-9 h-9 rounded-xl bg-slate-900 hover:bg-slate-800 text-white flex items-center justify-center transition-all shadow-sm hover:shadow-md">
                         <Icon icon="solar:download-linear" width="18" />
                       </button>
                     </div>

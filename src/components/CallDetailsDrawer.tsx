@@ -189,13 +189,13 @@ export default function CallDetailsDrawer({ isOpen, onClose, call }: CallDetails
             <div
               className={`w-10 h-10 rounded-xl bg-gradient-to-br ${
                 call.contact.avatar_color === 'blue'
-                  ? 'from-blue-400 to-blue-500'
+                  ? 'from-slate-500 to-slate-600'
                   : call.contact.avatar_color === 'pink'
-                  ? 'from-pink-400 to-pink-500'
+                  ? 'from-rose-300 to-rose-400'
                   : call.contact.avatar_color === 'amber'
-                  ? 'from-amber-400 to-amber-500'
+                  ? 'from-amber-300 to-amber-400'
                   : call.contact.avatar_color === 'emerald'
-                  ? 'from-emerald-400 to-emerald-500'
+                  ? 'from-teal-400 to-teal-500'
                   : 'from-slate-400 to-slate-500'
               } flex items-center justify-center text-white font-bold text-xs shadow-lg`}
             >
@@ -220,7 +220,7 @@ export default function CallDetailsDrawer({ isOpen, onClose, call }: CallDetails
 
         <div className="flex-1 overflow-y-auto p-8 custom-scrollbar">
           <div className="space-y-5">
-            <div className="bg-gradient-to-br from-slate-50/80 to-slate-100/40 backdrop-blur-sm rounded-2xl p-6 border border-slate-200/60 shadow-sm ring-1 ring-slate-100/50">
+            <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 border border-slate-200/60 shadow-sm ring-1 ring-slate-100/50">
               <div className="flex items-center justify-between mb-5">
                 <div className="flex items-center gap-2 text-slate-700">
                   <Icon icon="solar:soundwave-bold" className="w-5 h-5" />
@@ -263,8 +263,8 @@ export default function CallDetailsDrawer({ isOpen, onClose, call }: CallDetails
                         key={i}
                         className={`w-[3px] rounded-full transition-all duration-150 ${
                           isPassed
-                            ? 'bg-blue-400 group-hover:bg-blue-500'
-                            : 'bg-blue-200/60 group-hover:bg-blue-300/70'
+                            ? 'bg-slate-500 group-hover:bg-slate-600'
+                            : 'bg-slate-200/60 group-hover:bg-slate-300/70'
                         }`}
                         style={{ height: `${height * 100}%` }}
                       />
@@ -352,12 +352,12 @@ export default function CallDetailsDrawer({ isOpen, onClose, call }: CallDetails
             )}
 
             {call.next_action && (
-              <div className="bg-blue-50/80 backdrop-blur-sm rounded-2xl p-5 border border-blue-200/60 shadow-sm ring-1 ring-blue-100/50">
-                <h5 className="text-xs font-bold text-blue-900 uppercase tracking-wider mb-3 flex items-center gap-2">
+              <div className="bg-white/50 rounded-2xl p-5 border-l-2 border-l-purple-400 border border-white/60 shadow-sm ring-1 ring-slate-100/50">
+                <h5 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 flex items-center gap-2">
                   <Icon icon="solar:checklist-minimalistic-bold" className="w-4 h-4" />
                   Next Action
                 </h5>
-                <p className="text-sm text-blue-700 leading-relaxed font-medium">{call.next_action}</p>
+                <p className="text-sm text-slate-800 leading-relaxed font-medium">{call.next_action}</p>
               </div>
             )}
 

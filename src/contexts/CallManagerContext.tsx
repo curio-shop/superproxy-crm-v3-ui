@@ -34,7 +34,7 @@ export interface Quotation {
     initials: string;
     color: string;
   };
-  status: 'draft' | 'published' | 'sent';
+  status: 'draft' | 'published' | 'sent' | 'expired' | 'deal_won' | 'deal_lost';
   amount: number;
   date: string;
   validUntil: string;
