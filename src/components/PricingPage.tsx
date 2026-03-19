@@ -174,6 +174,11 @@ const FEATURE_SECTIONS: { category: string; features: FeatureRow[] }[] = [
 
 export default function PricingPage({ onBack }: PricingPageProps) {
   const [showComparison, setShowComparison] = useState(false);
+  const [billingCycle, setBillingCycle] = useState<'monthly' | 'annual'>('annual');
+  const getPrice = (monthlyPrice: number) => {
+    if (monthlyPrice === 0) return 0;
+    return billingCycle === 'annual' ? Math.round(monthlyPrice * 0.8) : monthlyPrice;
+  };
 
   return (
     <div className="flex-1 overflow-y-auto custom-scrollbar">
@@ -190,7 +195,30 @@ export default function PricingPage({ onBack }: PricingPageProps) {
         {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-2xl font-semibold text-slate-800 tracking-tight mb-2">Plans that grow with your team</h1>
-          <p className="text-[14px] text-slate-400">One workspace, unlimited seats, no per-user fees. Start free, upgrade when you're ready.</p>
+          <p className="text-[14px] text-slate-400 mb-6">One workspace, unlimited seats. Start free, upgrade when you're ready.</p>
+
+          {/* Billing toggle */}
+          <div className="inline-flex items-center bg-slate-100 rounded-xl p-1 relative">
+            <button
+              onClick={() => setBillingCycle('monthly')}
+              className={`px-5 py-2 rounded-lg text-[13px] font-medium transition-all ${
+                billingCycle === 'monthly' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-400 hover:text-slate-600'
+              }`}
+            >
+              Monthly
+            </button>
+            <button
+              onClick={() => setBillingCycle('annual')}
+              className={`px-5 py-2 rounded-lg text-[13px] font-medium transition-all ${
+                billingCycle === 'annual' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-400 hover:text-slate-600'
+              }`}
+            >
+              Annual
+            </button>
+            <span className="absolute -top-2.5 -right-2 text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200/80 px-2 py-0.5 rounded-full tracking-tight shadow-sm">
+              −20%
+            </span>
+          </div>
         </div>
 
         {/* Pricing grid */}
@@ -202,7 +230,7 @@ export default function PricingPage({ onBack }: PricingPageProps) {
                 key={tier.name}
                 className={`relative flex flex-col rounded-2xl p-6 transition-all ${
                   isPro
-                    ? 'border border-indigo-300 shadow-sm bg-white'
+                    ? 'border border-slate-900 shadow-[0_2px_12px_rgba(15,23,42,0.08)] bg-white'
                     : tier.isCurrent
                     ? 'bg-slate-50/80 border border-slate-200'
                     : 'bg-white border border-slate-200'
@@ -211,7 +239,7 @@ export default function PricingPage({ onBack }: PricingPageProps) {
                 {/* Recommended ribbon */}
                 {isPro && (
                   <div className="absolute -top-3 left-6">
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-indigo-50 text-indigo-500 border border-indigo-200 text-[10px] font-semibold uppercase tracking-wider">
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-slate-900 text-white text-[10px] font-semibold uppercase tracking-wider">
                       Most popular
                     </span>
                   </div>
@@ -232,10 +260,13 @@ export default function PricingPage({ onBack }: PricingPageProps) {
                 {/* Price */}
                 <div className="mb-1.5">
                   <span className={`text-4xl font-semibold tracking-tight ${isPro ? 'text-slate-900' : 'text-slate-800'}`}>
-                    ${tier.price}
+                    ${getPrice(tier.price)}
                   </span>
                   {tier.billing && (
-                    <span className="text-[13px] text-slate-400 ml-0.5">{tier.billing}</span>
+                    <span className="text-[13px] text-slate-400 ml-0.5">/mo</span>
+                  )}
+                  {tier.price > 0 && billingCycle === 'annual' && (
+                    <span className="ml-1.5 text-[11px] text-slate-300 line-through">${tier.price}</span>
                   )}
                 </div>
 
@@ -251,7 +282,7 @@ export default function PricingPage({ onBack }: PricingPageProps) {
                   <button
                     className={`w-full py-2.5 rounded-xl text-[13px] font-semibold transition-all active:scale-[0.98] mb-6 ${
                       isPro
-                        ? 'bg-indigo-600 text-white hover:bg-indigo-700 shadow-sm'
+                        ? 'bg-slate-900 text-white hover:bg-slate-800 shadow-sm'
                         : 'border border-slate-200 text-slate-600 hover:border-slate-300 hover:bg-slate-50'
                     }`}
                   >
@@ -269,7 +300,7 @@ export default function PricingPage({ onBack }: PricingPageProps) {
                       <Icon
                         icon="solar:check-read-linear"
                         width="14"
-                        className={`mt-0.5 flex-shrink-0 ${isPro ? 'text-indigo-500' : 'text-indigo-400'}`}
+                        className={`mt-0.5 flex-shrink-0 ${isPro ? 'text-slate-900' : 'text-slate-400'}`}
                       />
                       <span className={`text-[13px] leading-relaxed ${
                         i === 0 && (tier.name === 'Pro' || tier.name === 'Scale')
@@ -312,15 +343,15 @@ export default function PricingPage({ onBack }: PricingPageProps) {
                 </th>
                 <th className="px-4 py-4 text-center w-[130px]">
                   <div className="text-[11px] font-medium text-slate-400 uppercase tracking-wider mb-0.5">Growth</div>
-                  <div className="text-[13px] font-semibold text-slate-800">$29<span className="text-slate-400 font-normal">/mo</span></div>
+                  <div className="text-[13px] font-semibold text-slate-800">${getPrice(29)}<span className="text-slate-400 font-normal">/mo</span></div>
                 </th>
-                <th className="px-4 py-4 text-center w-[130px] border-x border-indigo-100 bg-indigo-50/30">
-                  <div className="text-[11px] font-semibold text-indigo-500 uppercase tracking-wider mb-0.5">Pro</div>
-                  <div className="text-[13px] font-semibold text-slate-800">$79<span className="text-slate-400 font-normal">/mo</span></div>
+                <th className="px-4 py-4 text-center w-[130px] border-x border-slate-200 bg-slate-50/40">
+                  <div className="text-[11px] font-semibold text-slate-900 uppercase tracking-wider mb-0.5">Pro</div>
+                  <div className="text-[13px] font-semibold text-slate-800">${getPrice(79)}<span className="text-slate-400 font-normal">/mo</span></div>
                 </th>
                 <th className="px-4 py-4 text-center w-[130px]">
                   <div className="text-[11px] font-medium text-slate-400 uppercase tracking-wider mb-0.5">Scale</div>
-                  <div className="text-[13px] font-semibold text-slate-800">$199<span className="text-slate-400 font-normal">/mo</span></div>
+                  <div className="text-[13px] font-semibold text-slate-800">${getPrice(199)}<span className="text-slate-400 font-normal">/mo</span></div>
                 </th>
               </tr>
             </thead>
@@ -338,9 +369,9 @@ export default function PricingPage({ onBack }: PricingPageProps) {
                         <span className="text-[13px] text-slate-600">{feature.name}</span>
                       </td>
                       {[feature.free, feature.growth, feature.pro, feature.scale].map((value, i) => (
-                        <td key={i} className={`px-4 py-3 text-center ${i === 2 ? 'border-x border-indigo-50 bg-indigo-50/10' : ''}`}>
+                        <td key={i} className={`px-4 py-3 text-center ${i === 2 ? 'border-x border-slate-100 bg-slate-50/20' : ''}`}>
                           {value === true ? (
-                            <Icon icon="solar:check-read-linear" width="16" className="text-indigo-500 mx-auto" />
+                            <Icon icon="solar:check-read-linear" width="16" className="text-slate-700 mx-auto" />
                           ) : value === false ? (
                             <span className="text-slate-300">—</span>
                           ) : (

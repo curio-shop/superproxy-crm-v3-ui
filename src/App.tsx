@@ -39,7 +39,6 @@ import PaymentReminderModal from './components/PaymentReminderModal';
 import QuoteFollowUpModal from './components/QuoteFollowUpModal';
 import MinimizedCallsBar from './components/MinimizedCallsBar';
 import TemplateBuilder from './components/TemplateBuilder';
-import AIChat from './components/AIChat';
 import AIProxyPage from './components/AIProxyPage';
 import DeleteConfirmationModal from './components/DeleteConfirmationModal';
 import DeleteAccountModal from './components/DeleteAccountModal';
@@ -81,9 +80,7 @@ function AppContent() {
   const [preSelectedInvoice, setPreSelectedInvoice] = useState<Invoice | null>(null);
   const [emailOriginPage, setEmailOriginPage] = useState<string>('ai-proxy');
   const [preSelectedQuoteForInvoice, setPreSelectedQuoteForInvoice] = useState<Quotation | null>(null);
-  const [selectedQuoteForAI, setSelectedQuoteForAI] = useState<Quotation | null>(null);
-  const [selectedInvoiceForAI, setSelectedInvoiceForAI] = useState<Invoice | null>(null);
-  const [aiChatOriginPage, setAiChatOriginPage] = useState<'quotations' | 'invoices'>('quotations');
+  const [aiProxyInitialContext, setAiProxyInitialContext] = useState<{ category: string; label: string } | null>(null);
   const [pricingOriginPage, setPricingOriginPage] = useState('home');
   const [isViewContactDrawerOpen, setIsViewContactDrawerOpen] = useState(false);
   const [isViewCompanyDrawerOpen, setIsViewCompanyDrawerOpen] = useState(false);
@@ -464,7 +461,7 @@ function AppContent() {
               subtitle="Manage display currency, convert between currencies, and view live exchange rates."
               onNavigateToNotifications={() => setActivePage('notifications')}
             />
-          ) : activePage === 'new-email' ? null : activePage === 'ai-chat' ? null : activePage === 'ai-proxy' ? null : activePage === 'pricing' ? null : activePage === 'home' ? null : (
+          ) : activePage === 'new-email' ? null : activePage === 'ai-proxy' ? null : activePage === 'pricing' ? null : activePage === 'home' ? null : (
             <Header
               activePage={activePage}
               onOpenDrawer={() => {}}
@@ -647,10 +644,8 @@ function AppContent() {
                 setIsCreatingInvoice(true);
               }}
               onAskAIClick={(quotation) => {
-                setSelectedQuoteForAI(quotation);
-                setSelectedInvoiceForAI(null);
-                setAiChatOriginPage('quotations');
-                setActivePage('ai-chat');
+                setAiProxyInitialContext({ category: 'Quote', label: quotation.number });
+                setActivePage('ai-proxy');
               }}
               onOpenTemplateBuilder={() => {
                 setTemplateBuilderType('quotation');
@@ -678,10 +673,8 @@ function AppContent() {
                 setActivePage('new-email');
               }}
               onAskAIClick={(invoice) => {
-                setSelectedInvoiceForAI(invoice);
-                setSelectedQuoteForAI(null);
-                setAiChatOriginPage('invoices');
-                setActivePage('ai-chat');
+                setAiProxyInitialContext({ category: 'Invoice', label: invoice.number });
+                setActivePage('ai-proxy');
               }}
               onOpenTemplateBuilder={() => {
                 setTemplateBuilderType('invoice');
@@ -701,7 +694,31 @@ function AppContent() {
                 handleOpenDeleteModal('presentation', presentation.id, presentation.title);
               }}
             />
-          ) : activePage === 'ai-proxy' ? (
+          ) : activePage === 'currency' ? (
+            <CurrencyPage />
+          ) : activePage === 'notifications' ? (
+            <Notifications />
+          ) : activePage === 'workspace' ? (
+            <Workspace onRegisterHandlers={setWorkspaceHandlers} onWorkspaceChange={setCurrentWorkspace} />
+          ) : activePage === 'account' ? (
+            <AccountProfile
+              activeTab={activeAccountTab}
+              onTabChange={setActiveAccountTab}
+              onChatOpen={() => setIsSupportChatOpen(true)}
+              chatUnreadCount={chatUnreadCount}
+              onDeleteAccountClick={handleOpenDeleteAccountModal}
+              connectedTools={connectedTools}
+              onConnectedToolsChange={setConnectedTools}
+              onViewPlans={() => { setPricingOriginPage('account'); setActivePage('pricing'); }}
+            />
+          ) : activePage === 'pricing' ? (
+            <PricingPage onBack={() => setActivePage(pricingOriginPage)} />
+          ) : activePage === 'call-history' ? (
+            <CallHistory onBack={() => setActivePage('contacts')} onViewCall={handleViewCall} />
+          ) : null}
+
+          {/* Always mounted to preserve chat state */}
+          <div className={activePage === 'ai-proxy' ? 'contents' : 'hidden'}>
             <AIProxyPage
               onNavigateToNotifications={() => setActivePage('notifications')}
               onViewContact={(contact) => {
@@ -728,40 +745,10 @@ function AppContent() {
               }}
               onOpenConnectors={() => setIsConnectToolsModalOpen(true)}
               connectedTools={connectedTools}
+              initialContext={aiProxyInitialContext}
+              onConsumeInitialContext={() => setAiProxyInitialContext(null)}
             />
-          ) : activePage === 'currency' ? (
-            <CurrencyPage />
-          ) : activePage === 'notifications' ? (
-            <Notifications />
-          ) : activePage === 'workspace' ? (
-            <Workspace onRegisterHandlers={setWorkspaceHandlers} onWorkspaceChange={setCurrentWorkspace} />
-          ) : activePage === 'account' ? (
-            <AccountProfile
-              activeTab={activeAccountTab}
-              onTabChange={setActiveAccountTab}
-              onChatOpen={() => setIsSupportChatOpen(true)}
-              chatUnreadCount={chatUnreadCount}
-              onDeleteAccountClick={handleOpenDeleteAccountModal}
-              connectedTools={connectedTools}
-              onConnectedToolsChange={setConnectedTools}
-              onViewPlans={() => { setPricingOriginPage('account'); setActivePage('pricing'); }}
-            />
-          ) : activePage === 'pricing' ? (
-            <PricingPage onBack={() => setActivePage(pricingOriginPage)} />
-          ) : activePage === 'call-history' ? (
-            <CallHistory onBack={() => setActivePage('contacts')} onViewCall={handleViewCall} />
-          ) : activePage === 'ai-chat' ? (
-            <AIChat
-              onBack={() => {
-                setActivePage(aiChatOriginPage);
-                setSelectedQuoteForAI(null);
-                setSelectedInvoiceForAI(null);
-              }}
-              quotation={selectedQuoteForAI}
-              invoice={selectedInvoiceForAI}
-              originPage={aiChatOriginPage}
-            />
-          ) : null}
+          </div>
         </main>
       </div>
 
@@ -865,7 +852,7 @@ function AppContent() {
         isDeleting={isDeletingEntity}
       />
       <MinimizedCallsBar />
-      <FloatingAIWidget isVisible={activePage !== 'ai-proxy' && activePage !== 'ai-chat'} />
+      <FloatingAIWidget isVisible={activePage !== 'ai-proxy'} />
       <FloatingChatButton
         unreadCount={chatUnreadCount}
         onClick={() => setIsSupportChatOpen(!isSupportChatOpen)}

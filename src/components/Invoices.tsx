@@ -323,13 +323,12 @@ export default function Invoices({ isTeamView, homeFilterPreference, onPaymentRe
           <table className="min-w-full divide-y divide-slate-100">
             <thead>
               <tr className="text-left text-[11px] font-medium text-slate-400 uppercase tracking-wider">
-                <th scope="col" className="pl-5 pr-2 py-3">Invoice</th>
-                <th scope="col" className="px-4 py-3">Client</th>
-                <th scope="col" className="px-4 py-3">Status</th>
-                <th scope="col" className="px-4 py-3">Amount</th>
-
-                <th scope="col" className="px-4 py-3">Due Date</th>
-                <th scope="col" className="px-4 py-3 w-12"></th>
+                <th scope="col" className="pl-5 pr-6 py-3 w-[24%]">Invoice</th>
+                <th scope="col" className="px-5 py-3 w-[20%]">Client</th>
+                <th scope="col" className="px-5 py-3 w-[18%]">Status</th>
+                <th scope="col" className="px-5 py-3 w-[16%]">Amount</th>
+                <th scope="col" className="px-5 py-3 w-[14%]">Due Date</th>
+                <th scope="col" className="px-3 py-3 w-[8%]"></th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-50">
@@ -342,7 +341,7 @@ export default function Invoices({ isTeamView, homeFilterPreference, onPaymentRe
                     key={invoice.id}
                     className="hover:bg-slate-50/70 transition-colors group cursor-pointer"
                   >
-                    <td className="pl-5 pr-2 py-3 whitespace-nowrap">
+                    <td className="pl-5 pr-6 py-3 whitespace-nowrap">
                       <div className="flex items-center gap-2.5">
                         <div className="h-7 w-7 rounded-lg bg-slate-100 text-slate-500 flex items-center justify-center text-[10px] font-semibold flex-shrink-0">
                           {invoice.client.initials}
@@ -353,10 +352,10 @@ export default function Invoices({ isTeamView, homeFilterPreference, onPaymentRe
                         </div>
                       </div>
                     </td>
-                    <td className="px-4 py-3 whitespace-nowrap">
+                    <td className="px-5 py-3 whitespace-nowrap">
                       <span className="text-[13px] text-slate-500">{invoice.client.name}</span>
                     </td>
-                    <td className="px-4 py-3 whitespace-nowrap">
+                    <td className="px-5 py-3 whitespace-nowrap">
                       <div className="relative" ref={openStatusBadge === invoice.id ? statusBadgeRef : null}>
                         <button
                           onClick={(e) => {
@@ -403,13 +402,13 @@ export default function Invoices({ isTeamView, homeFilterPreference, onPaymentRe
                         )}
                       </div>
                     </td>
-                    <td className="px-4 py-3 whitespace-nowrap">
+                    <td className="px-5 py-3 whitespace-nowrap">
                       <span className="text-[13px] font-medium text-slate-800">{formatCurrency(invoice.amount)}</span>
                     </td>
-                    <td className="px-4 py-3 whitespace-nowrap">
+                    <td className="px-5 py-3 whitespace-nowrap">
                       <span className="text-[13px] text-slate-500">{formatDate(invoice.dueDate)}</span>
                     </td>
-                    <td className="px-4 py-3 whitespace-nowrap">
+                    <td className="px-3 py-3 whitespace-nowrap">
                       <div className="relative" ref={openDropdown === invoice.id ? dropdownRef : null}>
                         <button
                           onClick={(e) => { e.stopPropagation(); setOpenDropdown(openDropdown === invoice.id ? null : invoice.id); }}

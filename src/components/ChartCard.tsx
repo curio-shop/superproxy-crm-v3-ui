@@ -90,11 +90,56 @@ function ChartCard() {
 
   return (
     <div className="bg-white rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.04),0_8px_24px_rgba(0,0,0,0.03)] border border-slate-100/80 p-5 relative overflow-hidden flex-1 flex flex-col">
-      {/* Header row */}
-      <div className="flex items-center justify-between mb-5">
-        <div className="flex items-center gap-3">
+      {/* Header */}
+      <div className="mb-5 space-y-3">
+        {/* Top row: title + date range with FY */}
+        <div className="flex items-center justify-between">
           <h3 className="text-[13px] font-semibold text-slate-700">Performance</h3>
+          <div className="flex items-center gap-2">
+            {/* Fiscal year */}
+            <div className="relative">
+              <button
+                onClick={() => setIsYearDropdownOpen(!isYearDropdownOpen)}
+                className="flex items-center gap-1 px-2 py-1 rounded-md text-[11px] font-medium text-slate-400 hover:text-slate-600 transition-colors"
+              >
+                FY {fiscalYear}
+                <Icon icon="solar:alt-arrow-down-linear" width="10" className={`transition-transform ${isYearDropdownOpen ? 'rotate-180' : ''}`} />
+              </button>
+              {isYearDropdownOpen && (
+                <div className="absolute top-full right-0 mt-1 w-24 py-1 bg-white rounded-xl border border-slate-200 shadow-lg z-50">
+                  {['2026', '2025', '2024', '2023'].map((year) => (
+                    <button
+                      key={year}
+                      onClick={() => { setFiscalYear(year); setIsYearDropdownOpen(false); }}
+                      className={`w-full px-3 py-1.5 text-left text-[12px] font-medium transition-colors ${
+                        fiscalYear === year ? 'text-slate-800 bg-slate-50' : 'text-slate-500 hover:bg-slate-50'
+                      }`}
+                    >
+                      {year}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+            {/* Date range */}
+            <div className="flex items-center bg-slate-100 rounded-lg p-0.5">
+              {(['7D', '30D', '12M'] as DateRangeType[]).map((range) => (
+                <button
+                  key={range}
+                  onClick={() => setDateRange(range)}
+                  className={`px-2 py-1 text-[11px] font-medium rounded-md transition-all ${
+                    dateRange === range ? 'bg-white text-slate-700 shadow-sm' : 'text-slate-400 hover:text-slate-600'
+                  }`}
+                >
+                  {range}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
 
+        {/* Second row: view toggle + legends */}
+        <div className="flex items-center justify-between">
           {/* View toggle */}
           <div className="flex items-center bg-slate-100 rounded-lg p-0.5">
             <button
@@ -115,35 +160,6 @@ function ChartCard() {
             </button>
           </div>
 
-          {/* Fiscal year */}
-          <div className="relative">
-            <button
-              onClick={() => setIsYearDropdownOpen(!isYearDropdownOpen)}
-              className="flex items-center gap-1 px-2 py-1 rounded-md text-[11px] font-medium text-slate-400 hover:text-slate-600 transition-colors"
-            >
-              FY {fiscalYear}
-              <Icon icon="solar:alt-arrow-down-linear" width="10" className={`transition-transform ${isYearDropdownOpen ? 'rotate-180' : ''}`} />
-            </button>
-            {isYearDropdownOpen && (
-              <div className="absolute top-full left-0 mt-1 w-24 py-1 bg-white rounded-xl border border-slate-200 shadow-lg z-50">
-                {['2026', '2025', '2024', '2023'].map((year) => (
-                  <button
-                    key={year}
-                    onClick={() => { setFiscalYear(year); setIsYearDropdownOpen(false); }}
-                    className={`w-full px-3 py-1.5 text-left text-[12px] font-medium transition-colors ${
-                      fiscalYear === year ? 'text-slate-800 bg-slate-50' : 'text-slate-500 hover:bg-slate-50'
-                    }`}
-                  >
-                    {year}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Right: date range + legends */}
-        <div className="flex items-center gap-4">
           {/* Legends with YoY */}
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-1.5">
@@ -156,21 +172,6 @@ function ChartCard() {
               <span className="text-[11px] text-slate-500">{secondaryLabel}</span>
               <span className="text-[11px] font-semibold text-slate-700">+{metrics.secondary}%</span>
             </div>
-          </div>
-
-          {/* Date range */}
-          <div className="flex items-center bg-slate-100 rounded-lg p-0.5">
-            {(['7D', '30D', '12M'] as DateRangeType[]).map((range) => (
-              <button
-                key={range}
-                onClick={() => setDateRange(range)}
-                className={`px-2 py-1 text-[11px] font-medium rounded-md transition-all ${
-                  dateRange === range ? 'bg-white text-slate-700 shadow-sm' : 'text-slate-400 hover:text-slate-600'
-                }`}
-              >
-                {range}
-              </button>
-            ))}
           </div>
         </div>
       </div>

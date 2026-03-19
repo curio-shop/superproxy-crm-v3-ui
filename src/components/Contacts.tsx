@@ -208,12 +208,12 @@ export default function Contacts({ isTeamView, homeFilterPreference, onColdCallC
           <table className="min-w-full divide-y divide-slate-100">
             <thead>
               <tr className="text-left text-[11px] font-medium text-slate-400 uppercase tracking-wider">
-                <th scope="col" className="pl-5 pr-2 py-3">Name</th>
-                <th scope="col" className="px-4 py-3">Company</th>
-                <th scope="col" className="px-4 py-3">Title</th>
-                <th scope="col" className="px-4 py-3">Email</th>
-                <th scope="col" className="px-4 py-3">Phone</th>
-                <th scope="col" className="px-4 py-3 w-12"></th>
+                <th scope="col" className="pl-5 pr-6 py-3 w-[20%]">Name</th>
+                <th scope="col" className="px-5 py-3 w-[18%]">Company</th>
+                <th scope="col" className="px-5 py-3 w-[16%]">Title</th>
+                <th scope="col" className="px-5 py-3 w-[22%]">Email</th>
+                <th scope="col" className="px-5 py-3 w-[16%]">Phone</th>
+                <th scope="col" className="px-3 py-3 w-[8%]"></th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-50">
@@ -223,7 +223,7 @@ export default function Contacts({ isTeamView, homeFilterPreference, onColdCallC
                     className="hover:bg-slate-50/70 transition-colors group cursor-pointer"
                     onClick={() => onViewContact?.(contact)}
                   >
-                    <td className="pl-5 pr-2 py-3 whitespace-nowrap">
+                    <td className="pl-5 pr-6 py-3 whitespace-nowrap">
                       <div className="flex items-center gap-2.5">
                         <div className="h-7 w-7 rounded-lg bg-slate-100 text-slate-500 flex items-center justify-center text-[10px] font-semibold flex-shrink-0">
                           {contact.initials}
@@ -231,35 +231,35 @@ export default function Contacts({ isTeamView, homeFilterPreference, onColdCallC
                         <span className="text-[13px] font-medium text-slate-800">{contact.name}</span>
                       </div>
                     </td>
-                    <td className="px-4 py-3 whitespace-nowrap">
+                    <td className="px-5 py-3 whitespace-nowrap">
                       {contact.company ? (
                         <span className="text-[13px] text-slate-500">{contact.company}</span>
                       ) : (
                         <span className="text-[13px] text-slate-300">—</span>
                       )}
                     </td>
-                    <td className="px-4 py-3 whitespace-nowrap">
+                    <td className="px-5 py-3 whitespace-nowrap">
                       {contact.title ? (
                         <span className="text-[13px] text-slate-500">{contact.title}</span>
                       ) : (
                         <span className="text-[13px] text-slate-300">—</span>
                       )}
                     </td>
-                    <td className="px-4 py-3 max-w-[200px]">
+                    <td className="px-5 py-3">
                       {contact.email ? (
                         <span className="text-[13px] text-slate-600 block truncate" title={contact.email}>{contact.email}</span>
                       ) : (
                         <span className="text-[13px] text-slate-300">—</span>
                       )}
                     </td>
-                    <td className="px-4 py-3 whitespace-nowrap">
+                    <td className="px-5 py-3 whitespace-nowrap">
                       {contact.phone ? (
                         <span className="text-[13px] text-slate-500 font-mono">{contact.phone}</span>
                       ) : (
                         <span className="text-[13px] text-slate-300">—</span>
                       )}
                     </td>
-                    <td className="px-4 py-3 whitespace-nowrap">
+                    <td className="px-3 py-3 whitespace-nowrap">
                       <div className="relative" ref={openMenuId === contact.id ? menuRef : null}>
                         <button
                           onClick={(e) => { e.stopPropagation(); toggleMenu(contact.id); }}

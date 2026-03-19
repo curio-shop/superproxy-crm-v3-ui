@@ -217,6 +217,19 @@ export default function FloatingAIWidget({ isVisible }: FloatingAIWidgetProps) {
         .widget-msg-in {
           animation: msg-in 300ms cubic-bezier(0.16,1,0.3,1) both;
         }
+        @keyframes pill-pulse-ring {
+          0% { transform: scale(1); opacity: 0.5; }
+          50% { transform: scale(1.08); opacity: 0; }
+          100% { transform: scale(1.08); opacity: 0; }
+        }
+        @keyframes pill-shimmer {
+          0% { transform: translateX(-100%); }
+          100% { transform: translateX(100%); }
+        }
+        @keyframes pill-progress-sweep {
+          0% { left: -33%; }
+          100% { left: 100%; }
+        }
       `}</style>
 
       <div
@@ -254,9 +267,12 @@ export default function FloatingAIWidget({ isVisible }: FloatingAIWidgetProps) {
 
             {/* Header */}
             <div className="flex items-center justify-between px-4 py-3">
-              <div className="flex items-center gap-2">
-                <SparkIcon size={14} className="text-slate-700" />
-                <span className="text-[13px] font-semibold text-slate-800 tracking-tight">AI Proxy</span>
+              <div className="flex items-center">
+                <img
+                  src="/superproxy-logo.png"
+                  alt="Superproxy"
+                  className="h-[24px] w-auto object-contain"
+                />
               </div>
               <div className="flex items-center gap-0.5">
                 {hasMessages && (
@@ -377,22 +393,54 @@ export default function FloatingAIWidget({ isVisible }: FloatingAIWidgetProps) {
           </div>
         )}
 
-        {/* Floating pill */}
-        <div
-          ref={pillRef}
-          onMouseDown={handleMouseDown}
-          onClick={handlePillClick}
-          className="group relative flex items-center gap-2 pl-3 pr-3.5 py-2 rounded-full cursor-pointer select-none bg-slate-900 shadow-[0_2px_4px_rgba(0,0,0,0.04),0_8px_24px_rgba(0,0,0,0.12),0_24px_48px_rgba(0,0,0,0.08)] hover:shadow-[0_2px_4px_rgba(0,0,0,0.06),0_12px_32px_rgba(0,0,0,0.16),0_32px_56px_rgba(0,0,0,0.1)] hover:-translate-y-0.5 transition-all duration-200 active:scale-[0.97]"
-        >
-          <SparkIcon size={13} className="flex-shrink-0 text-white" />
-          <span className="text-[12px] font-semibold tracking-tight text-white">AI Proxy</span>
-          <button
-            onClick={(e) => { e.stopPropagation(); setDismissed(true); setIsOpen(false); }}
-            className="absolute -top-1 -right-1 w-[18px] h-[18px] flex items-center justify-center rounded-full bg-white/90 backdrop-blur-sm border border-slate-200/80 shadow-sm transition-all duration-200 opacity-0 group-hover:opacity-100 text-slate-400 hover:text-slate-600 hover:border-slate-300 hover:shadow-md active:scale-90"
+        {/* Floating pill — two states */}
+        {hasMessages ? (
+          /* On-going Task pill */
+          <div className="group relative" ref={pillRef} onMouseDown={handleMouseDown} onClick={handlePillClick}>
+            {/* Close button — outside overflow-hidden container */}
+            <button
+              onClick={(e) => { e.stopPropagation(); setDismissed(true); setIsOpen(false); }}
+              className="absolute -top-1 -right-1 z-10 w-[18px] h-[18px] flex items-center justify-center rounded-full bg-white/90 backdrop-blur-sm border border-slate-200/80 shadow-sm transition-all duration-200 opacity-0 group-hover:opacity-100 text-slate-400 hover:text-slate-600 hover:border-slate-300 hover:shadow-md active:scale-90"
+            >
+              <svg width="7" height="7" viewBox="0 0 10 10" fill="none"><path d="M2 2L8 8M8 2L2 8" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round"/></svg>
+            </button>
+            <div
+              className="relative flex items-center gap-2 pl-3 pr-3.5 py-2 rounded-full cursor-pointer select-none bg-slate-900 border border-blue-500/30 shadow-[0_2px_4px_rgba(0,0,0,0.04),0_8px_24px_rgba(37,99,235,0.10),0_24px_48px_rgba(0,0,0,0.08)] hover:shadow-[0_2px_4px_rgba(0,0,0,0.06),0_12px_32px_rgba(37,99,235,0.14),0_32px_56px_rgba(0,0,0,0.1)] hover:-translate-y-0.5 transition-all duration-200 active:scale-[0.97] overflow-hidden"
+            >
+              {/* Pulse ring */}
+              <span className="absolute inset-0 rounded-full border border-blue-400/40 pointer-events-none" style={{ animation: 'pill-pulse-ring 2.5s ease-out infinite' }} />
+              {/* Surface shimmer */}
+              <span className="absolute inset-0 rounded-full overflow-hidden pointer-events-none">
+                <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/[0.06] to-transparent" style={{ animation: 'pill-shimmer 3s ease-in-out infinite' }} />
+              </span>
+              <span className="relative text-[12px] font-semibold tracking-tight text-white/90 whitespace-nowrap">Task in progress</span>
+              {/* Progress bar — only when minimized */}
+              {!isOpen && (
+                <span className="absolute bottom-0 left-3 right-3 h-[2px] rounded-full overflow-hidden">
+                  <span className="absolute inset-0 bg-white/[0.08] rounded-full" />
+                  <span className="absolute inset-y-0 w-1/3 rounded-full bg-gradient-to-r from-transparent via-blue-400 to-transparent" style={{ animation: 'pill-progress-sweep 1.8s ease-in-out infinite' }} />
+                </span>
+              )}
+            </div>
+          </div>
+        ) : (
+          /* New Task pill */
+          <div
+            ref={pillRef}
+            onMouseDown={handleMouseDown}
+            onClick={handlePillClick}
+            className="group relative flex items-center gap-2 pl-3 pr-3.5 py-2 rounded-full cursor-pointer select-none bg-slate-900 shadow-[0_2px_4px_rgba(0,0,0,0.04),0_8px_24px_rgba(0,0,0,0.12),0_24px_48px_rgba(0,0,0,0.08)] hover:shadow-[0_2px_4px_rgba(0,0,0,0.06),0_12px_32px_rgba(0,0,0,0.16),0_32px_56px_rgba(0,0,0,0.1)] hover:-translate-y-0.5 transition-all duration-200 active:scale-[0.97]"
           >
-            <svg width="7" height="7" viewBox="0 0 10 10" fill="none"><path d="M2 2L8 8M8 2L2 8" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round"/></svg>
-          </button>
-        </div>
+            <Icon icon="solar:pen-new-square-linear" width={13} className="flex-shrink-0 text-white" />
+            <span className="text-[12px] font-semibold tracking-tight text-white">New Task</span>
+            <button
+              onClick={(e) => { e.stopPropagation(); setDismissed(true); setIsOpen(false); }}
+              className="absolute -top-1 -right-1 w-[18px] h-[18px] flex items-center justify-center rounded-full bg-white/90 backdrop-blur-sm border border-slate-200/80 shadow-sm transition-all duration-200 opacity-0 group-hover:opacity-100 text-slate-400 hover:text-slate-600 hover:border-slate-300 hover:shadow-md active:scale-90"
+            >
+              <svg width="7" height="7" viewBox="0 0 10 10" fill="none"><path d="M2 2L8 8M8 2L2 8" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round"/></svg>
+            </button>
+          </div>
+        )}
       </div>
     </>
   );
