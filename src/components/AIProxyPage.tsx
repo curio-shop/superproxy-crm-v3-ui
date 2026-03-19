@@ -463,6 +463,8 @@ interface AIProxyPageProps {
   onViewInvoice?: () => void;
   onOpenConnectors?: () => void;
   connectedTools?: Record<string, boolean>;
+  initialContext?: { category: string; label: string } | null;
+  onConsumeInitialContext?: () => void;
 }
 
 const CONNECT_TOOLS = [
@@ -473,7 +475,7 @@ const CONNECT_TOOLS = [
 ];
 
 
-export default function AIProxyPage({ onNavigateToNotifications, onViewContact, onViewCompany, onViewProduct, onViewQuote, onCreateInvoiceFromQuote, onViewInvoice, onOpenConnectors, connectedTools = {} }: AIProxyPageProps) {
+export default function AIProxyPage({ onNavigateToNotifications, onViewContact, onViewCompany, onViewProduct, onViewQuote, onCreateInvoiceFromQuote, onViewInvoice, onOpenConnectors, connectedTools = {}, initialContext, onConsumeInitialContext }: AIProxyPageProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);
@@ -486,6 +488,13 @@ export default function AIProxyPage({ onNavigateToNotifications, onViewContact, 
   const phraseQueueRef = useRef<string[]>([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+
+  useEffect(() => {
+    if (initialContext) {
+      setProxySelected(initialContext);
+      onConsumeInitialContext?.();
+    }
+  }, [initialContext]);
 
   const getNextPhrase = () => {
     if (phraseQueueRef.current.length === 0) {

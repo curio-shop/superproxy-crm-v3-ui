@@ -27,7 +27,7 @@ interface SidebarProps {
 
 export default function Sidebar({ activePage, onPageChange, currentWorkspace, onCreateQuote, onCreateInvoice, onOpenQuoteTemplate, onOpenInvoiceTemplate }: SidebarProps) {
   const [collapsed, setCollapsed] = useState(false);
-  const [openSections, setOpenSections] = useState<Set<string>>(new Set(['ai-proxy']));
+  const [openSections, setOpenSections] = useState<Set<string>>(new Set());
 
   const toggleSection = (section: 'quotations' | 'invoices' | 'ai-proxy') => {
     setOpenSections(prev => {
@@ -78,72 +78,38 @@ export default function Sidebar({ activePage, onPageChange, currentWorkspace, on
       >
         <div className="space-y-1">
 
-          {/* ── AI Proxy (expandable) ── */}
-          <div>
-            <button
-              onClick={() => {
-                toggleSection('ai-proxy');
-                if (!openSections.has('ai-proxy')) onPageChange('ai-proxy');
-              }}
-              className={`w-full group flex items-center rounded-2xl transition-all duration-300 relative text-slate-500 hover:text-slate-900 hover:bg-slate-100/50 ${collapsed ? 'justify-center p-3' : 'gap-3.5 px-4 py-3'}`}
+          {/* ── Task ── */}
+          <button
+            onClick={() => onPageChange('ai-proxy')}
+            className={`w-full group flex items-center rounded-2xl transition-all duration-300 relative ${
+              isAiProxyActive
+                ? 'bg-slate-900/[0.06] text-slate-900'
+                : 'text-slate-500 hover:text-slate-900 hover:bg-slate-100/50'
+            } ${collapsed ? 'justify-center p-3' : 'gap-3.5 px-4 py-3'}`}
+          >
+            <div className="w-5 h-5 flex items-center justify-center shrink-0">
+              <Icon
+                icon="solar:pen-new-square-linear"
+                width="20"
+                className={`transition-colors ${
+                  isAiProxyActive ? 'text-slate-900 [&_*]:stroke-[2]' : 'text-slate-400 group-hover:text-slate-600'
+                }`}
+              />
+            </div>
+            <span
+              className={`whitespace-nowrap overflow-hidden transition-all duration-300 text-sm font-medium ${
+                collapsed ? 'w-0 opacity-0' : 'opacity-100'
+              }`}
             >
-              <div className="w-5 h-5 flex items-center justify-center shrink-0">
-                <svg
-                  viewBox="0 0 20 20"
-                  width="18"
-                  height="18"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="transition-colors text-slate-400 group-hover:text-slate-600"
-                >
-                  <path
-                    d="M10 1C10 1 11.2 6.5 13.5 8.5C15.8 10.5 19 10 19 10C19 10 15.8 9.5 13.5 11.5C11.2 13.5 10 19 10 19C10 19 8.8 13.5 6.5 11.5C4.2 9.5 1 10 1 10C1 10 4.2 10.5 6.5 8.5C8.8 6.5 10 1 10 1Z"
-                    fill="currentColor"
-                  />
-                </svg>
-              </div>
-              <span className={`font-semibold text-sm whitespace-nowrap overflow-hidden transition-all duration-300 flex-1 text-left ${collapsed ? 'w-0 opacity-0' : 'opacity-100'}`}>
-                AI Proxy
+              Task
+            </span>
+            {collapsed && (
+              <span className="absolute left-full ml-3 px-4 py-2 bg-gradient-to-r from-slate-800 to-slate-900 text-white text-sm font-semibold rounded-xl shadow-2xl ring-1 ring-white/10 opacity-0 scale-95 -translate-x-2 group-hover:opacity-100 group-hover:scale-100 group-hover:translate-x-0 transition-all duration-300 ease-out whitespace-nowrap z-[35] pointer-events-none">
+                Task
+                <span className="absolute right-full top-1/2 -translate-y-1/2 w-0 h-0 border-[7px] border-transparent border-r-slate-800"></span>
               </span>
-              {!collapsed && (
-                <Icon
-                  icon="solar:alt-arrow-down-linear"
-                  width="14"
-                  className={`text-slate-400 transition-transform duration-200 ${openSections.has('ai-proxy') ? 'rotate-180' : ''}`}
-                />
-              )}
-              {collapsed && (
-                <span className="absolute left-full ml-3 px-4 py-2 bg-gradient-to-r from-slate-800 to-slate-900 text-white text-sm font-semibold rounded-xl shadow-2xl ring-1 ring-white/10 opacity-0 scale-95 -translate-x-2 group-hover:opacity-100 group-hover:scale-100 group-hover:translate-x-0 transition-all duration-300 ease-out whitespace-nowrap z-[35] pointer-events-none">
-                  AI Proxy
-                  <span className="absolute right-full top-1/2 -translate-y-1/2 w-0 h-0 border-[7px] border-transparent border-r-slate-800"></span>
-                </span>
-              )}
-            </button>
-
-            {/* AI Proxy sub-items */}
-            {openSections.has('ai-proxy') && !collapsed && (
-              <div className="mt-0.5 ml-4 pl-4 space-y-0.5">
-                <button
-                  onClick={() => onPageChange('ai-proxy')}
-                  className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm transition-colors ${
-                    isAiProxyActive ? 'text-slate-900 font-semibold bg-slate-900/[0.05]' : 'text-slate-500 hover:text-slate-900 hover:bg-slate-100/50'
-                  }`}
-                >
-                  <Icon icon="solar:pen-new-square-linear" width="15" className={isAiProxyActive ? 'text-slate-900' : 'text-slate-400'} />
-                  Task
-                </button>
-                <button
-                  onClick={() => onPageChange('call-history')}
-                  className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm transition-colors ${
-                    isCallHistoryActive ? 'text-slate-900 font-semibold bg-slate-900/[0.05]' : 'text-slate-500 hover:text-slate-900 hover:bg-slate-100/50'
-                  }`}
-                >
-                  <Icon icon="solar:phone-linear" width="15" className={isCallHistoryActive ? 'text-slate-900' : 'text-slate-400'} />
-                  Calls
-                </button>
-              </div>
             )}
-          </div>
+          </button>
 
           {/* ── Dashboard ── */}
           <button
@@ -400,15 +366,6 @@ export default function Sidebar({ activePage, onPageChange, currentWorkspace, on
             )}
           </div>
 
-          {/* ── Separator + Tools category ── */}
-          <div className={`pt-3 pb-1 transition-all duration-300 ${collapsed ? 'px-0' : 'px-1'}`}>
-            {collapsed ? (
-              <div className="h-px bg-slate-200/70 mx-1" />
-            ) : (
-              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-3">Tools</p>
-            )}
-          </div>
-
           {/* Walkthroughs */}
           <button
             onClick={() => onPageChange('presentations')}
@@ -438,30 +395,39 @@ export default function Sidebar({ activePage, onPageChange, currentWorkspace, on
             )}
           </button>
 
-          {/* Currency */}
+          {/* ── Separator + Tools category ── */}
+          <div className={`pt-3 pb-1 transition-all duration-300 ${collapsed ? 'px-0' : 'px-1'}`}>
+            {collapsed ? (
+              <div className="h-px bg-slate-200/70 mx-1" />
+            ) : (
+              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-3">Tools</p>
+            )}
+          </div>
+
+          {/* Calls */}
           <button
-            onClick={() => onPageChange('currency')}
+            onClick={() => onPageChange('call-history')}
             className={`w-full group flex items-center rounded-2xl transition-all duration-300 relative ${
-              activePage === 'currency'
+              isCallHistoryActive
                 ? 'bg-slate-900/[0.06] text-slate-900'
                 : 'text-slate-500 hover:text-slate-900 hover:bg-slate-100/50'
             } ${collapsed ? 'justify-center p-3' : 'gap-3.5 px-4 py-3'}`}
           >
             <div className="w-5 h-5 flex items-center justify-center shrink-0">
               <Icon
-                icon="solar:dollar-minimalistic-linear"
+                icon="solar:phone-linear"
                 width="20"
                 className={`transition-colors ${
-                  activePage === 'currency' ? 'text-slate-900 [&_*]:stroke-[2]' : 'text-slate-400 group-hover:text-slate-600'
+                  isCallHistoryActive ? 'text-slate-900 [&_*]:stroke-[2]' : 'text-slate-400 group-hover:text-slate-600'
                 }`}
               />
             </div>
             <span className={`font-medium text-sm whitespace-nowrap overflow-hidden transition-all duration-300 ${collapsed ? 'w-0 opacity-0' : 'opacity-100'}`}>
-              Currency
+              Calls
             </span>
             {collapsed && (
               <span className="absolute left-full ml-3 px-4 py-2 bg-gradient-to-r from-slate-800 to-slate-900 text-white text-sm font-semibold rounded-xl shadow-2xl ring-1 ring-white/10 opacity-0 scale-95 -translate-x-2 group-hover:opacity-100 group-hover:scale-100 group-hover:translate-x-0 transition-all duration-300 ease-out whitespace-nowrap z-[35] pointer-events-none">
-                Currency
+                Calls
                 <span className="absolute right-full top-1/2 -translate-y-1/2 w-0 h-0 border-[7px] border-transparent border-r-slate-800"></span>
               </span>
             )}
@@ -491,6 +457,35 @@ export default function Sidebar({ activePage, onPageChange, currentWorkspace, on
             {collapsed && (
               <span className="absolute left-full ml-3 px-4 py-2 bg-gradient-to-r from-slate-800 to-slate-900 text-white text-sm font-semibold rounded-xl shadow-2xl ring-1 ring-white/10 opacity-0 scale-95 -translate-x-2 group-hover:opacity-100 group-hover:scale-100 group-hover:translate-x-0 transition-all duration-300 ease-out whitespace-nowrap z-[35] pointer-events-none">
                 Email
+                <span className="absolute right-full top-1/2 -translate-y-1/2 w-0 h-0 border-[7px] border-transparent border-r-slate-800"></span>
+              </span>
+            )}
+          </button>
+
+          {/* Currency */}
+          <button
+            onClick={() => onPageChange('currency')}
+            className={`w-full group flex items-center rounded-2xl transition-all duration-300 relative ${
+              activePage === 'currency'
+                ? 'bg-slate-900/[0.06] text-slate-900'
+                : 'text-slate-500 hover:text-slate-900 hover:bg-slate-100/50'
+            } ${collapsed ? 'justify-center p-3' : 'gap-3.5 px-4 py-3'}`}
+          >
+            <div className="w-5 h-5 flex items-center justify-center shrink-0">
+              <Icon
+                icon="solar:dollar-minimalistic-linear"
+                width="20"
+                className={`transition-colors ${
+                  activePage === 'currency' ? 'text-slate-900 [&_*]:stroke-[2]' : 'text-slate-400 group-hover:text-slate-600'
+                }`}
+              />
+            </div>
+            <span className={`font-medium text-sm whitespace-nowrap overflow-hidden transition-all duration-300 ${collapsed ? 'w-0 opacity-0' : 'opacity-100'}`}>
+              Currency
+            </span>
+            {collapsed && (
+              <span className="absolute left-full ml-3 px-4 py-2 bg-gradient-to-r from-slate-800 to-slate-900 text-white text-sm font-semibold rounded-xl shadow-2xl ring-1 ring-white/10 opacity-0 scale-95 -translate-x-2 group-hover:opacity-100 group-hover:scale-100 group-hover:translate-x-0 transition-all duration-300 ease-out whitespace-nowrap z-[35] pointer-events-none">
+                Currency
                 <span className="absolute right-full top-1/2 -translate-y-1/2 w-0 h-0 border-[7px] border-transparent border-r-slate-800"></span>
               </span>
             )}

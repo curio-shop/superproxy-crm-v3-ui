@@ -119,12 +119,12 @@ export default function Companies({ isTeamView, homeFilterPreference, onViewComp
           <table className="min-w-full divide-y divide-slate-100">
             <thead>
               <tr className="text-left text-[11px] font-medium text-slate-400 uppercase tracking-wider">
-                <th className="pl-5 pr-2 py-3">Name</th>
-                <th className="px-4 py-3">Type</th>
-                <th className="px-4 py-3">Industry</th>
-                <th className="px-4 py-3">Location</th>
-                <th className="px-4 py-3">Phone</th>
-                <th className="px-4 py-3 w-12"></th>
+                <th className="pl-5 pr-6 py-3 w-[22%]">Name</th>
+                <th className="px-5 py-3 w-[16%]">Type</th>
+                <th className="px-5 py-3 w-[20%]">Industry</th>
+                <th className="px-5 py-3 w-[18%]">Location</th>
+                <th className="px-5 py-3 w-[16%]">Phone</th>
+                <th className="px-3 py-3 w-[8%]"></th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-50">
@@ -134,7 +134,7 @@ export default function Companies({ isTeamView, homeFilterPreference, onViewComp
                   className="hover:bg-slate-50/70 transition-colors group cursor-pointer"
                   onClick={() => onViewCompany?.(company)}
                 >
-                  <td className="pl-5 pr-2 py-3 whitespace-nowrap">
+                  <td className="pl-5 pr-6 py-3 whitespace-nowrap">
                     <div className="flex items-center gap-2.5">
                       <div className="h-7 w-7 rounded-lg bg-slate-100 text-slate-500 flex items-center justify-center text-[10px] font-semibold flex-shrink-0">
                         {company.initials}
@@ -142,35 +142,35 @@ export default function Companies({ isTeamView, homeFilterPreference, onViewComp
                       <span className="text-[13px] font-medium text-slate-800">{company.name}</span>
                     </div>
                   </td>
-                  <td className="px-4 py-3 whitespace-nowrap">
+                  <td className="px-5 py-3 whitespace-nowrap">
                     {company.type ? (
                       <span className="text-[13px] text-slate-500">{company.type}</span>
                     ) : (
                       <span className="text-[13px] text-slate-300">—</span>
                     )}
                   </td>
-                  <td className="px-4 py-3 whitespace-nowrap">
+                  <td className="px-5 py-3 whitespace-nowrap">
                     {company.industry ? (
                       <span className="text-[13px] text-slate-500">{company.industry}</span>
                     ) : (
                       <span className="text-[13px] text-slate-300">—</span>
                     )}
                   </td>
-                  <td className="px-4 py-3 whitespace-nowrap">
+                  <td className="px-5 py-3 whitespace-nowrap">
                     {company.city ? (
                       <span className="text-[13px] text-slate-500">{company.city}</span>
                     ) : (
                       <span className="text-[13px] text-slate-300">—</span>
                     )}
                   </td>
-                  <td className="px-4 py-3 whitespace-nowrap">
+                  <td className="px-5 py-3 whitespace-nowrap">
                     {company.phone ? (
                       <span className="text-[13px] text-slate-500 font-mono">{company.phone}</span>
                     ) : (
                       <span className="text-[13px] text-slate-300">—</span>
                     )}
                   </td>
-                  <td className="px-4 py-3 whitespace-nowrap">
+                  <td className="px-3 py-3 whitespace-nowrap">
                     <div className="relative" ref={openDropdown === company.id ? dropdownRef : null}>
                       <button
                         onClick={(e) => { e.stopPropagation(); setOpenDropdown(openDropdown === company.id ? null : company.id); }}

@@ -331,14 +331,14 @@ export default function CallHistory({ contactId, onViewCall }: CallHistoryProps)
                 <table className="min-w-full divide-y divide-slate-100">
                   <thead>
                     <tr className="text-left text-[11px] font-medium text-slate-400 uppercase tracking-wider">
-                      <th className="px-4 py-3">Contact</th>
-                      <th className="px-4 py-3">Type</th>
-                      <th className="px-4 py-3">Duration</th>
-                      <th className="px-4 py-3">Outcome</th>
-                      <th className="px-4 py-3">Sentiment</th>
-                      <th className="px-4 py-3">Notes</th>
-                      <th className="px-4 py-3">Date</th>
-                      <th className="px-4 py-3 w-12"></th>
+                      <th className="pl-5 pr-6 py-3 w-[16%]">Contact</th>
+                      <th className="px-5 py-3 w-[10%]">Type</th>
+                      <th className="px-5 py-3 w-[10%]">Duration</th>
+                      <th className="px-5 py-3 w-[12%]">Outcome</th>
+                      <th className="px-5 py-3 w-[12%]">Sentiment</th>
+                      <th className="px-5 py-3 w-[20%]">Notes</th>
+                      <th className="px-5 py-3 w-[12%]">Date</th>
+                      <th className="px-3 py-3 w-[8%]"></th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-50">
@@ -348,7 +348,7 @@ export default function CallHistory({ contactId, onViewCall }: CallHistoryProps)
                         className="hover:bg-slate-50/60 transition-colors cursor-pointer"
                         onClick={() => onViewCall?.(call)}
                       >
-                        <td className="px-4 py-3 whitespace-nowrap">
+                        <td className="pl-5 pr-6 py-3 whitespace-nowrap">
                           <div className="min-w-0">
                             <div className="text-[13px] font-medium text-slate-700 truncate">{call.contact.name}</div>
                             {call.contact.company_name && (
@@ -356,30 +356,30 @@ export default function CallHistory({ contactId, onViewCall }: CallHistoryProps)
                             )}
                           </div>
                         </td>
-                        <td className="px-4 py-3 whitespace-nowrap">
+                        <td className="px-5 py-3 whitespace-nowrap">
                           <span className="text-[11px] text-slate-500">{getCallTypeLabel(call.call_type)}</span>
                         </td>
-                        <td className="px-4 py-3 whitespace-nowrap">
+                        <td className="px-5 py-3 whitespace-nowrap">
                           <span className="text-[11px] font-medium text-slate-600">{formatDuration(call.duration)}</span>
                         </td>
-                        <td className="px-4 py-3 whitespace-nowrap">{getOutcomeBadge(call.outcome)}</td>
-                        <td className="px-4 py-3 whitespace-nowrap">
+                        <td className="px-5 py-3 whitespace-nowrap">{getOutcomeBadge(call.outcome)}</td>
+                        <td className="px-5 py-3 whitespace-nowrap">
                           <div className="flex items-center gap-1.5">
                             {getSentimentIcon(call.sentiment)}
                             <span className="text-[11px] text-slate-500 capitalize">{call.sentiment}</span>
                           </div>
                         </td>
-                        <td className="px-4 py-3 max-w-[200px]">
+                        <td className="px-5 py-3">
                           {call.notes ? (
                             <p className="text-[11px] text-slate-500 truncate">{call.notes}</p>
                           ) : (
                             <span className="text-[11px] text-slate-300">—</span>
                           )}
                         </td>
-                        <td className="px-4 py-3 whitespace-nowrap">
+                        <td className="px-5 py-3 whitespace-nowrap">
                           <span className="text-[11px] text-slate-400">{formatDate(call.created_at)}</span>
                         </td>
-                        <td className="px-4 py-3 whitespace-nowrap">
+                        <td className="px-3 py-3 whitespace-nowrap">
                           <button
                             onClick={(e) => { e.stopPropagation(); onViewCall?.(call); }}
                             className="w-7 h-7 flex items-center justify-center rounded-lg text-slate-300 hover:text-slate-600 hover:bg-slate-100 transition-colors"

@@ -330,12 +330,12 @@ export default function Quotations({ isTeamView, homeFilterPreference, onViewQuo
           <table className="min-w-full divide-y divide-slate-100">
             <thead>
               <tr className="text-left text-[11px] font-medium text-slate-400 uppercase tracking-wider">
-                <th scope="col" className="pl-5 pr-2 py-3">Quote Name</th>
-                <th scope="col" className="px-4 py-3">Client</th>
-                <th scope="col" className="px-4 py-3">Status</th>
-                <th scope="col" className="px-4 py-3">Amount</th>
-                <th scope="col" className="px-4 py-3">Date Created</th>
-                <th scope="col" className="px-4 py-3 w-12"></th>
+                <th scope="col" className="pl-5 pr-6 py-3 w-[24%]">Quote Name</th>
+                <th scope="col" className="px-5 py-3 w-[20%]">Client</th>
+                <th scope="col" className="px-5 py-3 w-[18%]">Status</th>
+                <th scope="col" className="px-5 py-3 w-[16%]">Amount</th>
+                <th scope="col" className="px-5 py-3 w-[14%]">Date Created</th>
+                <th scope="col" className="px-3 py-3 w-[8%]"></th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-50">
@@ -349,7 +349,7 @@ export default function Quotations({ isTeamView, homeFilterPreference, onViewQuo
                     className="hover:bg-slate-50/70 transition-colors group cursor-pointer"
                     onClick={() => onViewQuote?.(quote)}
                   >
-                    <td className="pl-5 pr-2 py-3 whitespace-nowrap">
+                    <td className="pl-5 pr-6 py-3 whitespace-nowrap">
                       <div className="flex items-center gap-2.5">
                         <div className="h-7 w-7 rounded-lg bg-slate-100 text-slate-500 flex items-center justify-center text-[10px] font-semibold flex-shrink-0">
                           {quote.client.initials}
@@ -357,10 +357,10 @@ export default function Quotations({ isTeamView, homeFilterPreference, onViewQuo
                         <span className="text-[13px] font-medium text-slate-800">{quote.title}</span>
                       </div>
                     </td>
-                    <td className="px-4 py-3 whitespace-nowrap">
+                    <td className="px-5 py-3 whitespace-nowrap">
                       <span className="text-[13px] text-slate-500">{quote.client.name}</span>
                     </td>
-                    <td className="px-4 py-3 whitespace-nowrap">
+                    <td className="px-5 py-3 whitespace-nowrap">
                       <div className="relative" ref={openStatusBadge === quote.id ? statusBadgeRef : null}>
                         <button
                           onClick={(e) => {
@@ -407,13 +407,13 @@ export default function Quotations({ isTeamView, homeFilterPreference, onViewQuo
                         )}
                       </div>
                     </td>
-                    <td className="px-4 py-3 whitespace-nowrap">
+                    <td className="px-5 py-3 whitespace-nowrap">
                       <span className="text-[13px] font-medium text-slate-800">{formatCurrency(quote.amount)}</span>
                     </td>
-                    <td className="px-4 py-3 whitespace-nowrap">
+                    <td className="px-5 py-3 whitespace-nowrap">
                       <span className="text-[13px] text-slate-500">{formatDate(quote.date)}</span>
                     </td>
-                    <td className="px-4 py-3 whitespace-nowrap">
+                    <td className="px-3 py-3 whitespace-nowrap">
                       <div className="relative" ref={openDropdown === quote.id ? dropdownRef : null}>
                         <button
                           onClick={(e) => { e.stopPropagation(); setOpenDropdown(openDropdown === quote.id ? null : quote.id); }}

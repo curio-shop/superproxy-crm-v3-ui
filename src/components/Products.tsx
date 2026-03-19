@@ -50,16 +50,16 @@ export default function Products({ isTeamView, homeFilterPreference, onViewProdu
   }, []);
 
   const products: Product[] = [
-    { id: '1', name: 'Nike Air Max 270', category: 'Footwear', sku: 'NK-2024-001', stock: 450, maxStock: 1000, price: 129.00, status: 'active', image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=100&h=100', description: 'Lightweight running shoe with Max Air unit for all-day comfort' },
-    { id: '2', name: 'Sony WH-1000XM4', category: 'Electronics', sku: 'SN-WH-004', stock: 12, maxStock: 200, price: 348.00, status: 'low_stock', image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=100&h=100', description: 'Noise-cancelling wireless headphones with 30hr battery life' },
-    { id: '3', name: 'Fujifilm X-T30', category: 'Photography', sku: 'FJ-XT30-II', stock: 85, maxStock: 100, price: 899.00, status: 'active', image: 'https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?auto=format&fit=crop&w=100&h=100', description: 'Mirrorless camera with 26.1MP sensor and 4K video' },
-    { id: '4', name: 'Analog Watch', category: 'Accessories', sku: 'AW-SERIES-5', stock: 0, maxStock: 50, price: 210.00, status: 'out_of_stock', image: 'https://images.unsplash.com/photo-1593998066526-65fcab3021a2?auto=format&fit=crop&w=100&h=100', description: 'Stainless steel case with sapphire crystal and leather strap' },
-    { id: '5', name: 'Premium Kit', category: 'Bundles', sku: 'BUN-2023-EX', stock: 14, maxStock: 20, price: 1299.00, status: 'active', description: 'Complete professional bundle with all essential accessories' },
-    { id: '6', name: 'Wireless Charger', category: 'Electronics', sku: 'WC-MAG-01', stock: 320, maxStock: 500, price: 49.00, status: 'active', description: 'MagSafe-compatible fast charger with LED indicator' },
-    { id: '7', name: 'Leather Backpack', category: 'Accessories', sku: 'LB-PRO-22', stock: 8, maxStock: 100, price: 189.00, status: 'low_stock', description: 'Full-grain leather with padded laptop compartment' },
-    { id: '8', name: 'Running Shorts', category: 'Footwear', sku: 'RS-DRI-07', stock: 275, maxStock: 400, price: 45.00, status: 'active', description: 'Moisture-wicking fabric with built-in compression liner' },
-    { id: '9', name: 'Studio Monitor', category: 'Electronics', sku: 'SM-KRK-V8', stock: 0, maxStock: 30, price: 449.00, status: 'out_of_stock', description: '8-inch powered speaker for professional audio mixing' },
-    { id: '10', name: 'Travel Adapter', category: 'Accessories', sku: 'TA-UNI-03', stock: 180, maxStock: 300, price: 29.00, status: 'draft', description: 'Universal adapter supporting 150+ countries with USB-C' },
+    { id: '1', name: 'Nike Air Max 270', category: 'Footwear', sku: 'NK-2024-001', stock: 450, maxStock: 1000, price: 129.00, status: 'active', image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=100&h=100', description: 'Lightweight running shoe with Max Air unit for all-day comfort. Breathable mesh upper with foam midsole cushioning for everyday wear.' },
+    { id: '2', name: 'Sony WH-1000XM4', category: 'Electronics', sku: 'SN-WH-004', stock: 12, maxStock: 200, price: 348.00, status: 'low_stock', image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=100&h=100', description: 'Noise-cancelling wireless headphones with 30hr battery life. Features adaptive sound control, multipoint connection, and speak-to-chat technology.' },
+    { id: '3', name: 'Fujifilm X-T30', category: 'Photography', sku: 'FJ-XT30-II', stock: 85, maxStock: 100, price: 899.00, status: 'active', image: 'https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?auto=format&fit=crop&w=100&h=100', description: 'Mirrorless camera with 26.1MP sensor and 4K video. Compact body with advanced autofocus and film simulation modes for stunning color reproduction.' },
+    { id: '4', name: 'Analog Watch', category: 'Accessories', sku: 'AW-SERIES-5', stock: 0, maxStock: 50, price: 210.00, status: 'out_of_stock', image: 'https://images.unsplash.com/photo-1593998066526-65fcab3021a2?auto=format&fit=crop&w=100&h=100', description: 'Stainless steel case with sapphire crystal and leather strap. Japanese quartz movement with 50m water resistance and luminous hands.' },
+    { id: '5', name: 'Premium Kit', category: 'Bundles', sku: 'BUN-2023-EX', stock: 14, maxStock: 20, price: 1299.00, status: 'active', description: 'Complete professional bundle with all essential accessories. Includes carrying case, cables, cleaning kit, and extended warranty coverage.' },
+    { id: '6', name: 'Wireless Charger', category: 'Electronics', sku: 'WC-MAG-01', stock: 320, maxStock: 500, price: 49.00, status: 'active', description: 'MagSafe-compatible fast charger with LED indicator. Supports up to 15W charging with foreign object detection and temperature control.' },
+    { id: '7', name: 'Leather Backpack', category: 'Accessories', sku: 'LB-PRO-22', stock: 8, maxStock: 100, price: 189.00, status: 'low_stock', description: 'Full-grain leather with padded laptop compartment. Fits up to 15-inch laptops with organizer pockets and adjustable shoulder straps.' },
+    { id: '8', name: 'Running Shorts', category: 'Footwear', sku: 'RS-DRI-07', stock: 275, maxStock: 400, price: 45.00, status: 'active', description: 'Moisture-wicking fabric with built-in compression liner. Lightweight 5-inch inseam design with zippered pocket and reflective details.' },
+    { id: '9', name: 'Studio Monitor', category: 'Electronics', sku: 'SM-KRK-V8', stock: 0, maxStock: 30, price: 449.00, status: 'out_of_stock', description: '8-inch powered speaker for professional audio mixing. Bi-amped design with 230W output delivering flat frequency response for accurate monitoring.' },
+    { id: '10', name: 'Travel Adapter', category: 'Accessories', sku: 'TA-UNI-03', stock: 180, maxStock: 300, price: 29.00, status: 'draft', description: 'Universal adapter supporting 150+ countries with USB-C. Includes 3 USB-A ports, surge protection, and a compact foldable design for easy packing.' },
   ];
 
   const getStatusLabel = (status: string) => {
@@ -159,11 +159,11 @@ export default function Products({ isTeamView, homeFilterPreference, onViewProdu
           <table className="min-w-full divide-y divide-slate-100">
             <thead>
               <tr className="text-left text-[11px] font-medium text-slate-400 uppercase tracking-wider">
-                <th className="pl-5 pr-2 py-3">Product</th>
-                <th className="px-4 py-3">Description</th>
-                <th className="px-4 py-3">Stock</th>
-                <th className="px-4 py-3">Price</th>
-                <th className="px-4 py-3 w-12"></th>
+                <th className="pl-5 pr-6 py-3 w-[22%]">Product</th>
+                <th className="px-5 py-3 w-[38%]">Description</th>
+                <th className="px-5 py-3 w-[14%]">Stock</th>
+                <th className="px-5 py-3 w-[18%]">Price</th>
+                <th className="px-3 py-3 w-[8%]"></th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-50">
@@ -173,7 +173,7 @@ export default function Products({ isTeamView, homeFilterPreference, onViewProdu
                   className="hover:bg-slate-50/70 transition-colors group cursor-pointer"
                   onClick={() => onViewProduct?.(product)}
                 >
-                  <td className="pl-5 pr-2 py-3 whitespace-nowrap">
+                  <td className="pl-5 pr-6 py-3 whitespace-nowrap">
                     <div className="flex items-center gap-2.5">
                       <div className="h-7 w-7 rounded-lg bg-slate-100 flex items-center justify-center flex-shrink-0 overflow-hidden">
                         {product.image ? (
@@ -188,20 +188,20 @@ export default function Products({ isTeamView, homeFilterPreference, onViewProdu
                       </div>
                     </div>
                   </td>
-                  <td className="px-4 py-3 max-w-[240px]">
+                  <td className="px-5 py-3">
                     {product.description ? (
-                      <span className="text-[13px] text-slate-400 block truncate" title={product.description}>{product.description}</span>
+                      <span className="text-xs text-slate-400 block line-clamp-2 leading-relaxed" title={product.description}>{product.description}</span>
                     ) : (
                       <span className="text-[13px] text-slate-300">—</span>
                     )}
                   </td>
-                  <td className="px-4 py-3 whitespace-nowrap">
+                  <td className="px-5 py-3 whitespace-nowrap">
                     <span className="text-[13px] text-slate-500">{product.stock.toLocaleString()}</span>
                   </td>
-                  <td className="px-4 py-3 whitespace-nowrap">
+                  <td className="px-5 py-3 whitespace-nowrap">
                     <span className="text-[13px] font-medium text-slate-700">${product.price.toFixed(2)}</span>
                   </td>
-                  <td className="px-4 py-3 whitespace-nowrap">
+                  <td className="px-3 py-3 whitespace-nowrap">
                     <div className="relative" ref={openDropdown === product.id ? dropdownRef : null}>
                       <button
                         onClick={(e) => { e.stopPropagation(); setOpenDropdown(openDropdown === product.id ? null : product.id); }}

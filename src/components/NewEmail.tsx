@@ -410,8 +410,8 @@ export default function NewEmail({ onBack, contactName, contactEmail, onOpenEmai
                   </>
                 ) : (
                   <div className="w-full h-[60px] bg-slate-50 border border-dashed border-slate-300 rounded-xl flex items-center justify-center px-4 text-sm font-semibold text-slate-600 animate-in fade-in zoom-in-95 duration-200 select-none gap-2">
-                    <div className="p-1.5 rounded-md bg-indigo-50 text-indigo-500">
-                      <Icon icon="solar:stars-minimalistic-linear" width="16" />
+                    <div className="p-1.5 rounded-md bg-slate-100 text-slate-400">
+                      <Icon icon="solar:document-linear" width="16" />
                     </div>
                     Starting from blank slate
                   </div>

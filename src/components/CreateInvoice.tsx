@@ -839,24 +839,6 @@ export default function CreateInvoice({ onBack, onPublish, preSelectedQuote }: C
                       </div>
                     )}
 
-                    <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4">
-                      <div className="flex items-start gap-3">
-                        <Icon
-                          icon="solar:check-circle-bold"
-                          className="text-emerald-600 flex-shrink-0 mt-0.5"
-                          width="20"
-                        />
-                        <div>
-                          <p className="text-sm font-semibold text-emerald-900 mb-1">
-                            Ready to Publish
-                          </p>
-                          <p className="text-xs text-emerald-700 leading-relaxed">
-                            Your invoice is ready. Click "Publish Invoice" to finalize and send it to your
-                            client.
-                          </p>
-                        </div>
-                      </div>
-                    </div>
                   </div>
                 </div>
 

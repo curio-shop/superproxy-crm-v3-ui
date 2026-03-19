@@ -323,8 +323,8 @@ export default function Leaderboard() {
             <table className="w-full">
               <thead>
                 <tr className="border-b border-slate-100">
-                  <th className="text-left text-[11px] font-medium text-slate-400 uppercase tracking-wider pl-5 pr-2 py-3 w-10">#</th>
-                  <th className="text-left text-[11px] font-medium text-slate-400 uppercase tracking-wider px-2 py-3">Member</th>
+                  <th className="text-left text-[11px] font-medium text-slate-400 uppercase tracking-wider pl-5 pr-4 py-3 w-10">#</th>
+                  <th className="text-left text-[11px] font-medium text-slate-400 uppercase tracking-wider px-5 py-3">Member</th>
                   <th className="text-right text-[11px] font-medium text-slate-400 uppercase tracking-wider px-4 py-3">
                     <div className="relative inline-flex items-center gap-1 group/tooltip cursor-default">
                       Revenue
@@ -369,7 +369,7 @@ export default function Leaderboard() {
                       }`}
                     >
                       {/* Rank */}
-                      <td className="pl-5 pr-2 py-3">
+                      <td className="pl-5 pr-4 py-3">
                         {rankIndicator ? (
                           <div className={`w-7 h-7 rounded-lg border ${rankIndicator.bg} flex items-center justify-center`}>
                             <Icon icon={rankIndicator.icon} width="14" className={rankIndicator.color} />
@@ -382,7 +382,7 @@ export default function Leaderboard() {
                       </td>
 
                       {/* Member */}
-                      <td className="px-2 py-3">
+                      <td className="px-5 py-3">
                         <div className="flex items-center gap-2.5">
                           <div className={`h-8 w-8 rounded-lg overflow-hidden shadow-sm flex-shrink-0 ${
                             entry.rank === 1 ? 'ring-2 ring-amber-200' : 'ring-2 ring-white'

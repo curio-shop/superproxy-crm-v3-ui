@@ -5,9 +5,10 @@ interface ViewProductDrawerProps {
   isOpen: boolean;
   onClose: () => void;
   product: Product | null;
+  onEditProduct?: (product: Product) => void;
 }
 
-export default function ViewProductDrawer({ isOpen, onClose, product }: ViewProductDrawerProps) {
+export default function ViewProductDrawer({ isOpen, onClose, product, onEditProduct }: ViewProductDrawerProps) {
   if (!isOpen || !product) return null;
 
   const getStockPercentage = (stock: number, maxStock: number) => {
@@ -96,12 +97,21 @@ export default function ViewProductDrawer({ isOpen, onClose, product }: ViewProd
                 </span>
               </div>
             </div>
-            <button
-              onClick={onClose}
-              className="w-9 h-9 text-slate-400 hover:text-slate-600 hover:bg-slate-100/50 rounded-xl border border-transparent hover:border-slate-200/60 transition-all flex items-center justify-center flex-shrink-0"
-            >
-              <Icon icon="solar:close-circle-linear" width="20" />
-            </button>
+            <div className="flex items-center gap-2 flex-shrink-0">
+              <button
+                onClick={() => onEditProduct?.(product)}
+                className="h-9 px-3.5 text-[13px] font-semibold text-slate-600 hover:text-slate-800 bg-slate-100/60 hover:bg-slate-100 rounded-xl border border-slate-200/60 hover:border-slate-200 transition-all flex items-center gap-1.5"
+              >
+                <Icon icon="solar:pen-2-linear" width="15" />
+                Edit
+              </button>
+              <button
+                onClick={onClose}
+                className="w-9 h-9 text-slate-400 hover:text-slate-600 hover:bg-slate-100/50 rounded-xl border border-transparent hover:border-slate-200/60 transition-all flex items-center justify-center"
+              >
+                <Icon icon="solar:close-circle-linear" width="20" />
+              </button>
+            </div>
           </div>
 
           {product.image && (
