@@ -48,11 +48,14 @@ import FloatingAIWidget from './components/FloatingAIWidget';
 import SupportChatDialog from './components/SupportChatDialog';
 import Notifications from './components/Notifications';
 import CurrencyPage from './components/CurrencyPage';
+import SignIn from './components/SignIn';
+import SignUp from './components/SignUp';
+import Onboarding from './components/Onboarding';
 import { CallManagerProvider, Contact, Invoice, Quotation, useCallManager } from './contexts/CallManagerContext';
 import { ToastProvider, useToast } from './components/ToastContainer';
 import { supabase } from './lib/supabase';
 
-function AppContent() {
+function AppContent({ onSignOut }: { onSignOut?: () => void }) {
   const { focusedCallId, getFocusedCall } = useCallManager();
   const { showToast } = useToast();
   // Read URL params for new-tab navigation from chat
@@ -723,6 +726,7 @@ function AppContent() {
               connectedTools={connectedTools}
               onConnectedToolsChange={setConnectedTools}
               onViewPlans={() => { setPricingOriginPage('account'); setActivePage('pricing'); }}
+              onSignOut={onSignOut}
             />
           ) : activePage === 'pricing' ? (
             <PricingPage onBack={() => setActivePage(pricingOriginPage)} />
@@ -952,11 +956,39 @@ function CallManagerWithToast({ children }: { children: React.ReactNode }) {
   );
 }
 
+type AuthPage = 'signin' | 'signup' | 'onboarding' | null;
+
 function App() {
+  const [authPage, setAuthPage] = useState<AuthPage>('signin');
+
+  if (authPage === 'signin') {
+    return (
+      <SignIn
+        onSignIn={() => setAuthPage(null)}
+        onGoToSignUp={() => setAuthPage('signup')}
+      />
+    );
+  }
+
+  if (authPage === 'signup') {
+    return (
+      <SignUp
+        onSignUp={() => setAuthPage('onboarding')}
+        onGoToSignIn={() => setAuthPage('signin')}
+      />
+    );
+  }
+
+  if (authPage === 'onboarding') {
+    return (
+      <Onboarding onComplete={() => setAuthPage(null)} />
+    );
+  }
+
   return (
     <ToastProvider>
       <CallManagerWithToast>
-        <AppContent />
+        <AppContent onSignOut={() => setAuthPage('signin')} />
       </CallManagerWithToast>
     </ToastProvider>
   );

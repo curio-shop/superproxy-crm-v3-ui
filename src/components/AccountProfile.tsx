@@ -13,6 +13,7 @@ interface AccountProfileProps {
   connectedTools?: Record<string, boolean>;
   onConnectedToolsChange?: (tools: Record<string, boolean>) => void;
   onViewPlans?: () => void;
+  onSignOut?: () => void;
 }
 
 export default function AccountProfile({
@@ -23,7 +24,8 @@ export default function AccountProfile({
   onDeleteAccountClick,
   connectedTools = {},
   onConnectedToolsChange,
-  onViewPlans
+  onViewPlans,
+  onSignOut
 }: AccountProfileProps) {
   const [showDangerZone, setShowDangerZone] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -433,6 +435,15 @@ export default function AccountProfile({
                   {tab.label}
                 </button>
               ))}
+              <div className="mt-2 pt-2 border-t border-slate-100">
+                <button
+                  onClick={onSignOut}
+                  className="w-full flex items-center gap-2.5 px-4 py-2.5 rounded-xl text-[13px] font-medium text-slate-400 hover:bg-rose-50 hover:text-rose-600 transition-all active:scale-[0.98]"
+                >
+                  <Icon icon="solar:logout-2-linear" width="18" />
+                  Sign out
+                </button>
+              </div>
             </nav>
           </div>
 
