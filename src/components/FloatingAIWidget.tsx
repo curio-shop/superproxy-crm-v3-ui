@@ -380,8 +380,7 @@ export default function FloatingAIWidget({ isVisible }: FloatingAIWidgetProps) {
                   onChange={(e) => setInputValue(e.target.value)}
                   onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSubmit(); } }}
                   placeholder="Ask, run a task, or make a call..."
-                  disabled={isTyping}
-                  className="flex-1 bg-transparent text-slate-800 placeholder-slate-400 text-[13px] resize-none outline-none leading-5 max-h-[60px] py-1 disabled:opacity-50 overflow-y-auto"
+                  className="flex-1 bg-transparent text-slate-800 placeholder-slate-400 text-[13px] resize-none outline-none leading-5 max-h-[60px] py-1 overflow-y-auto"
                   rows={1}
                   onInput={(e) => {
                     const t = e.target as HTMLTextAreaElement;
