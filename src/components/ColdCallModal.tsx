@@ -222,9 +222,9 @@ export default function ColdCallModal({ isOpen, onClose, contact, onNavigateToHi
             </div>
 
             <div className="relative z-10 flex flex-col items-center text-center space-y-6 w-full max-w-md">
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-emerald-50 rounded-full border border-emerald-200">
-                <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></div>
-                <span className="text-xs font-bold text-emerald-700">
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-indigo-50 rounded-full border border-indigo-200">
+                <div className="w-1.5 h-1.5 bg-indigo-500 rounded-full animate-pulse"></div>
+                <span className="text-xs font-bold text-indigo-700">
                   {focusedCall?.callType === 'paymentReminder' ? 'AI Reminder Call' : focusedCall?.callType === 'quoteFollowUp' ? 'AI Follow-Up Call' : 'AI Cold Call'} In Progress
                 </span>
               </div>
@@ -282,7 +282,7 @@ export default function ColdCallModal({ isOpen, onClose, contact, onNavigateToHi
                   </div>
                 </div>
 
-                <div className="absolute -bottom-2 z-20 bg-white shadow-lg ring-1 ring-slate-100 p-2 rounded-full text-emerald-600 flex items-center justify-center">
+                <div className="absolute -bottom-2 z-20 bg-white shadow-lg ring-1 ring-slate-100 p-2 rounded-full text-indigo-600 flex items-center justify-center">
                   <Icon icon="solar:microphone-linear" className="w-3.5 h-3.5" />
                 </div>
               </div>
@@ -444,7 +444,7 @@ export default function ColdCallModal({ isOpen, onClose, contact, onNavigateToHi
                 </div>
               </div>
 
-              <div className="absolute -bottom-3 z-20 bg-white shadow-[0_4px_12px_-2px_rgba(0,0,0,0.15)] ring-1 ring-slate-100 p-2.5 rounded-full text-blue-600 flex items-center justify-center">
+              <div className="absolute -bottom-3 z-20 bg-white shadow-[0_4px_12px_-2px_rgba(0,0,0,0.15)] ring-1 ring-slate-100 p-2.5 rounded-full text-indigo-600 flex items-center justify-center">
                 <Icon icon="solar:microphone-linear" className="w-3.5 h-3.5" />
               </div>
             </div>
@@ -454,7 +454,7 @@ export default function ColdCallModal({ isOpen, onClose, contact, onNavigateToHi
                 ref={voiceButtonRef}
                 type="button"
                 onClick={() => setShowVoiceDropdown(!showVoiceDropdown)}
-                className="flex hover:border-blue-400 hover:ring-4 hover:ring-blue-500/10 transition-all duration-200 outline-none cursor-pointer bg-white border-slate-200 border rounded-full pt-1.5 pr-2.5 pb-1.5 pl-3 shadow-sm gap-2 items-center"
+                className="flex hover:border-slate-400 transition-all duration-200 outline-none cursor-pointer bg-white border-slate-200 border rounded-full pt-1.5 pr-2.5 pb-1.5 pl-3 shadow-sm gap-2 items-center"
               >
                 <span className="text-sm font-medium text-slate-500">Speaking Voice:</span>
                 <span className="text-sm font-medium text-slate-900">{selectedVoice}</span>
@@ -491,7 +491,7 @@ export default function ColdCallModal({ isOpen, onClose, contact, onNavigateToHi
                             }}
                             className={`flex w-full items-center justify-between px-3 py-2 text-left transition-all duration-150 ${
                               isSelected
-                                ? 'bg-blue-50/80 text-blue-700'
+                                ? 'bg-slate-100 text-slate-800'
                                 : 'text-slate-700 hover:bg-slate-50'
                             }`}
                           >
@@ -506,7 +506,7 @@ export default function ColdCallModal({ isOpen, onClose, contact, onNavigateToHi
                               )}
                             </div>
                             {isSelected && (
-                              <Icon icon="solar:check-circle-bold" width="16" className="text-blue-600 flex-shrink-0" />
+                              <Icon icon="solar:check-circle-bold" width="16" className="text-slate-700 flex-shrink-0" />
                             )}
                           </button>
                         );
@@ -541,10 +541,10 @@ export default function ColdCallModal({ isOpen, onClose, contact, onNavigateToHi
               </button>
             </div>
 
-            <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-50 via-white to-blue-50/30 border border-blue-100/60 shadow-sm">
+            <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-50 via-white to-slate-50/30 border border-slate-200/60 shadow-sm">
               <div className="flex items-start gap-4 p-5">
-                <div className="shrink-0 flex items-center justify-center w-10 h-10 rounded-xl bg-blue-600 shadow-lg shadow-blue-600/30">
-                  <Icon icon="solar:magic-stick-linear" className="w-5 h-5 text-white" />
+                <div className="shrink-0 flex items-center justify-center w-10 h-10">
+                  <Icon icon="solar:magic-stick-bold" className="w-6 h-6 text-amber-500" />
                 </div>
                 <div className="flex-1 min-w-0 space-y-1">
                   <h4 className="text-sm font-bold text-slate-900">Smart Call Assistant</h4>
@@ -582,7 +582,7 @@ export default function ColdCallModal({ isOpen, onClose, contact, onNavigateToHi
                   <button
                     ref={productButtonRef}
                     onClick={() => setShowProductDropdown(!showProductDropdown)}
-                    className="group flex hover:border-slate-300 hover:shadow-md transition-all duration-200 focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 text-left bg-white w-full border-slate-200 border rounded-xl pt-3 pr-4 pb-3 pl-4 shadow-sm items-center justify-between"
+                    className="group flex hover:border-slate-300 hover:shadow-md transition-all duration-200 focus:outline-none focus:border-slate-400 text-left bg-white w-full border-slate-200 border rounded-xl pt-3 pr-4 pb-3 pl-4 shadow-sm items-center justify-between"
                   >
                     <span className={`text-sm font-medium ${selectedProducts.length > 0 ? 'text-slate-900' : 'text-slate-500'}`}>
                       {selectedProducts.length > 0
@@ -672,7 +672,7 @@ export default function ColdCallModal({ isOpen, onClose, contact, onNavigateToHi
                     rows={4}
                     value={additionalInstructions}
                     onChange={(e) => setAdditionalInstructions(e.target.value)}
-                    className="placeholder:text-slate-400 focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 resize-none transition-all text-sm text-slate-900 bg-white w-full border-slate-200 border rounded-xl pt-3.5 pr-10 pb-3.5 pl-3.5 shadow-sm hover:border-slate-300 hover:shadow-md leading-relaxed"
+                    className="placeholder:text-slate-400 focus:outline-none focus:border-slate-400 resize-none transition-all text-sm text-slate-900 bg-white w-full border-slate-200 border rounded-xl pt-3.5 pr-10 pb-3.5 pl-3.5 shadow-sm hover:border-slate-300 hover:shadow-md leading-relaxed"
                     placeholder="e.g. Introduce our company, understand their current needs, and schedule a follow-up meeting if there's interest..."
                   />
                   <div className="absolute bottom-3.5 right-3.5 text-slate-300 pointer-events-none group-focus-within:text-blue-500 transition-colors">
@@ -687,7 +687,7 @@ export default function ColdCallModal({ isOpen, onClose, contact, onNavigateToHi
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Icon icon="solar:wallet-linear" className="w-4 h-4 text-slate-400" />
-                <span className="text-xs font-medium text-slate-600">1 credit per minute</span>
+                <span className="text-xs font-medium text-slate-600">140 credits per minute</span>
                 {otherActiveCalls.length > 0 && (
                   <span className="text-xs font-semibold text-blue-600">
                     × {otherActiveCalls.length + 1} calls

@@ -21,7 +21,6 @@ const TIERS = [
       'Email sending & open tracking',
       'Custom templates',
       'USD currency',
-      'No AI access',
     ],
   },
   {
@@ -40,7 +39,7 @@ const TIERS = [
       '1,000 AI credits/mo',
       'Engagement tracking',
       'Multi-currency',
-      'Comments on documents',
+      'Quote & invoice comments',
     ],
   },
   {
@@ -58,7 +57,7 @@ const TIERS = [
       '5 concurrent AI calls',
       'Multi-language calls',
       'Performance analytics',
-      'Gmail & Calendar',
+      'Call recording & transcripts',
       'Advanced AI insights',
     ],
   },
@@ -76,9 +75,9 @@ const TIERS = [
       '15,000 AI credits/mo',
       'Multi-team workspaces',
       'Approval workflows',
-      'White-label & API access',
+      'Advanced role-based access',
       'Priority AI processing',
-      'Kanban & AI dashboards',
+      'Dedicated support',
     ],
   },
 ];
@@ -115,15 +114,13 @@ const FEATURE_SECTIONS: { category: string; features: FeatureRow[] }[] = [
       { name: 'Professional quotes & invoices', free: 'Watermark', growth: true, pro: true, scale: true },
       { name: 'Quotes & invoices limit', free: 'Unlimited', growth: 'Unlimited', pro: 'Unlimited', scale: 'Unlimited' },
       { name: 'Quote/invoice approval', free: false, growth: false, pro: false, scale: true },
-      { name: 'E-signature', free: false, growth: false, pro: 'Limited', scale: 'Limited' },
-      { name: 'Comments on documents', free: false, growth: true, pro: true, scale: true },
-      { name: 'Presentation recording', free: false, growth: true, pro: true, scale: true },
+      { name: 'Quote & invoice comments', free: false, growth: true, pro: true, scale: true },
+      { name: 'Video walkthroughs', free: false, growth: true, pro: true, scale: true },
     ],
   },
   {
     category: 'Branding',
     features: [
-      { name: 'White-label links', free: false, growth: false, pro: false, scale: true },
       { name: 'Custom templates', free: 'Basic', growth: true, pro: true, scale: true },
     ],
   },
@@ -141,10 +138,8 @@ const FEATURE_SECTIONS: { category: string; features: FeatureRow[] }[] = [
     category: 'Visibility & Analytics',
     features: [
       { name: 'Team activity timeline', free: false, growth: true, pro: true, scale: true },
-      { name: 'Client engagement timeline', free: false, growth: false, pro: true, scale: true },
       { name: 'Performance analytics', free: false, growth: false, pro: true, scale: true },
       { name: 'Revenue analytics', free: false, growth: false, pro: true, scale: true },
-      { name: 'AI-powered dashboards', free: false, growth: false, pro: false, scale: true },
     ],
   },
   {
@@ -164,9 +159,6 @@ const FEATURE_SECTIONS: { category: string; features: FeatureRow[] }[] = [
   {
     category: 'Integration & Currency',
     features: [
-      { name: 'API access', free: false, growth: false, pro: false, scale: true },
-      { name: 'Gmail integration', free: false, growth: false, pro: true, scale: true },
-      { name: 'Calendar integration', free: false, growth: false, pro: true, scale: true },
       { name: 'Multi-currency', free: 'USD only', growth: true, pro: true, scale: true },
       { name: 'Currency converter', free: false, growth: false, pro: false, scale: true },
     ],
