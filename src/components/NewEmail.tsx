@@ -234,7 +234,7 @@ export default function NewEmail({ onBack, contactName, contactEmail, onOpenEmai
             Back
           </button>
           <div className="h-4 w-px bg-slate-200" />
-          <h1 className="text-lg font-semibold text-slate-800 tracking-tight">
+          <h1 className="text-[15px] font-semibold text-slate-800 tracking-tight">
             {contactName ? `Email to ${contactName}` : 'New Email'}
           </h1>
         </div>
@@ -325,25 +325,25 @@ export default function NewEmail({ onBack, contactName, contactEmail, onOpenEmai
                         </div>
                         {selectedSourceItem ? (
                           <div className="flex flex-col justify-center overflow-hidden text-left">
-                            <span className="text-sm font-semibold text-slate-900 truncate">
+                            <span className="text-[13px] font-medium text-slate-800 truncate">
                               {selectedSourceItem.title}
                             </span>
                             <div className="flex items-center gap-2">
-                              <span className="text-xs font-medium text-slate-600 truncate">
+                              <span className="text-[11px] text-slate-400 truncate">
                                 {sourceType === 'quote' ? 'Quote' : 'Invoice'} #{selectedSourceItem.number}
                               </span>
                               <span className="w-1 h-1 rounded-full bg-slate-300"></span>
-                              <span className="text-xs font-semibold truncate text-slate-600">
+                              <span className="text-[11px] font-medium truncate text-slate-500">
                                 {selectedSourceItem.amount}
                               </span>
                             </div>
                           </div>
                         ) : (
                           <div className="flex flex-col justify-center overflow-hidden text-left">
-                            <span className="text-sm font-medium text-slate-500">
+                            <span className="text-[13px] text-slate-500">
                               Select {sourceType === 'invoice' ? 'an' : 'a'} {sourceType}
                             </span>
-                            <span className="text-xs font-medium text-slate-400">
+                            <span className="text-[11px] text-slate-400">
                               Choose {sourceType === 'invoice' ? 'an invoice' : 'a quote'} to attach
                             </span>
                           </div>
@@ -377,22 +377,22 @@ export default function NewEmail({ onBack, contactName, contactEmail, onOpenEmai
                                   <Icon icon={getSourceIcon()} width="18" />
                                 </div>
                                 <div className="flex flex-col justify-center overflow-hidden text-left">
-                                  <span className="text-sm font-semibold text-slate-900 truncate">
+                                  <span className="text-[13px] font-medium text-slate-700 truncate">
                                     {item.title}
                                   </span>
                                   <div className="flex items-center gap-2">
-                                    <span className="text-xs font-medium text-slate-600 truncate">
+                                    <span className="text-[11px] text-slate-400 truncate">
                                       #{item.number}
                                     </span>
                                     <span className="w-1 h-1 rounded-full bg-slate-300"></span>
-                                    <span className="text-xs font-medium text-slate-500">
+                                    <span className="text-[11px] text-slate-400">
                                       {item.date}
                                     </span>
                                   </div>
                                 </div>
                               </div>
                               <div className="flex items-center gap-2 shrink-0">
-                                <span className="text-sm font-semibold text-slate-900">
+                                <span className="text-[13px] font-medium text-slate-700">
                                   {item.amount}
                                 </span>
                                 <div className={`flex items-center gap-1.5 px-2 py-1 rounded-md ring-1 ${statusStyle.bg} ${statusStyle.text} ${statusStyle.ring}`}>
@@ -409,7 +409,7 @@ export default function NewEmail({ onBack, contactName, contactEmail, onOpenEmai
                     )}
                   </>
                 ) : (
-                  <div className="w-full h-[60px] bg-slate-50 border border-dashed border-slate-300 rounded-xl flex items-center justify-center px-4 text-sm font-semibold text-slate-600 animate-in fade-in zoom-in-95 duration-200 select-none gap-2">
+                  <div className="w-full h-[52px] bg-slate-50 border border-dashed border-slate-200 rounded-xl flex items-center justify-center px-4 text-[13px] font-medium text-slate-400 animate-in fade-in zoom-in-95 duration-200 select-none gap-2">
                     <div className="p-1.5 rounded-md bg-slate-100 text-slate-400">
                       <Icon icon="solar:document-linear" width="16" />
                     </div>
@@ -426,7 +426,7 @@ export default function NewEmail({ onBack, contactName, contactEmail, onOpenEmai
             <div className="flex flex-col border-b border-slate-50 px-6 py-3">
               {/* To Field */}
               <div className="group flex min-h-[56px] border-b border-slate-50 items-center">
-                <label className="w-20 text-[13px] font-medium text-slate-400 transition-colors group-hover:text-slate-600">
+                <label className="w-20 text-[13px] font-medium text-slate-400 transition-colors group-hover:text-slate-500">
                   To
                 </label>
                 <div className="flex items-center gap-2 flex-1">
@@ -435,7 +435,7 @@ export default function NewEmail({ onBack, contactName, contactEmail, onOpenEmai
                       <div className={`flex items-center justify-center w-7 h-7 text-[11px] font-bold bg-gradient-to-br ${avatarColor.from} ${avatarColor.to} text-white rounded-full shadow-sm`}>
                         {getInitials(contactName)}
                       </div>
-                      <span className="text-sm font-semibold text-slate-800 group-hover/chip:text-slate-900">
+                      <span className="text-[13px] font-medium text-slate-700 group-hover/chip:text-slate-900">
                         {contactName}
                       </span>
                     </div>
@@ -443,7 +443,7 @@ export default function NewEmail({ onBack, contactName, contactEmail, onOpenEmai
                     <input
                       type="email"
                       placeholder="recipient@example.com"
-                      className="flex-1 bg-transparent outline-none text-sm font-medium text-slate-700 placeholder-slate-400"
+                      className="flex-1 bg-transparent outline-none text-[13px] text-slate-700 placeholder-slate-300"
                     />
                   )}
                 </div>
@@ -451,7 +451,7 @@ export default function NewEmail({ onBack, contactName, contactEmail, onOpenEmai
 
               {/* Cc Field */}
               <div className="group flex min-h-[56px] border-b border-slate-50 items-center">
-                <label className="w-20 text-[13px] font-medium text-slate-400 transition-colors group-hover:text-slate-600">
+                <label className="w-20 text-[13px] font-medium text-slate-400 transition-colors group-hover:text-slate-500">
                   Cc
                 </label>
                 <input
@@ -459,13 +459,13 @@ export default function NewEmail({ onBack, contactName, contactEmail, onOpenEmai
                   placeholder="Add recipients"
                   value={ccRecipients}
                   onChange={(e) => setCcRecipients(e.target.value)}
-                  className="flex-1 border-none outline-none placeholder-slate-400 focus:ring-0 text-sm font-medium text-slate-700 bg-transparent h-full"
+                  className="flex-1 border-none outline-none placeholder-slate-300 focus:ring-0 text-[13px] text-slate-700 bg-transparent h-full"
                 />
               </div>
 
               {/* Subject Field */}
               <div className="group flex min-h-[56px] items-center">
-                <label className="w-20 text-[13px] font-medium text-slate-400 transition-colors group-hover:text-slate-600">
+                <label className="w-20 text-[13px] font-medium text-slate-400 transition-colors group-hover:text-slate-500">
                   Subject
                 </label>
                 <input
@@ -473,45 +473,45 @@ export default function NewEmail({ onBack, contactName, contactEmail, onOpenEmai
                   value={subject}
                   onChange={(e) => setSubject(e.target.value)}
                   placeholder="Enter email subject"
-                  className="flex-1 p-0 text-base font-semibold tracking-tight text-slate-900 bg-transparent border-none outline-none placeholder-slate-400 focus:ring-0"
+                  className="flex-1 p-0 text-[13px] font-medium tracking-tight text-slate-900 bg-transparent border-none outline-none placeholder:font-normal placeholder-slate-300 focus:ring-0"
                 />
               </div>
             </div>
 
-            {/* Modern Toolbar */}
-            <div className="flex bg-slate-50/50 border-b border-slate-100 py-3 px-6 items-center justify-between">
-              <div className="flex items-center gap-4">
-                {/* Formatting Group */}
-                <div className="flex items-center p-0.5 bg-white border border-slate-200/80 rounded-lg shadow-sm">
-                  <button className="p-1.5 text-slate-400 transition-all rounded-md hover:text-slate-900 hover:bg-slate-50">
-                    <Icon icon="solar:text-bold-linear" width="16" />
-                  </button>
-                  <button className="p-1.5 text-slate-400 transition-all rounded-md hover:text-slate-900 hover:bg-slate-50">
-                    <Icon icon="solar:text-italic-linear" width="16" />
-                  </button>
-                  <button className="p-1.5 text-slate-400 transition-all rounded-md hover:text-slate-900 hover:bg-slate-50">
-                    <Icon icon="solar:text-underline-linear" width="16" />
-                  </button>
-                </div>
-
-                {/* Attachment Button */}
-                <button className="flex items-center justify-center p-2 bg-white border border-slate-200/80 rounded-lg shadow-sm text-slate-400 hover:shadow-md transition-all duration-200 outline-none group/attach hover:text-slate-600 hover:border-slate-300">
-                  <Icon icon="solar:paperclip-linear" width="16" />
+            {/* Toolbar */}
+            <div className="flex border-b border-slate-100 py-2 px-6 items-center justify-between">
+              <div className="flex items-center gap-1">
+                {/* Formatting */}
+                <button className="w-8 h-8 flex items-center justify-center text-slate-400 transition-all rounded-lg hover:text-slate-700 hover:bg-slate-100">
+                  <Icon icon="solar:text-bold-linear" width="15" />
                 </button>
+                <button className="w-8 h-8 flex items-center justify-center text-slate-400 transition-all rounded-lg hover:text-slate-700 hover:bg-slate-100">
+                  <Icon icon="solar:text-italic-linear" width="15" />
+                </button>
+                <button className="w-8 h-8 flex items-center justify-center text-slate-400 transition-all rounded-lg hover:text-slate-700 hover:bg-slate-100">
+                  <Icon icon="solar:text-underline-linear" width="15" />
+                </button>
+
+                <div className="w-px h-4 bg-slate-200 mx-1" />
+
+                {/* Attachment */}
+                <button className="w-8 h-8 flex items-center justify-center text-slate-400 transition-all rounded-lg hover:text-slate-700 hover:bg-slate-100 outline-none">
+                  <Icon icon="solar:paperclip-linear" width="15" />
+                </button>
+
+                <div className="w-px h-4 bg-slate-200 mx-1" />
 
                 {/* Presentations Dropdown */}
                 <div className="relative" data-dropdown>
                   <button
                     onClick={() => setShowPresentationDropdown(!showPresentationDropdown)}
-                    className="flex items-center justify-between gap-2 px-3 py-2 bg-white border border-slate-200/80 rounded-lg shadow-sm text-sm font-semibold text-slate-600 hover:text-slate-900 hover:border-slate-300 hover:shadow-md transition-all duration-200 outline-none"
+                    className="flex items-center gap-1.5 h-8 px-2.5 text-slate-400 hover:text-slate-700 rounded-lg hover:bg-slate-100 transition-all text-[12px] font-medium outline-none"
                   >
-                    <span className="flex items-center gap-1.5">
-                      <span className="w-1.5 h-1.5 rounded-full bg-indigo-500"></span>
-                      Add presentation
-                    </span>
+                    <Icon icon="solar:videocamera-record-linear" width="15" />
+                    <span className="text-inherit">Presentation</span>
                     <Icon
                       icon="solar:alt-arrow-down-linear"
-                      width="14"
+                      width="12"
                       className={`opacity-50 transition-transform ${showPresentationDropdown ? 'rotate-180' : ''}`}
                     />
                   </button>
@@ -529,8 +529,8 @@ export default function NewEmail({ onBack, contactName, contactEmail, onOpenEmai
                           className="w-full flex items-center justify-between px-3 py-2.5 rounded-lg transition-all group hover:bg-slate-50"
                         >
                           <div className="flex flex-col justify-center overflow-hidden text-left flex-1">
-                            <span className="text-sm font-medium text-slate-700 truncate group-hover:text-slate-900 transition-colors">
-                              {presentation.title} {presentation.date} at {presentation.time} <span className="text-slate-500">({presentation.duration})</span>
+                            <span className="text-[13px] text-slate-600 truncate group-hover:text-slate-800 transition-colors">
+                              {presentation.title} {presentation.date} at {presentation.time} <span className="text-slate-400">({presentation.duration})</span>
                             </span>
                           </div>
                           <Icon
@@ -549,7 +549,7 @@ export default function NewEmail({ onBack, contactName, contactEmail, onOpenEmai
             {/* Text Body */}
             <div className="flex-1 p-8 min-h-[26rem]">
               <textarea
-                className="w-full h-full font-sans text-[15px] font-medium leading-loose bg-transparent border-none outline-none resize-none text-slate-700 placeholder-slate-400 focus:ring-0"
+                className="w-full h-full font-sans text-[14px] leading-[1.8] bg-transparent border-none outline-none resize-none text-slate-600 placeholder-slate-300 focus:ring-0"
                 spellCheck={false}
                 placeholder="Write your message..."
                 value={emailBody}

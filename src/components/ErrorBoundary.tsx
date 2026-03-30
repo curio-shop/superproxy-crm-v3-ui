@@ -84,7 +84,7 @@ class ErrorBoundary extends Component<Props, State> {
 
               <button
                 onClick={this.handleReset}
-                className="mt-4 px-6 py-2.5 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-medium text-sm"
+                className="mt-4 px-6 py-2.5 bg-amber-500 text-white rounded-lg hover:bg-amber-600 transition-colors font-medium text-sm"
               >
                 Try Again
               </button>

@@ -537,14 +537,18 @@ function AppContent() {
                   />
                 </div>
 
-                <ChartCard />
+                <ChartCard
+                  isFreeTier={true}
+                  onUpgrade={() => { setPricingOriginPage('home'); setActivePage('pricing'); }}
+                />
               </div>
 
               <div className="col-span-12 xl:col-span-4">
                 <TeamActivity
+                  isFreeTier={true}
+                  onUpgrade={() => { setPricingOriginPage('home'); setActivePage('pricing'); }}
                   onViewFullActivity={() => {
                     setActivePage('workspace');
-                    // Use requestAnimationFrame for instant, smooth scroll after render
                     requestAnimationFrame(() => {
                       document.getElementById('workspace-activity')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
                     });
@@ -655,6 +659,8 @@ function AppContent() {
               onDeleteQuotation={(quotation) => {
                 handleOpenDeleteModal('quotation', quotation.id, quotation.number);
               }}
+              isFreeTier={true}
+              onUpgrade={() => { setPricingOriginPage('quotations'); setActivePage('pricing'); }}
             />
           ) : activePage === 'invoices' ? (
             <Invoices
@@ -684,6 +690,8 @@ function AppContent() {
               onDeleteInvoice={(invoice) => {
                 handleOpenDeleteModal('invoice', invoice.id, invoice.number);
               }}
+              isFreeTier={true}
+              onUpgrade={() => { setPricingOriginPage('invoices'); setActivePage('pricing'); }}
             />
           ) : activePage === 'presentations' ? (
             <Presentations
@@ -693,13 +701,18 @@ function AppContent() {
               onDeletePresentation={(presentation) => {
                 handleOpenDeleteModal('presentation', presentation.id, presentation.title);
               }}
+              isFreeTier={true}
+              onUpgrade={() => { setPricingOriginPage('presentations'); setActivePage('pricing'); }}
             />
           ) : activePage === 'currency' ? (
-            <CurrencyPage />
+            <CurrencyPage
+              isFreeTier={true}
+              onUpgrade={() => { setPricingOriginPage('currency'); setActivePage('pricing'); }}
+            />
           ) : activePage === 'notifications' ? (
             <Notifications />
           ) : activePage === 'workspace' ? (
-            <Workspace onRegisterHandlers={setWorkspaceHandlers} onWorkspaceChange={setCurrentWorkspace} />
+            <Workspace onRegisterHandlers={setWorkspaceHandlers} onWorkspaceChange={setCurrentWorkspace} onUpgrade={() => { setPricingOriginPage('workspace'); setActivePage('pricing'); }} />
           ) : activePage === 'account' ? (
             <AccountProfile
               activeTab={activeAccountTab}
@@ -852,7 +865,7 @@ function AppContent() {
         isDeleting={isDeletingEntity}
       />
       <MinimizedCallsBar />
-      <FloatingAIWidget isVisible={activePage !== 'ai-proxy'} />
+      <FloatingAIWidget isVisible={activePage !== 'ai-proxy' && !(activePage === 'account' && activeAccountTab === 'contact')} />
       <FloatingChatButton
         unreadCount={chatUnreadCount}
         onClick={() => setIsSupportChatOpen(!isSupportChatOpen)}

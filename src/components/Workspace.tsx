@@ -10,6 +10,7 @@ interface WorkspaceProps {
     onJoinWorkspace: () => void;
   }) => void;
   onWorkspaceChange?: (workspace: Workspace) => void;
+  onUpgrade?: () => void;
 }
 
 export interface Workspace {
@@ -184,7 +185,7 @@ const mockActivities: WorkspaceActivity[] = [
   },
 ];
 
-export default function Workspace({ onRegisterHandlers, onWorkspaceChange }: WorkspaceProps = {}) {
+export default function Workspace({ onRegisterHandlers, onWorkspaceChange, onUpgrade }: WorkspaceProps = {}) {
   const [workspaces, setWorkspaces] = useState<Workspace[]>(mockWorkspaces);
   const [currentWorkspace, setCurrentWorkspace] = useState<Workspace>(mockWorkspaces[0]);
   const [members, setMembers] = useState<WorkspaceMember[]>(mockMembers);
@@ -1084,7 +1085,7 @@ export default function Workspace({ onRegisterHandlers, onWorkspaceChange }: Wor
             </div>
           </div>
 
-          {currentWorkspace.show_leaderboard && <Leaderboard />}
+          {currentWorkspace.show_leaderboard && <Leaderboard isFreeTier={true} onUpgrade={onUpgrade} />}
 
           {currentWorkspace.profile && (
             <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">

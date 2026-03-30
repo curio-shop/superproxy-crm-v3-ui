@@ -485,6 +485,7 @@ export default function AIProxyPage({ onNavigateToNotifications, onViewContact, 
   const [bannerClosing, setBannerClosing] = useState(false);
   const [proxySelected, setProxySelected] = useState<{ category: string; label: string } | null>(null);
   const [thinkingPhrase, setThinkingPhrase] = useState('thinking');
+  const [showShareBanner, setShowShareBanner] = useState(true);
   const phraseQueueRef = useRef<string[]>([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -607,13 +608,13 @@ export default function AIProxyPage({ onNavigateToNotifications, onViewContact, 
   /* ── Landing state ────────────────────────────────────────── */
   if (!hasConversation) {
     return (
-      <div className="flex-1 flex flex-col bg-slate-50 overflow-hidden">
+      <div className="flex-1 flex flex-col bg-[#fafafa] overflow-hidden">
         {/* Bell — top-right */}
         <div className="absolute top-5 right-8 z-30">
           <div className="relative">
             <button
               onClick={() => setShowNotifications(!showNotifications)}
-              className="group transition-all flex outline-none text-slate-400 hover:text-slate-600 w-9 h-9 rounded-xl border border-slate-200 relative items-center justify-center hover:bg-slate-50 hover:border-slate-300 active:scale-[0.97]"
+              className="group transition-all flex outline-none text-slate-400 hover:text-slate-600 w-9 h-9 rounded-xl bg-white border border-slate-200/80 shadow-[0_1px_2px_rgba(0,0,0,0.04)] relative items-center justify-center hover:border-slate-300 hover:shadow-[0_1px_3px_rgba(0,0,0,0.06)] active:scale-[0.97]"
             >
               <Icon icon="solar:bell-linear" width="18" />
               <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-rose-500 rounded-full ring-2 ring-white">
@@ -659,10 +660,10 @@ export default function AIProxyPage({ onNavigateToNotifications, onViewContact, 
             <div className="w-full max-w-2xl flex flex-col items-center">
 
               {/* Input card */}
-              <div className={`w-full bg-white rounded-2xl transition-all duration-200 mb-4 ${
+              <div className={`w-full bg-white rounded-2xl border transition-all duration-200 mb-4 ${
                 isFocused
-                  ? 'shadow-[0_4px_24px_rgba(0,0,0,0.10)]'
-                  : 'shadow-[0_2px_16px_rgba(0,0,0,0.05)] hover:shadow-[0_4px_20px_rgba(0,0,0,0.08)]'
+                  ? 'border-slate-200 shadow-[0_4px_24px_rgba(0,0,0,0.08)]'
+                  : 'border-slate-200/60 shadow-[0_2px_12px_rgba(0,0,0,0.04)] hover:border-slate-200 hover:shadow-[0_4px_20px_rgba(0,0,0,0.06)]'
               }`}>
                 {/* Textarea */}
                 <div className="px-4 pt-4 pb-2">
@@ -674,7 +675,7 @@ export default function AIProxyPage({ onNavigateToNotifications, onViewContact, 
                     onFocus={() => setIsFocused(true)}
                     onBlur={() => setIsFocused(false)}
                     placeholder="How can I help you today?"
-                    className="w-full bg-transparent text-slate-800 placeholder-slate-400 text-[15px] resize-none outline-none leading-6 min-h-[52px] max-h-40"
+                    className="w-full bg-transparent text-slate-800 placeholder-slate-300 text-[15px] resize-none outline-none leading-6 min-h-[52px] max-h-40"
                     rows={2}
                     onInput={(e) => {
                       const t = e.target as HTMLTextAreaElement;
@@ -713,7 +714,7 @@ export default function AIProxyPage({ onNavigateToNotifications, onViewContact, 
                       <button
                         key={chip.label}
                         onClick={() => handleSubmit(chip.label)}
-                        className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-50 shadow-[0_1px_3px_rgba(0,0,0,0.05),0_0_0_1px_rgba(148,163,184,0.2)] hover:shadow-[0_2px_8px_rgba(0,0,0,0.07),0_0_0_1px_rgba(148,163,184,0.35)] text-slate-500 text-sm font-medium transition-all whitespace-nowrap"
+                        className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white border border-slate-200/60 shadow-[0_1px_2px_rgba(0,0,0,0.04)] hover:border-slate-200 hover:shadow-[0_2px_8px_rgba(0,0,0,0.06)] text-slate-500 text-sm font-medium transition-all whitespace-nowrap"
                       >
                         <Icon icon={chip.icon} width="15" className="text-slate-400 flex-shrink-0" />
                         {chip.label}
@@ -723,6 +724,34 @@ export default function AIProxyPage({ onNavigateToNotifications, onViewContact, 
 
             </div>
           </div>
+
+          {/* Share banner — pinned to bottom */}
+          {showShareBanner && (
+            <div className="mt-auto px-6 pb-6 pt-8 flex justify-center">
+              <div className="group relative max-w-md w-full bg-white border border-slate-200/60 rounded-2xl px-5 py-4 flex items-center gap-4 shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
+                <div className="w-9 h-9 rounded-xl bg-slate-900 flex items-center justify-center flex-shrink-0">
+                  <Icon icon="solar:gift-linear" width="18" className="text-white" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-[13px] font-semibold text-slate-700">Share Superproxy, earn 500 credits</p>
+                  <p className="text-[11px] text-slate-400 mt-0.5">Invite others — you both get rewarded.</p>
+                </div>
+                <button
+                  onClick={() => {/* Wire to share functionality in prod */}}
+                  className="flex items-center gap-1.5 px-4 py-2 bg-slate-900 text-white text-[12px] font-semibold rounded-xl hover:bg-slate-800 transition-all active:scale-[0.97] flex-shrink-0 shadow-sm"
+                >
+                  <Icon icon="solar:share-linear" width="14" />
+                  Share
+                </button>
+                <button
+                  onClick={() => setShowShareBanner(false)}
+                  className="absolute -top-2 -right-2 w-[20px] h-[20px] flex items-center justify-center rounded-full bg-white border border-slate-200 shadow-sm text-slate-300 hover:text-slate-500 opacity-0 group-hover:opacity-100 transition-all hover:scale-110"
+                >
+                  <svg width="7" height="7" viewBox="0 0 10 10" fill="none"><path d="M2 2L8 8M8 2L2 8" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round"/></svg>
+                </button>
+              </div>
+            </div>
+          )}
         </div>
 
       </div>
@@ -731,13 +760,13 @@ export default function AIProxyPage({ onNavigateToNotifications, onViewContact, 
 
   /* ── Conversation state ───────────────────────────────────── */
   return (
-    <div className="flex-1 flex flex-col bg-slate-50 overflow-hidden">
+    <div className="flex-1 flex flex-col bg-[#fafafa] overflow-hidden">
       {/* Top bar */}
-      <div className="sticky top-0 z-20 bg-slate-50/80 backdrop-blur-xl px-8 py-3.5 flex items-center">
+      <div className="sticky top-0 z-20 bg-[#fafafa]/80 backdrop-blur-xl px-8 py-3.5 flex items-center">
         <div className="ml-auto flex items-center gap-2">
           <button
             onClick={() => { setMessages([]); setInputValue(''); setProxySelected(null); }}
-            className="group transition-all flex items-center gap-1.5 outline-none text-slate-400 hover:text-slate-600 border border-slate-200 hover:border-slate-300 hover:bg-slate-50 px-3 h-9 rounded-xl active:scale-[0.97]"
+            className="group transition-all flex items-center gap-1.5 outline-none text-slate-400 hover:text-slate-600 bg-white border border-slate-200/80 shadow-[0_1px_2px_rgba(0,0,0,0.04)] hover:border-slate-300 hover:shadow-[0_1px_3px_rgba(0,0,0,0.06)] px-3 h-9 rounded-xl active:scale-[0.97]"
           >
             <Icon icon="solar:pen-new-square-linear" width="15" className="flex-shrink-0" />
             <span className="text-[13px] font-medium">New Task</span>
@@ -745,7 +774,7 @@ export default function AIProxyPage({ onNavigateToNotifications, onViewContact, 
           <div className="relative">
             <button
               onClick={() => setShowNotifications(!showNotifications)}
-              className="group transition-all flex outline-none text-slate-400 hover:text-slate-600 w-9 h-9 rounded-xl border border-slate-200 relative items-center justify-center hover:bg-slate-50 hover:border-slate-300 active:scale-[0.97]"
+              className="group transition-all flex outline-none text-slate-400 hover:text-slate-600 w-9 h-9 rounded-xl bg-white border border-slate-200/80 shadow-[0_1px_2px_rgba(0,0,0,0.04)] relative items-center justify-center hover:border-slate-300 hover:shadow-[0_1px_3px_rgba(0,0,0,0.06)] active:scale-[0.97]"
             >
               <Icon icon="solar:bell-linear" width="18" />
               <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-rose-500 rounded-full ring-2 ring-white">
@@ -787,29 +816,27 @@ export default function AIProxyPage({ onNavigateToNotifications, onViewContact, 
                   {/* Entity inline preview */}
                   {message.entityAction && (() => {
                     const action = message.entityAction!;
-                    const borderColor = action.type === 'contact' ? 'border-blue-200' : action.type === 'company' ? 'border-violet-200' : 'border-amber-200';
-                    const linkColor = action.type === 'contact' ? 'text-blue-500 hover:text-blue-600' : action.type === 'company' ? 'text-violet-500 hover:text-violet-600' : 'text-amber-500 hover:text-amber-600';
                     const viewLabel = action.type === 'contact' ? 'View Contact' : action.type === 'company' ? 'View Company' : 'View Product';
 
                     if (action.type === 'contact' && action.contact) {
                       const c = action.contact;
                       return (
                         <div className="mt-3 ml-5">
-                          <div className={`border-l-2 ${borderColor} pl-4 py-1.5`}>
+                          <div className="border-l-[1.5px] border-slate-200 pl-4 py-1.5">
                             <div className="flex items-center gap-1.5">
-                              <span className="text-[13px] font-semibold text-slate-700">{c.name}</span>
-                              {c.title && <><span className="text-slate-300">·</span><span className="text-[11px] font-medium text-slate-400">{c.title}</span></>}
+                              <span className="text-[13px] font-medium text-slate-700">{c.name}</span>
+                              {c.title && <><span className="text-slate-300">·</span><span className="text-[11px] text-slate-400">{c.title}</span></>}
                             </div>
                             <div className="flex items-center gap-1.5 mt-1 flex-wrap">
-                              {c.email && <span className="text-[13px] text-slate-400">{c.email}</span>}
-                              {c.company && <><span className="text-slate-300">·</span><span className="text-[13px] text-slate-400">{c.company}</span></>}
-                              {c.owner && <><span className="text-slate-300">·</span><span className="text-[13px] text-slate-400">Owner: {c.owner.name}</span></>}
+                              {c.email && <span className="text-[12px] text-slate-400">{c.email}</span>}
+                              {c.company && <><span className="text-slate-300">·</span><span className="text-[12px] text-slate-400">{c.company}</span></>}
+                              {c.owner && <><span className="text-slate-300">·</span><span className="text-[12px] text-slate-400">Owner: {c.owner.name}</span></>}
                             </div>
                             <button
                               onClick={() => onViewContact?.(c)}
-                              className={`inline-flex items-center gap-1 mt-2.5 text-[13px] font-medium ${linkColor} transition-colors`}
+                              className="inline-flex items-center gap-1.5 mt-3 px-3 py-1.5 text-[11px] font-semibold text-slate-500 bg-slate-100 hover:bg-slate-200/80 hover:text-slate-700 rounded-lg transition-all active:scale-[0.97]"
                             >
-                              <Icon icon="solar:arrow-right-up-linear" width="14" />
+                              <Icon icon="solar:arrow-right-up-linear" width="13" />
                               {viewLabel}
                             </button>
                           </div>
@@ -821,21 +848,21 @@ export default function AIProxyPage({ onNavigateToNotifications, onViewContact, 
                       const co = action.company;
                       return (
                         <div className="mt-3 ml-5">
-                          <div className={`border-l-2 ${borderColor} pl-4 py-1.5`}>
+                          <div className="border-l-[1.5px] border-slate-200 pl-4 py-1.5">
                             <div className="flex items-center gap-1.5">
-                              <span className="text-[13px] font-semibold text-slate-700">{co.name}</span>
-                              {co.type && <><span className="text-slate-300">·</span><span className="text-[11px] font-medium text-slate-400">{co.type}</span></>}
+                              <span className="text-[13px] font-medium text-slate-700">{co.name}</span>
+                              {co.type && <><span className="text-slate-300">·</span><span className="text-[11px] text-slate-400">{co.type}</span></>}
                             </div>
                             <div className="flex items-center gap-1.5 mt-1 flex-wrap">
-                              {co.industry && <span className="text-[13px] text-slate-400">{co.industry}</span>}
-                              {co.lifecycleStage && <><span className="text-slate-300">·</span><span className="text-[13px] text-slate-400">{co.lifecycleStage}</span></>}
-                              {co.owner && <><span className="text-slate-300">·</span><span className="text-[13px] text-slate-400">Owner: {co.owner.name}</span></>}
+                              {co.industry && <span className="text-[12px] text-slate-400">{co.industry}</span>}
+                              {co.lifecycleStage && <><span className="text-slate-300">·</span><span className="text-[12px] text-slate-400">{co.lifecycleStage}</span></>}
+                              {co.owner && <><span className="text-slate-300">·</span><span className="text-[12px] text-slate-400">Owner: {co.owner.name}</span></>}
                             </div>
                             <button
                               onClick={() => onViewCompany?.(co)}
-                              className={`inline-flex items-center gap-1 mt-2.5 text-[13px] font-medium ${linkColor} transition-colors`}
+                              className="inline-flex items-center gap-1.5 mt-3 px-3 py-1.5 text-[11px] font-semibold text-slate-500 bg-slate-100 hover:bg-slate-200/80 hover:text-slate-700 rounded-lg transition-all active:scale-[0.97]"
                             >
-                              <Icon icon="solar:arrow-right-up-linear" width="14" />
+                              <Icon icon="solar:arrow-right-up-linear" width="13" />
                               {viewLabel}
                             </button>
                           </div>
@@ -847,26 +874,26 @@ export default function AIProxyPage({ onNavigateToNotifications, onViewContact, 
                       const p = action.product;
                       return (
                         <div className="mt-3 ml-5">
-                          <div className={`border-l-2 ${borderColor} pl-4 py-1.5`}>
+                          <div className="border-l-[1.5px] border-slate-200 pl-4 py-1.5">
                             <div className="flex items-center gap-1.5">
-                              <span className="text-[13px] font-semibold text-slate-700">{p.name}</span>
+                              <span className="text-[13px] font-medium text-slate-700">{p.name}</span>
                               <span className="text-slate-300">·</span>
-                              <span className={`text-[11px] font-medium ${p.status === 'active' ? 'text-emerald-500' : p.status === 'draft' ? 'text-slate-400' : 'text-amber-500'}`}>
+                              <span className={`text-[11px] font-medium ${p.status === 'active' ? 'text-emerald-600' : p.status === 'draft' ? 'text-slate-400' : 'text-amber-600'}`}>
                                 {p.status === 'active' ? 'Active' : p.status === 'draft' ? 'Draft' : p.status === 'low_stock' ? 'Low Stock' : 'Out of Stock'}
                               </span>
                             </div>
                             <div className="flex items-center gap-1.5 mt-1 flex-wrap">
-                              <span className="text-[13px] text-slate-400">SKU: {p.sku}</span>
+                              <span className="text-[12px] text-slate-400">SKU: {p.sku}</span>
                               <span className="text-slate-300">·</span>
-                              <span className="text-[13px] font-semibold text-slate-700">฿{p.price.toLocaleString()}</span>
+                              <span className="text-[12px] font-medium text-slate-600">฿{p.price.toLocaleString()}</span>
                               <span className="text-slate-300">·</span>
-                              <span className="text-[13px] text-slate-400">{p.stock} in stock</span>
+                              <span className="text-[12px] text-slate-400">{p.stock} in stock</span>
                             </div>
                             <button
                               onClick={() => onViewProduct?.(p)}
-                              className={`inline-flex items-center gap-1 mt-2.5 text-[13px] font-medium ${linkColor} transition-colors`}
+                              className="inline-flex items-center gap-1.5 mt-3 px-3 py-1.5 text-[11px] font-semibold text-slate-500 bg-slate-100 hover:bg-slate-200/80 hover:text-slate-700 rounded-lg transition-all active:scale-[0.97]"
                             >
-                              <Icon icon="solar:arrow-right-up-linear" width="14" />
+                              <Icon icon="solar:arrow-right-up-linear" width="13" />
                               {viewLabel}
                             </button>
                           </div>
@@ -882,25 +909,25 @@ export default function AIProxyPage({ onNavigateToNotifications, onViewContact, 
                     const q = message.documentCard.quotation;
                     const validDate = new Date(q.validUntil);
                     const formattedValid = validDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-                    const statusColor = q.status === 'published' ? 'text-emerald-500' : q.status === 'sent' ? 'text-blue-500' : 'text-slate-400';
+                    const statusColor = q.status === 'published' ? 'text-emerald-600' : q.status === 'sent' ? 'text-blue-600' : 'text-slate-400';
                     const statusLabel = q.status === 'published' ? 'Published' : q.status === 'sent' ? 'Sent' : 'Draft';
                     return (
                       <div className="mt-3 ml-5">
-                        <div className="border-l-2 border-indigo-200 pl-4 py-1.5">
+                        <div className="border-l-[1.5px] border-slate-200 pl-4 py-1.5">
                           <div className="flex items-center gap-1.5">
-                            <span className="text-[13px] font-semibold text-slate-700 tracking-tight">{q.number}</span>
+                            <span className="text-[13px] font-medium text-slate-700 tracking-tight">{q.number}</span>
                             <span className="text-slate-300">·</span>
                             <span className={`text-[11px] font-medium ${statusColor}`}>{statusLabel}</span>
                           </div>
-                          <p className="text-[13px] text-slate-400 mt-0.5">{q.title}</p>
+                          <p className="text-[12px] text-slate-400 mt-0.5">{q.title}</p>
                           <div className="flex items-center gap-1.5 mt-1.5 flex-wrap">
-                            <span className="text-[13px] font-medium text-slate-600">{q.client.name}</span>
+                            <span className="text-[12px] font-medium text-slate-600">{q.client.name}</span>
                             <span className="text-slate-300">·</span>
-                            <span className="text-[13px] text-slate-400">{q.items} items</span>
+                            <span className="text-[12px] text-slate-400">{q.items} items</span>
                             <span className="text-slate-300">·</span>
-                            <span className="text-[13px] font-semibold text-slate-700">฿{q.amount.toLocaleString()}</span>
+                            <span className="text-[12px] font-medium text-slate-600">฿{q.amount.toLocaleString()}</span>
                             <span className="text-slate-300">·</span>
-                            <span className="text-[13px] text-slate-400">Valid until {formattedValid}</span>
+                            <span className="text-[12px] text-slate-400">Valid until {formattedValid}</span>
                           </div>
                           <button
                             onClick={() => {
@@ -908,9 +935,9 @@ export default function AIProxyPage({ onNavigateToNotifications, onViewContact, 
                               url.searchParams.set('view', 'quote');
                               window.open(url.toString(), '_blank');
                             }}
-                            className="inline-flex items-center gap-1 mt-2.5 text-[13px] font-medium text-indigo-500 hover:text-indigo-600 transition-colors"
+                            className="inline-flex items-center gap-1.5 mt-3 px-3 py-1.5 text-[11px] font-semibold text-slate-500 bg-slate-100 hover:bg-slate-200/80 hover:text-slate-700 rounded-lg transition-all active:scale-[0.97]"
                           >
-                            <Icon icon="solar:arrow-right-up-linear" width="14" />
+                            <Icon icon="solar:arrow-right-up-linear" width="13" />
                             View Quote
                           </button>
                         </div>
@@ -922,25 +949,25 @@ export default function AIProxyPage({ onNavigateToNotifications, onViewContact, 
                     const inv = message.documentCard.invoice;
                     const dueDate = new Date(inv.dueDate);
                     const formattedDue = dueDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-                    const statusColor = inv.status === 'paid' ? 'text-emerald-500' : inv.status === 'pending' ? 'text-amber-500' : inv.status === 'overdue' ? 'text-red-500' : 'text-slate-400';
+                    const statusColor = inv.status === 'paid' ? 'text-emerald-600' : inv.status === 'pending' ? 'text-amber-600' : inv.status === 'overdue' ? 'text-red-600' : 'text-slate-400';
                     const statusLabel = inv.status === 'paid' ? 'Paid' : inv.status === 'pending' ? 'Pending' : inv.status === 'overdue' ? 'Overdue' : 'Draft';
                     return (
                       <div className="mt-3 ml-5">
-                        <div className="border-l-2 border-emerald-200 pl-4 py-1.5">
+                        <div className="border-l-[1.5px] border-slate-200 pl-4 py-1.5">
                           <div className="flex items-center gap-1.5">
-                            <span className="text-[13px] font-semibold text-slate-700 tracking-tight">{inv.number}</span>
+                            <span className="text-[13px] font-medium text-slate-700 tracking-tight">{inv.number}</span>
                             <span className="text-slate-300">·</span>
                             <span className={`text-[11px] font-medium ${statusColor}`}>{statusLabel}</span>
                           </div>
-                          <p className="text-[13px] text-slate-400 mt-0.5">{inv.title}</p>
+                          <p className="text-[12px] text-slate-400 mt-0.5">{inv.title}</p>
                           <div className="flex items-center gap-1.5 mt-1.5 flex-wrap">
-                            <span className="text-[13px] font-medium text-slate-600">{inv.client.name}</span>
+                            <span className="text-[12px] font-medium text-slate-600">{inv.client.name}</span>
                             <span className="text-slate-300">·</span>
-                            <span className="text-[13px] text-slate-400">{inv.items} items</span>
+                            <span className="text-[12px] text-slate-400">{inv.items} items</span>
                             <span className="text-slate-300">·</span>
-                            <span className="text-[13px] font-semibold text-slate-700">฿{inv.amount.toLocaleString()}</span>
+                            <span className="text-[12px] font-medium text-slate-600">฿{inv.amount.toLocaleString()}</span>
                             <span className="text-slate-300">·</span>
-                            <span className="text-[13px] text-slate-400">Due {formattedDue}</span>
+                            <span className="text-[12px] text-slate-400">Due {formattedDue}</span>
                           </div>
                           <button
                             onClick={() => {
@@ -948,9 +975,9 @@ export default function AIProxyPage({ onNavigateToNotifications, onViewContact, 
                               url.searchParams.set('view', 'invoice');
                               window.open(url.toString(), '_blank');
                             }}
-                            className="inline-flex items-center gap-1 mt-2.5 text-[13px] font-medium text-emerald-500 hover:text-emerald-600 transition-colors"
+                            className="inline-flex items-center gap-1.5 mt-3 px-3 py-1.5 text-[11px] font-semibold text-slate-500 bg-slate-100 hover:bg-slate-200/80 hover:text-slate-700 rounded-lg transition-all active:scale-[0.97]"
                           >
-                            <Icon icon="solar:arrow-right-up-linear" width="14" />
+                            <Icon icon="solar:arrow-right-up-linear" width="13" />
                             View Invoice
                           </button>
                         </div>
@@ -1036,8 +1063,7 @@ export default function AIProxyPage({ onNavigateToNotifications, onViewContact, 
                 onFocus={() => setIsFocused(true)}
                 onBlur={() => setIsFocused(false)}
                 placeholder="Keep the conversation going"
-                disabled={isTyping}
-                className="w-full bg-transparent text-slate-800 placeholder-slate-300 text-[14px] resize-none outline-none leading-6 min-h-[28px] max-h-32 disabled:opacity-60"
+                className="w-full bg-transparent text-slate-800 placeholder-slate-300 text-[14px] resize-none outline-none leading-6 min-h-[28px] max-h-32"
                 rows={1}
                 style={{ height: 'auto' }}
                 onInput={(e) => {
