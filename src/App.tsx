@@ -50,6 +50,8 @@ import Notifications from './components/Notifications';
 import CurrencyPage from './components/CurrencyPage';
 import SignIn from './components/SignIn';
 import SignUp from './components/SignUp';
+import ForgotPassword from './components/ForgotPassword';
+import VerifyEmail from './components/VerifyEmail';
 import Onboarding from './components/Onboarding';
 import { CallManagerProvider, Contact, Invoice, Quotation, useCallManager } from './contexts/CallManagerContext';
 import { ToastProvider, useToast } from './components/ToastContainer';
@@ -956,25 +958,42 @@ function CallManagerWithToast({ children }: { children: React.ReactNode }) {
   );
 }
 
-type AuthPage = 'signin' | 'signup' | 'onboarding' | null;
+type AuthPage = 'signin' | 'signup' | 'verify-email' | 'forgot-password' | 'onboarding' | null;
 
 function App() {
   const [authPage, setAuthPage] = useState<AuthPage>('signin');
+  const [signUpEmail, setSignUpEmail] = useState('');
 
   if (authPage === 'signin') {
     return (
       <SignIn
-        onSignIn={() => setAuthPage(null)}
+        onSignIn={() => setAuthPage('onboarding')}
         onGoToSignUp={() => setAuthPage('signup')}
+        onForgotPassword={() => setAuthPage('forgot-password')}
       />
+    );
+  }
+
+  if (authPage === 'forgot-password') {
+    return (
+      <ForgotPassword onBackToSignIn={() => setAuthPage('signin')} />
     );
   }
 
   if (authPage === 'signup') {
     return (
       <SignUp
-        onSignUp={() => setAuthPage('onboarding')}
+        onSignUp={(email: string) => { setSignUpEmail(email); setAuthPage('verify-email'); }}
         onGoToSignIn={() => setAuthPage('signin')}
+      />
+    );
+  }
+
+  if (authPage === 'verify-email') {
+    return (
+      <VerifyEmail
+        email={signUpEmail}
+        onBackToSignIn={() => setAuthPage('signin')}
       />
     );
   }

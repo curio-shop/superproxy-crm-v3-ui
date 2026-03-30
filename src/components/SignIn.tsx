@@ -4,9 +4,10 @@ import { Icon } from '@iconify/react';
 interface SignInProps {
   onSignIn: () => void;
   onGoToSignUp: () => void;
+  onForgotPassword?: () => void;
 }
 
-export default function SignIn({ onSignIn, onGoToSignUp }: SignInProps) {
+export default function SignIn({ onSignIn, onGoToSignUp, onForgotPassword }: SignInProps) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -32,7 +33,7 @@ export default function SignIn({ onSignIn, onGoToSignUp }: SignInProps) {
         </div>
 
         <div className="relative z-10">
-          <img src="/superproxy-logo.png" alt="Superproxy" className="h-7 object-contain opacity-90" />
+          <img src="/superproxy-logo.png" alt="Superproxy" className="h-7 object-contain" style={{ filter: 'brightness(0) invert(1)', opacity: 0.8 }} />
         </div>
 
         <div className="relative z-10 space-y-6">
@@ -53,11 +54,11 @@ export default function SignIn({ onSignIn, onGoToSignUp }: SignInProps) {
       <div className="flex-1 flex items-center justify-center px-6 py-12 bg-white">
         <div className="w-full max-w-[380px]">
           {/* Mobile logo */}
-          <div className="lg:hidden mb-10">
+          <div className="lg:hidden mb-10 flex justify-center">
             <img src="/superproxy-logo.png" alt="Superproxy" className="h-6 object-contain" />
           </div>
 
-          <div className="mb-8">
+          <div className="mb-8 text-center lg:text-left">
             <h2 className="text-2xl font-bold text-slate-900 tracking-tight mb-2">Welcome back</h2>
             <p className="text-[14px] text-slate-400">Sign in to your account to continue</p>
           </div>
@@ -78,7 +79,7 @@ export default function SignIn({ onSignIn, onGoToSignUp }: SignInProps) {
             <div>
               <div className="flex items-center justify-between mb-2">
                 <label className="text-[13px] font-semibold text-slate-700">Password</label>
-                <button type="button" className="text-[12px] font-medium text-slate-400 hover:text-slate-600 transition-colors">
+                <button type="button" onClick={onForgotPassword} className="text-[12px] font-medium text-slate-400 hover:text-slate-600 transition-colors">
                   Forgot password?
                 </button>
               </div>
