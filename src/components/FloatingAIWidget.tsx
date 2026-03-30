@@ -30,10 +30,10 @@ const MOCK_RESPONSES: Record<string, string> = {
 };
 
 const QUICK_ACTIONS = [
-  { label: 'Check my pipeline', icon: 'solar:chart-2-linear' },
-  { label: 'Draft a follow-up email', icon: 'solar:letter-linear' },
-  { label: 'Show top accounts', icon: 'solar:buildings-2-linear' },
-  { label: 'Generate a quote', icon: 'solar:document-text-linear' },
+  { label: 'Follow up on a quote', icon: 'solar:letter-linear' },
+  { label: 'Call a contact', icon: 'solar:phone-calling-linear' },
+  { label: 'Create a new quote', icon: 'solar:document-add-linear' },
+  { label: 'Summarize my day', icon: 'solar:calendar-minimalistic-linear' },
 ];
 
 interface Message {
@@ -362,11 +362,11 @@ export default function FloatingAIWidget({ isVisible }: FloatingAIWidgetProps) {
             {/* Credit bar */}
             <div className="flex items-center justify-between px-3.5 py-1.5 border-t border-slate-100">
               <div className="flex items-center gap-1.5">
-                <Icon icon="solar:bolt-linear" width="11" className="text-slate-400" />
+                <Icon icon="solar:bolt-linear" width="11" className="text-amber-500" />
                 <span className="text-[10px] font-semibold text-slate-500">159K</span>
                 <span className="text-[10px] text-slate-400">credits</span>
               </div>
-              <button className="text-[10px] font-medium text-indigo-500 hover:text-indigo-600 transition-colors">
+              <button className="text-[10px] font-medium text-amber-500 hover:text-amber-600 transition-colors">
                 Get more
               </button>
             </div>

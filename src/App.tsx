@@ -349,7 +349,7 @@ function AppContent() {
     return (
       <div className="h-screen w-screen">
         <ErrorBoundary>
-          <QuoteView onBackToQuotes={() => {
+          <QuoteView isFreeTier={true} onBackToQuotes={() => {
             setIsViewingQuote(false);
             setActivePage('quotations');
           }} />

@@ -75,12 +75,11 @@ export default function RecordPresentationModal({ onClose, preSelectedType, preS
                       setSelectedType('quote');
                       setCurrentStep('configure');
                     }}
-                    className="group relative overflow-hidden p-6 bg-white hover:bg-slate-50 border-2 border-slate-200 hover:border-amber-300 rounded-2xl transition-all duration-300 hover:shadow-lg active:scale-[0.98]"
+                    className="group relative overflow-hidden p-6 bg-white hover:bg-slate-50 border-2 border-slate-200 hover:border-slate-300 rounded-2xl transition-all duration-300 hover:shadow-lg active:scale-[0.98]"
                   >
-                    <div className="absolute top-0 right-0 w-24 h-24 bg-amber-400/5 blur-2xl rounded-full transition-opacity opacity-0 group-hover:opacity-100"></div>
                     <div className="relative flex flex-col items-center text-center space-y-3">
-                      <div className="w-14 h-14 bg-amber-50 group-hover:bg-amber-100 border border-amber-200 rounded-xl flex items-center justify-center transition-all duration-300">
-                        <Icon icon="solar:document-text-linear" className="w-7 h-7 text-amber-600" />
+                      <div className="w-14 h-14 bg-amber-50/60 group-hover:bg-amber-50 border border-amber-100 rounded-xl flex items-center justify-center transition-all duration-300">
+                        <Icon icon="solar:document-text-linear" className="w-7 h-7 text-amber-500/70" />
                       </div>
                       <div>
                         <p className="text-base font-bold text-slate-900 mb-1">Quote Walkthrough</p>
@@ -94,12 +93,11 @@ export default function RecordPresentationModal({ onClose, preSelectedType, preS
                       setSelectedType('invoice');
                       setCurrentStep('configure');
                     }}
-                    className="group relative overflow-hidden p-6 bg-white hover:bg-slate-50 border-2 border-slate-200 hover:border-emerald-300 rounded-2xl transition-all duration-300 hover:shadow-lg active:scale-[0.98]"
+                    className="group relative overflow-hidden p-6 bg-white hover:bg-slate-50 border-2 border-slate-200 hover:border-slate-300 rounded-2xl transition-all duration-300 hover:shadow-lg active:scale-[0.98]"
                   >
-                    <div className="absolute top-0 right-0 w-24 h-24 bg-emerald-400/5 blur-2xl rounded-full transition-opacity opacity-0 group-hover:opacity-100"></div>
                     <div className="relative flex flex-col items-center text-center space-y-3">
-                      <div className="w-14 h-14 bg-emerald-50 group-hover:bg-emerald-100 border border-emerald-200 rounded-xl flex items-center justify-center transition-all duration-300">
-                        <Icon icon="solar:bill-list-linear" className="w-7 h-7 text-emerald-600" />
+                      <div className="w-14 h-14 bg-emerald-50/60 group-hover:bg-emerald-50 border border-emerald-100 rounded-xl flex items-center justify-center transition-all duration-300">
+                        <Icon icon="solar:bill-list-linear" className="w-7 h-7 text-emerald-500/70" />
                       </div>
                       <div>
                         <p className="text-base font-bold text-slate-900 mb-1">Invoice Walkthrough</p>
@@ -114,9 +112,9 @@ export default function RecordPresentationModal({ onClose, preSelectedType, preS
 
           {currentStep === 'configure' && selectedType && (
             <div className="space-y-6">
-              <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-amber-50/60 via-white to-amber-50/20 border border-amber-100/60 shadow-sm">
+              <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-50 via-white to-slate-50/30 border border-slate-200/60 shadow-sm">
                 <div className="flex items-start gap-4 p-5">
-                  <div className="shrink-0 flex items-center justify-center w-10 h-10 rounded-xl bg-amber-500 shadow-lg shadow-amber-500/30">
+                  <div className="shrink-0 flex items-center justify-center w-10 h-10 rounded-xl bg-slate-800 shadow-lg shadow-slate-800/30">
                     <Icon icon="solar:videocamera-record-linear" className="w-5 h-5 text-white" />
                   </div>
                   <div className="flex-1 min-w-0 space-y-1">
@@ -153,7 +151,7 @@ export default function RecordPresentationModal({ onClose, preSelectedType, preS
                   <select
                     value={selectedDocument}
                     onChange={(e) => setSelectedDocument(e.target.value)}
-                    className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-900 text-sm focus:outline-none focus:border-amber-500 focus:ring-4 focus:ring-amber-500/10 transition-all hover:border-slate-300 hover:shadow-sm"
+                    className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-900 text-sm focus:outline-none focus:border-slate-400 transition-all hover:border-slate-300 hover:shadow-sm"
                   >
                     <option value="">Choose a {selectedType}...</option>
                     {(selectedType === 'quote' ? mockQuotes : mockInvoices).map((doc) => (
@@ -181,7 +179,7 @@ export default function RecordPresentationModal({ onClose, preSelectedType, preS
                     <button
                       onClick={() => setWebcamEnabled(!webcamEnabled)}
                       className={`relative w-12 h-6 rounded-full transition-all duration-300 ${
-                        webcamEnabled ? 'bg-amber-500' : 'bg-slate-300'
+                        webcamEnabled ? 'bg-slate-800' : 'bg-slate-300'
                       }`}
                     >
                       <div
@@ -205,7 +203,7 @@ export default function RecordPresentationModal({ onClose, preSelectedType, preS
                     <button
                       onClick={() => setMicEnabled(!micEnabled)}
                       className={`relative w-12 h-6 rounded-full transition-all duration-300 ${
-                        micEnabled ? 'bg-amber-500' : 'bg-slate-300'
+                        micEnabled ? 'bg-slate-800' : 'bg-slate-300'
                       }`}
                     >
                       <div
@@ -246,13 +244,13 @@ export default function RecordPresentationModal({ onClose, preSelectedType, preS
                     onClick={() => setCameraView('thumbnail')}
                     className={`group relative overflow-hidden p-5 bg-white rounded-2xl transition-all duration-300 hover:shadow-lg active:scale-[0.98] ${
                       cameraView === 'thumbnail'
-                        ? 'border-2 border-amber-400 shadow-lg shadow-amber-400/20'
+                        ? 'border-2 border-slate-800 shadow-lg shadow-slate-800/10'
                         : 'border-2 border-slate-200 hover:border-slate-300'
                     }`}
                   >
                     <div className="aspect-video bg-gradient-to-br from-slate-50 to-slate-100 rounded-xl mb-4 overflow-hidden relative border border-slate-200/60 flex items-center justify-center">
                       <div className="w-[70%] h-[85%] bg-white rounded-lg shadow-sm flex flex-col items-center justify-center gap-2.5 p-3.5">
-                        <div className="w-full h-2 bg-amber-400 rounded-full"></div>
+                        <div className="w-full h-2 bg-amber-400/50 rounded-full"></div>
                         <div className="w-full space-y-1.5">
                           <div className="w-4/5 h-1.5 bg-slate-200 rounded-full"></div>
                           <div className="w-3/5 h-1.5 bg-slate-200 rounded-full"></div>
@@ -261,7 +259,7 @@ export default function RecordPresentationModal({ onClose, preSelectedType, preS
                         <div className="w-full space-y-1.5">
                           <div className="w-2/5 h-1.5 bg-slate-200 rounded-full"></div>
                         </div>
-                        <div className="w-full h-6 bg-amber-400 rounded"></div>
+                        <div className="w-full h-6 bg-slate-200 rounded"></div>
                       </div>
                       <div className="absolute top-4 right-4 w-16 h-12 rounded-lg border-2 border-white shadow-lg overflow-hidden">
                         <img
@@ -283,7 +281,7 @@ export default function RecordPresentationModal({ onClose, preSelectedType, preS
                     onClick={() => setCameraView('full-camera')}
                     className={`group relative overflow-hidden p-5 bg-white rounded-2xl transition-all duration-300 hover:shadow-lg active:scale-[0.98] ${
                       cameraView === 'full-camera'
-                        ? 'border-2 border-amber-400 shadow-lg shadow-amber-400/20'
+                        ? 'border-2 border-slate-800 shadow-lg shadow-slate-800/10'
                         : 'border-2 border-slate-200 hover:border-slate-300'
                     }`}
                   >

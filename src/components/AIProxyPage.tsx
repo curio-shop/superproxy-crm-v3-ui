@@ -725,23 +725,23 @@ export default function AIProxyPage({ onNavigateToNotifications, onViewContact, 
             </div>
           </div>
 
-          {/* Share banner — pinned to bottom */}
+          {/* Referral banner — pinned to bottom */}
           {showShareBanner && (
             <div className="mt-auto px-6 pb-6 pt-8 flex justify-center">
-              <div className="group relative max-w-md w-full bg-white border border-slate-200/60 rounded-2xl px-5 py-4 flex items-center gap-4 shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
-                <div className="w-9 h-9 rounded-xl bg-slate-900 flex items-center justify-center flex-shrink-0">
-                  <Icon icon="solar:gift-linear" width="18" className="text-white" />
+              <div className="group relative max-w-md w-full rounded-2xl border border-amber-100/80 bg-gradient-to-r from-amber-50/80 via-white to-amber-50/40 px-5 py-4 flex items-center gap-4">
+                <div className="w-9 h-9 rounded-xl bg-amber-500/10 flex items-center justify-center flex-shrink-0">
+                  <Icon icon="solar:gift-bold" width="18" className="text-amber-500" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-[13px] font-semibold text-slate-700">Share Superproxy, earn 500 credits</p>
-                  <p className="text-[11px] text-slate-400 mt-0.5">Invite others — you both get rewarded.</p>
+                  <p className="text-[13px] font-semibold text-slate-800">Invite a friend, get 500 credits</p>
+                  <p className="text-[11px] text-slate-400 mt-0.5">They get 500 too. Everyone wins.</p>
                 </div>
                 <button
                   onClick={() => {/* Wire to share functionality in prod */}}
-                  className="flex items-center gap-1.5 px-4 py-2 bg-slate-900 text-white text-[12px] font-semibold rounded-xl hover:bg-slate-800 transition-all active:scale-[0.97] flex-shrink-0 shadow-sm"
+                  className="flex items-center gap-1.5 px-4 py-2 bg-slate-900 text-white text-[12px] font-semibold rounded-xl hover:bg-slate-800 transition-all active:scale-[0.97] flex-shrink-0"
                 >
-                  <Icon icon="solar:share-linear" width="14" />
-                  Share
+                  Invite
+                  <Icon icon="solar:arrow-right-linear" width="13" />
                 </button>
                 <button
                   onClick={() => setShowShareBanner(false)}
@@ -1046,7 +1046,7 @@ export default function AIProxyPage({ onNavigateToNotifications, onViewContact, 
           }`}>
             {/* Credits bar */}
             <div className="flex items-center gap-2.5 px-4 py-2.5 bg-slate-100/80 rounded-t-2xl border-b border-slate-100">
-              <Icon icon="solar:bolt-linear" width="13" className="text-slate-400 flex-shrink-0" />
+              <Icon icon="solar:bolt-linear" width="13" className="text-amber-500 flex-shrink-0" />
               <span className="text-xs text-slate-500 flex-1">
                 <span className="font-semibold text-slate-600">159K</span> credits remaining
               </span>

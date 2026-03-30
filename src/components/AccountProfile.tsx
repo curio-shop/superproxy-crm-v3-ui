@@ -764,8 +764,8 @@ export default function AccountProfile({
                   <div className="p-6 space-y-3">
                     <button className="w-full flex items-center justify-between p-5 bg-slate-50 hover:bg-slate-100 rounded-xl transition-all group border border-slate-200">
                       <div className="flex items-center gap-4">
-                        <div className="h-12 w-12 rounded-xl bg-amber-50 border border-amber-100 flex items-center justify-center">
-                          <Icon icon="solar:lock-password-linear" width="22" className="text-amber-600" />
+                        <div className="h-12 w-12 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-center">
+                          <Icon icon="solar:lock-password-linear" width="22" className="text-slate-500" />
                         </div>
                         <div className="text-left">
                           <h3 className="text-[13px] font-semibold text-slate-800 mb-0.5">Change Password</h3>
@@ -777,8 +777,8 @@ export default function AccountProfile({
 
                     <button className="w-full flex items-center justify-between p-5 bg-slate-50 hover:bg-slate-100 rounded-xl transition-all group border border-slate-200">
                       <div className="flex items-center gap-4">
-                        <div className="h-12 w-12 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center">
-                          <Icon icon="solar:shield-check-linear" width="22" className="text-emerald-600" />
+                        <div className="h-12 w-12 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-center">
+                          <Icon icon="solar:shield-check-linear" width="22" className="text-slate-500" />
                         </div>
                         <div className="text-left">
                           <h3 className="text-[13px] font-semibold text-slate-800 mb-0.5">Two-Factor Authentication</h3>
@@ -853,65 +853,28 @@ export default function AccountProfile({
                 />
 
                 <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
-                  <div className="p-6 border-b border-slate-100 space-y-4">
-                    <div className="flex items-start justify-between gap-4">
-                      <div className="flex items-start gap-3">
-                        <div className="h-10 w-10 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-center">
-                          <Icon icon="solar:wallet-linear" width="18" className="text-slate-600" />
-                        </div>
-                        <div>
-                          <h2 className="text-[13px] font-semibold text-slate-800 tracking-tight">AI Credits</h2>
-                          <p className="text-[11px] text-slate-400 mt-0.5">
-                            Credits power every AI feature, including AI calls and Ask AI.
-                          </p>
-                        </div>
-                      </div>
-                      <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-full text-xs font-semibold text-slate-600">
-                        <Icon icon="solar:timer-linear" width="14" className="text-slate-500" />
-                        1 credit = 1 minute of calling
-                      </div>
-                    </div>
-
-
+                  <div className="px-5 py-4 border-b border-slate-100">
+                    <h2 className="text-[13px] font-semibold text-slate-800 tracking-tight">AI Credits</h2>
+                    <p className="text-[11px] text-slate-400 mt-0.5">Credits power AI chat, AI calls, and every AI feature</p>
                   </div>
 
                   <div className="p-6">
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                      {creditPacks.map((pack) => (
-                        <div
-                          key={pack.id}
-                          className={`relative rounded-2xl border p-5 transition-all ${
-                            pack.isPopular
-                              ? 'border-amber-500 bg-amber-50/60 shadow-md shadow-amber-500/10'
-                              : 'border-slate-200 bg-white hover:border-slate-300'
-                          }`}
-                        >
-                          {pack.isPopular && (
-                            <span className="absolute top-4 right-4 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-semibold uppercase tracking-wider bg-amber-500 text-white">
-                              <Icon icon="solar:star-linear" width="12" />
-                              Most popular
-                            </span>
-                          )}
-
-                          <div className="text-[13px] font-semibold text-slate-600">Credits</div>
-                          <div className="mt-2 flex items-baseline gap-2">
-                            <span className="text-3xl font-bold text-slate-900">{pack.credits}</span>
-                            <span className="text-[11px] text-slate-400">credits</span>
-                          </div>
-                          <div className="mt-3 text-2xl font-bold text-slate-900">${pack.price}</div>
-                          <p className="text-[11px] text-slate-400 mt-2">{pack.tagline}</p>
-
-                          <button
-                            className={`mt-5 w-full rounded-xl px-4 py-2.5 text-xs font-semibold transition-all ${
-                              pack.isPopular
-                                ? 'bg-amber-500 text-white hover:bg-amber-600'
-                                : 'bg-slate-50 text-slate-700 hover:bg-slate-100'
-                            }`}
-                          >
-                            Buy credits
-                          </button>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-4">
+                        <div className="h-12 w-12 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-center">
+                          <Icon icon="solar:bolt-circle-linear" width="24" className="text-slate-400" />
                         </div>
-                      ))}
+                        <div>
+                          <div className="flex items-baseline gap-2">
+                            <span className="text-2xl font-bold text-slate-900">0</span>
+                            <span className="text-[12px] text-slate-400">credits</span>
+                          </div>
+                          <p className="text-[11px] text-slate-400 mt-0.5">No AI credits on the Free plan</p>
+                        </div>
+                      </div>
+                      <span className="text-[11px] text-slate-400 font-medium">
+                        Available on paid plans
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -1068,7 +1031,7 @@ export default function AccountProfile({
                           onClick={() => handleVoiceSelect(voice.id)}
                           className={`p-4 rounded-2xl border transition-all duration-200 cursor-pointer ${
                             selectedVoice === voice.id
-                              ? 'border-amber-400 bg-amber-50/30'
+                              ? 'border-slate-800 bg-slate-50/30'
                               : 'border-slate-200 bg-white hover:border-slate-300'
                           }`}
                         >
@@ -1079,12 +1042,12 @@ export default function AccountProfile({
                               <div
                                 className={`w-5 h-5 rounded-full border flex items-center justify-center flex-shrink-0 transition-all ${
                                   selectedVoice === voice.id
-                                    ? 'border-amber-400 bg-white'
+                                    ? 'border-slate-800 bg-white'
                                     : 'border-slate-300 bg-white'
                                 }`}
                               >
                                 {selectedVoice === voice.id && (
-                                  <div className="w-3 h-3 rounded-full bg-amber-500"></div>
+                                  <div className="w-3 h-3 rounded-full bg-amber-500/80"></div>
                                 )}
                               </div>
 
@@ -1115,9 +1078,9 @@ export default function AccountProfile({
                               onClick={(e) => handleVoicePreview(voice.id, e)}
                               className={`flex items-center gap-1.5 px-4 py-2 text-xs font-semibold rounded-full transition-all flex-shrink-0 ml-4 ${
                                 playingVoiceId === voice.id
-                                  ? 'bg-amber-500 text-white shadow-sm hover:bg-amber-600'
+                                  ? 'bg-slate-800 text-white shadow-sm hover:bg-slate-900'
                                   : selectedVoice === voice.id
-                                  ? 'bg-amber-100 text-amber-700 hover:bg-amber-200'
+                                  ? 'bg-slate-100 text-slate-700 hover:bg-slate-200'
                                   : 'bg-slate-50 text-slate-600 hover:bg-slate-100 hover:text-slate-700'
                               }`}
                             >
@@ -1234,18 +1197,6 @@ export default function AccountProfile({
 
             {activeTab === 'contact' && (
               <div className="space-y-6">
-                <div className="bg-gradient-to-br from-slate-50 to-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
-                  <div className="p-8 text-center">
-                    <div className="inline-flex items-center justify-center h-16 w-16 rounded-2xl bg-amber-50 border border-amber-100 mb-4">
-                      <Icon icon="solar:chat-round-call-bold" width="32" className="text-amber-600" />
-                    </div>
-                    <h2 className="text-2xl font-bold text-slate-900 mb-3">We're Here to Help</h2>
-                    <p className="text-slate-600 max-w-xl mx-auto leading-relaxed">
-                      Our support team is ready to assist you with any questions or concerns you may have
-                    </p>
-                  </div>
-                </div>
-
                 <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
                   <div className="px-5 py-4 border-b border-slate-100">
                     <h2 className="text-[13px] font-semibold text-slate-800 tracking-tight">Send Us a Message</h2>
@@ -1388,16 +1339,16 @@ export default function AccountProfile({
                         <h3 className="text-[13px] font-semibold text-slate-800 mb-1">Email Support</h3>
                         <p className="text-[11px] text-slate-400 mb-2">Send us an email directly</p>
                         <a
-                          href="mailto:support@superproxy.ai"
+                          href="mailto:support@superproxy.com"
                           className="inline-flex items-center gap-1.5 text-[13px] font-semibold text-amber-600 hover:text-amber-700 transition-colors"
                         >
-                          support@superproxy.ai
+                          support@superproxy.com
                           <Icon icon="solar:arrow-right-up-linear" width="14" />
                         </a>
                       </div>
                       <button
                         onClick={() => {
-                          navigator.clipboard.writeText('support@superproxy.ai');
+                          navigator.clipboard.writeText('support@superproxy.com');
                           alert('Email address copied to clipboard!');
                         }}
                         className="flex-shrink-0 p-2 text-slate-400 hover:text-slate-600 hover:bg-white rounded-lg transition-all"
