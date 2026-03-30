@@ -206,13 +206,13 @@ export default function SupportChatDialog({ isOpen, onClose, userId, userName }:
             <button
               type="submit"
               disabled={!newMessage.trim() || isSending}
-              className="bg-gradient-to-br from-indigo-600 to-indigo-700 text-white rounded-full p-3 hover:from-indigo-700 hover:to-indigo-800 disabled:from-slate-300 disabled:to-slate-300 disabled:cursor-not-allowed transition-all shadow-md hover:shadow-lg disabled:shadow-none"
+              className="h-10 w-10 flex items-center justify-center rounded-xl bg-slate-800 text-white hover:bg-slate-900 disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed transition-all active:scale-95 flex-shrink-0"
               aria-label="Send message"
             >
               {isSending ? (
-                <Icon icon="svg-spinners:270-ring-with-bg" width="20" />
+                <Icon icon="svg-spinners:270-ring-with-bg" width="16" />
               ) : (
-                <Icon icon="solar:plain-2-bold" width="20" className="rotate-45" />
+                <Icon icon="solar:arrow-up-linear" width="16" strokeWidth={2} />
               )}
             </button>
           </div>

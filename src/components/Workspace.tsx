@@ -200,6 +200,8 @@ export default function Workspace({ onRegisterHandlers, onWorkspaceChange, onUpg
   const [showRoleUpdateConfirm, setShowRoleUpdateConfirm] = useState(false);
   const [showRemoveMemberConfirm, setShowRemoveMemberConfirm] = useState(false);
   const [showDeleteWorkspaceConfirm, setShowDeleteWorkspaceConfirm] = useState(false);
+  const [showDangerZone, setShowDangerZone] = useState(false);
+  const [deleteConfirmName, setDeleteConfirmName] = useState('');
   const [editingWorkspace, setEditingWorkspace] = useState<Partial<Workspace>>(mockWorkspaces[0]);
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
   const [uploadingLogo, setUploadingLogo] = useState(false);
@@ -739,9 +741,8 @@ export default function Workspace({ onRegisterHandlers, onWorkspaceChange, onUpg
         <div className="max-w-7xl mx-auto space-y-8">
           <div className="flex items-start justify-between">
             <div className="flex items-center gap-6">
-              <button
-                onClick={() => setShowWorkspaceSwitcher(!showWorkspaceSwitcher)}
-                className="relative group workspace-switcher-container"
+              <div
+                className="relative group"
               >
                 <div className="h-20 w-20 rounded-2xl bg-white border border-slate-100/80 shadow-[0_2px_8px_rgba(0,0,0,0.04),0_8px_24px_rgba(0,0,0,0.03)] overflow-hidden flex items-center justify-center hover:border-slate-300 transition-all hover:shadow-md p-3">
                   {currentWorkspace.logo_url ? (
@@ -761,81 +762,11 @@ export default function Workspace({ onRegisterHandlers, onWorkspaceChange, onUpg
                   )}
                 </div>
 
-                {showWorkspaceSwitcher && (
-                  <div className="absolute top-full left-0 mt-2 w-80 bg-white rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.12)] border border-slate-200/60 overflow-hidden z-50 animate-in fade-in slide-in-from-top-2 duration-200">
-                    <div className="p-3 border-b border-slate-100 bg-slate-50">
-                      <div className="flex items-center justify-between">
-                        <h3 className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Switch Workspace</h3>
-                        <span className="text-[11px] text-slate-400">{workspaces.length} workspaces</span>
-                      </div>
-                    </div>
-                    <div className="max-h-96 overflow-y-auto p-2">
-                      {workspaces.map((workspace) => (
-                        <button
-                          key={workspace.id}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleSwitchWorkspace(workspace.id);
-                          }}
-                          className={`w-full flex items-center gap-3 p-3 rounded-xl transition-all active:scale-[0.98] ${
-                            workspace.id === currentWorkspace.id
-                              ? 'bg-slate-900 text-white shadow-md ring-1 ring-white/10'
-                              : 'hover:bg-slate-50 text-slate-900'
-                          }`}
-                        >
-                          <div className={`h-12 w-12 rounded-lg overflow-hidden flex items-center justify-center flex-shrink-0 p-2 ${
-                            workspace.id === currentWorkspace.id
-                              ? 'bg-white/20 border border-white/30'
-                              : 'bg-white border border-slate-100'
-                          }`}>
-                            {workspace.logo_url ? (
-                              <img
-                                src={workspace.logo_url}
-                                alt={workspace.name}
-                                className="h-full w-full object-contain"
-                                onError={(e) => {
-                                  e.currentTarget.style.display = 'none';
-                                  e.currentTarget.parentElement!.innerHTML = `<span class="text-lg font-bold ${workspace.id === currentWorkspace.id ? 'text-white' : 'text-slate-600'}">${workspace.name.charAt(0)}</span>`;
-                                }}
-                              />
-                            ) : (
-                              <span className={`text-lg font-bold ${
-                                workspace.id === currentWorkspace.id ? 'text-white' : 'text-slate-600'
-                              }`}>
-                                {workspace.name.charAt(0)}
-                              </span>
-                            )}
-                          </div>
-                          <div className="flex-1 text-left min-w-0">
-                            <div className={`text-sm font-semibold truncate ${
-                              workspace.id === currentWorkspace.id ? 'text-white' : 'text-slate-900'
-                            }`}>
-                              {workspace.name}
-                            </div>
-                            <div className={`text-xs truncate ${
-                              workspace.id === currentWorkspace.id ? 'text-white/70' : 'text-slate-500'
-                            }`}>
-                              {workspace.website}
-                            </div>
-                          </div>
-                          {workspace.id === currentWorkspace.id && (
-                            <Icon icon="solar:check-circle-bold" width="20" className="text-white flex-shrink-0" />
-                          )}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </button>
+              </div>
               <div>
                 <div className="flex items-center gap-2 mb-1">
                   <h2 className="text-xl font-bold text-slate-900 tracking-tight">{currentWorkspace.name}</h2>
-                  <button
-                    onClick={() => setShowWorkspaceSwitcher(!showWorkspaceSwitcher)}
-                    className="p-1.5 hover:bg-slate-100 rounded-lg transition-colors"
-                  >
-                    <Icon icon="solar:alt-arrow-down-linear" width="20" className="text-slate-400" />
-                  </button>
+                  {/* Workspace switcher chevron — hidden on free tier (single workspace) */}
                 </div>
                 <div className="flex items-center gap-3 text-[13px] text-slate-500">
                   {currentWorkspace.website && (
@@ -861,6 +792,8 @@ export default function Workspace({ onRegisterHandlers, onWorkspaceChange, onUpg
             </div>
 
             <div className="flex items-center gap-2">
+              {/* Hidden for now — will reuse soon */}
+              {false && <>
               <button
                 onClick={() => setShowCreateWorkspace(true)}
                 className="flex items-center gap-2 px-3 py-2 border border-slate-200 text-slate-600 rounded-xl text-[13px] font-medium hover:bg-slate-50 hover:text-slate-800 hover:border-slate-300 transition-all active:scale-[0.98]"
@@ -876,6 +809,7 @@ export default function Workspace({ onRegisterHandlers, onWorkspaceChange, onUpg
                 <span>Join</span>
               </button>
               <div className="h-6 w-px bg-slate-200 mx-0.5"></div>
+              </>}
               <button
                 onClick={() => setShowAddMember(true)}
                 className="group inline-flex items-center gap-2 px-4 py-2 bg-white hover:bg-slate-900 border-2 border-slate-200 hover:border-slate-900 text-slate-900 hover:text-white rounded-xl text-[13px] font-semibold transition-all duration-200 shadow-sm hover:shadow-lg hover:shadow-slate-500/20 active:scale-[0.98]"
@@ -959,7 +893,7 @@ export default function Workspace({ onRegisterHandlers, onWorkspaceChange, onUpg
                     <Icon icon="solar:users-group-rounded-linear" width="14" />
                     Team Members
                   </h3>
-                  <span className="inline-flex items-center px-2 py-0.5 rounded-md bg-slate-100 text-[11px] font-semibold text-slate-600">
+                  <span className="hidden inline-flex items-center px-2 py-0.5 rounded-md bg-slate-100 text-[11px] font-semibold text-slate-600">
                     {members.length}
                   </span>
                 </div>
@@ -1104,7 +1038,7 @@ export default function Workspace({ onRegisterHandlers, onWorkspaceChange, onUpg
                   <Icon icon="solar:history-linear" width="14" />
                   Recent Activity
                 </h3>
-                <span className="inline-flex items-center px-2 py-0.5 rounded-md bg-slate-100 text-[11px] font-semibold text-slate-600">
+                <span className="hidden inline-flex items-center px-2 py-0.5 rounded-md bg-slate-100 text-[11px] font-semibold text-slate-600">
                   {activities.length}
                 </span>
               </div>
@@ -1228,9 +1162,7 @@ export default function Workspace({ onRegisterHandlers, onWorkspaceChange, onUpg
           >
             <div className="px-8 py-6 border-b border-slate-100/50 bg-white/40 backdrop-blur-md z-10 flex items-center justify-between sticky top-0">
               <div className="flex items-center gap-3">
-                <div className="h-10 w-10 rounded-xl bg-slate-900 flex items-center justify-center">
-                  <Icon icon="solar:settings-linear" width="18" className="text-white" />
-                </div>
+                <Icon icon="solar:settings-linear" width="24" className="text-slate-400" />
                 <div>
                   <h2 className="text-lg text-slate-900 tracking-tight font-bold">Workspace Settings</h2>
                   <p className="text-xs text-slate-500 mt-0.5">Manage your workspace information</p>
@@ -1393,26 +1325,37 @@ export default function Workspace({ onRegisterHandlers, onWorkspaceChange, onUpg
                   </div>
                 </div>
 
-                {/* Danger Zone */}
+                {/* Danger Zone — Accordion */}
                 {isOwner && (
-                  <div className="bg-gradient-to-br from-rose-50/80 to-red-50/30 rounded-2xl p-5 border border-rose-200/40 relative overflow-hidden">
-                    <div className="absolute top-0 right-0 w-32 h-32 bg-rose-500/5 rounded-full blur-3xl"></div>
-                    <div className="relative">
-                      <h4 className="text-xs font-bold text-rose-500 uppercase tracking-wider mb-3 flex items-center gap-2">
-                        <Icon icon="solar:danger-bold" width="14" />
+                  <div className="rounded-2xl border border-slate-200 overflow-hidden">
+                    <button
+                      onClick={() => setShowDangerZone(!showDangerZone)}
+                      className="w-full flex items-center justify-between px-5 py-4 hover:bg-slate-50/50 transition-colors"
+                    >
+                      <span className="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-2">
+                        <Icon icon="solar:danger-bold" width="14" className="text-rose-400" />
                         Danger Zone
-                      </h4>
-                      <p className="text-[12px] text-slate-600 leading-relaxed mb-4">
-                        Once you delete this workspace, all data including members, invoices, and documents will be permanently removed.
-                      </p>
-                      <button
-                        onClick={() => setShowDeleteWorkspaceConfirm(true)}
-                        className="group inline-flex items-center gap-2 px-4 py-2 bg-white hover:bg-rose-600 border border-rose-200 hover:border-rose-600 text-rose-600 hover:text-white rounded-xl text-[13px] font-semibold transition-all duration-200 shadow-sm hover:shadow-lg hover:shadow-rose-500/20 active:scale-[0.98]"
-                      >
-                        <Icon icon="solar:trash-bin-minimalistic-bold" width="14" className="group-hover:rotate-12 transition-transform" />
-                        <span>Delete Workspace</span>
-                      </button>
-                    </div>
+                      </span>
+                      <Icon
+                        icon="solar:alt-arrow-down-linear"
+                        width="14"
+                        className={`text-slate-400 transition-transform duration-200 ${showDangerZone ? 'rotate-180' : ''}`}
+                      />
+                    </button>
+                    {showDangerZone && (
+                      <div className="px-5 pb-5 pt-1">
+                        <p className="text-[12px] text-slate-500 leading-relaxed mb-4">
+                          Once you delete this workspace, all data including members, invoices, and documents will be permanently removed.
+                        </p>
+                        <button
+                          onClick={() => { setDeleteConfirmName(''); setShowDeleteWorkspaceConfirm(true); }}
+                          className="inline-flex items-center gap-2 px-4 py-2 border border-rose-200 text-rose-600 hover:bg-rose-50 rounded-xl text-[13px] font-semibold transition-all active:scale-[0.98]"
+                        >
+                          <Icon icon="solar:trash-bin-minimalistic-bold" width="14" />
+                          Delete Workspace
+                        </button>
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
@@ -1445,7 +1388,7 @@ export default function Workspace({ onRegisterHandlers, onWorkspaceChange, onUpg
           <div className="bg-white rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.12)] max-w-lg w-full overflow-hidden flex flex-col" style={{ animation: 'ws-modal 180ms cubic-bezier(0.32, 0.72, 0, 1)' }}>
             <div className="flex items-center justify-between p-6 border-b border-slate-100">
               <div className="flex items-center gap-3">
-                <Icon icon="solar:user-plus-bold" width="32" className="text-emerald-600" />
+                <Icon icon="solar:user-plus-bold" width="32" className="text-slate-400" />
                 <div>
                   <h2 className="text-lg font-bold text-slate-900">Invite Team Member</h2>
                   <p className="text-xs text-slate-500 mt-0.5">Add someone to your workspace</p>
@@ -1576,7 +1519,7 @@ export default function Workspace({ onRegisterHandlers, onWorkspaceChange, onUpg
           <div className="bg-white rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.12)] max-w-md w-full overflow-hidden" style={{ animation: 'ws-modal 180ms cubic-bezier(0.32, 0.72, 0, 1)' }}>
             <div className="flex items-center justify-between p-6 border-b border-slate-100">
               <div className="flex items-center gap-3">
-                <Icon icon="solar:add-circle-bold" width="32" className="text-sky-600" />
+                <Icon icon="solar:add-circle-bold" width="32" className="text-slate-400" />
                 <div>
                   <h2 className="text-lg font-bold text-slate-900">Join Workspace</h2>
                   <p className="text-xs text-slate-500 mt-0.5">Enter an invite code or link</p>
@@ -1628,8 +1571,8 @@ export default function Workspace({ onRegisterHandlers, onWorkspaceChange, onUpg
           <div className="bg-white rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.12)] max-w-md w-full overflow-hidden" style={{ animation: 'ws-modal 180ms cubic-bezier(0.32, 0.72, 0, 1)' }}>
             <div className="p-6">
               <div className="flex items-start gap-4 mb-4">
-                <div className="h-12 w-12 rounded-xl bg-blue-100 flex items-center justify-center flex-shrink-0">
-                  <Icon icon="solar:user-check-rounded-bold" width="24" className="text-blue-600" />
+                <div className="h-12 w-12 rounded-xl bg-slate-100 flex items-center justify-center flex-shrink-0">
+                  <Icon icon="solar:user-check-rounded-bold" width="24" className="text-slate-500" />
                 </div>
                 <div className="flex-1">
                   <h2 className="text-lg font-bold text-slate-900 mb-1">Update Member Role</h2>
@@ -1731,16 +1674,30 @@ export default function Workspace({ onRegisterHandlers, onWorkspaceChange, onUpg
                 </div>
               </div>
 
+              <div className="mb-6">
+                <label className="block text-[13px] font-semibold text-slate-800 mb-2">
+                  Type <span className="font-bold text-slate-900">"{currentWorkspace.name}"</span> to confirm
+                </label>
+                <input
+                  type="text"
+                  value={deleteConfirmName}
+                  onChange={(e) => setDeleteConfirmName(e.target.value)}
+                  placeholder={currentWorkspace.name}
+                  className="w-full px-4 py-3 border border-slate-200 rounded-xl text-[13px] text-slate-800 placeholder-slate-300 focus:outline-none focus:border-slate-400 transition-colors"
+                />
+              </div>
+
               <div className="flex items-center justify-end gap-3">
                 <button
-                  onClick={() => setShowDeleteWorkspaceConfirm(false)}
+                  onClick={() => { setShowDeleteWorkspaceConfirm(false); setDeleteConfirmName(''); }}
                   className="px-4 py-2.5 border border-slate-200 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-all"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={handleDeleteWorkspace}
-                  className="px-4 py-2.5 bg-gradient-to-br from-rose-500 to-red-600 hover:from-rose-600 hover:to-red-700 text-white rounded-xl text-sm font-semibold transition-all shadow-lg shadow-rose-500/30 hover:shadow-xl hover:shadow-rose-500/40 active:scale-95"
+                  disabled={deleteConfirmName !== currentWorkspace.name}
+                  className="px-4 py-2.5 bg-gradient-to-br from-rose-500 to-red-600 hover:from-rose-600 hover:to-red-700 text-white rounded-xl text-sm font-semibold transition-all shadow-lg shadow-rose-500/30 hover:shadow-xl hover:shadow-rose-500/40 active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed disabled:shadow-none"
                 >
                   Delete Permanently
                 </button>
@@ -1756,7 +1713,7 @@ export default function Workspace({ onRegisterHandlers, onWorkspaceChange, onUpg
           <div className="bg-white rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.12)] max-w-3xl w-full max-h-[90vh] overflow-hidden flex flex-col" style={{ animation: 'ws-modal 180ms cubic-bezier(0.32, 0.72, 0, 1)' }}>
             <div className="flex items-center justify-between p-6 border-b border-slate-100">
               <div className="flex items-center gap-3">
-                <Icon icon="solar:add-square-bold" width="32" className="text-slate-700" />
+                <Icon icon="solar:add-square-bold" width="32" className="text-slate-400" />
                 <div>
                   <h2 className="text-lg font-bold text-slate-900">Create New Workspace</h2>
                   <p className="text-xs text-slate-500 mt-0.5">Set up your new workspace</p>

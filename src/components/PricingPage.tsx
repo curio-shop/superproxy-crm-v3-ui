@@ -21,6 +21,7 @@ const TIERS = [
       'Email sending & open tracking',
       'Custom templates',
       'USD currency',
+      'No AI access',
     ],
   },
   {
@@ -36,7 +37,7 @@ const TIERS = [
       '2,500 contacts',
       'No watermarks',
       'AI chat & AI calls',
-      '100K free AI credits',
+      '1,000 AI credits/mo',
       'Engagement tracking',
       'Multi-currency',
       'Comments on documents',
@@ -53,8 +54,8 @@ const TIERS = [
     features: [
       'Everything in Growth',
       '15,000 contacts',
-      '300K free AI credits',
-      'Multi-call & recording',
+      '5,000 AI credits/mo',
+      '5 concurrent AI calls',
       'Multi-language calls',
       'Performance analytics',
       'Gmail & Calendar',
@@ -72,7 +73,7 @@ const TIERS = [
     features: [
       'Everything in Pro',
       'Unlimited contacts',
-      '800K free AI credits',
+      '15,000 AI credits/mo',
       'Multi-team workspaces',
       'Approval workflows',
       'White-label & API access',
@@ -149,7 +150,7 @@ const FEATURE_SECTIONS: { category: string; features: FeatureRow[] }[] = [
   {
     category: 'AI',
     features: [
-      { name: 'AI credits included', free: '0', growth: '100K', pro: '300K', scale: '800K' },
+      { name: 'AI credits included', free: '0', growth: '1,000/mo', pro: '5,000/mo', scale: '15,000/mo' },
       { name: 'Agentic AI chat', free: false, growth: true, pro: true, scale: true },
       { name: 'AI calls', free: false, growth: true, pro: 'Multi-call', scale: 'Multi-call + Priority' },
       { name: 'Call transcript', free: false, growth: true, pro: true, scale: true },
@@ -172,9 +173,30 @@ const FEATURE_SECTIONS: { category: string; features: FeatureRow[] }[] = [
   },
 ];
 
+const CREDIT_PACKS = [
+  { tier: 1, credits: 500, price: 5 },
+  { tier: 2, credits: 1100, price: 10 },
+  { tier: 3, credits: 2750, price: 25 },
+  { tier: 4, credits: 5500, price: 50 },
+  { tier: 5, credits: 12000, price: 100, isPopular: true },
+  { tier: 6, credits: 18000, price: 150 },
+  { tier: 7, credits: 25000, price: 200 },
+  { tier: 8, credits: 40000, price: 300 },
+  { tier: 9, credits: 50000, price: 380 },
+  { tier: 10, credits: 75000, price: 570 },
+  { tier: 11, credits: 100000, price: 750 },
+  { tier: 12, credits: 150000, price: 1100 },
+  { tier: 13, credits: 200000, price: 1500 },
+  { tier: 14, credits: 350000, price: 2500 },
+  { tier: 15, credits: 500000, price: 3500 },
+];
+
+type PricingTab = 'plans' | 'credits';
+
 export default function PricingPage({ onBack }: PricingPageProps) {
   const [showComparison, setShowComparison] = useState(false);
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'annual'>('annual');
+  const [activeTab, setActiveTab] = useState<PricingTab>('plans');
   const getPrice = (monthlyPrice: number) => {
     if (monthlyPrice === 0) return 0;
     return billingCycle === 'annual' ? Math.round(monthlyPrice * 0.8) : monthlyPrice;
@@ -192,6 +214,38 @@ export default function PricingPage({ onBack }: PricingPageProps) {
           Back
         </button>
 
+        {/* Tab switcher — underline style to differentiate from billing pill toggle */}
+        <div className="flex justify-center mb-10">
+          <div className="inline-flex items-center gap-8">
+            <button
+              onClick={() => setActiveTab('plans')}
+              className={`relative flex items-center gap-2 pb-3 text-[14px] font-semibold transition-colors ${
+                activeTab === 'plans' ? 'text-slate-800' : 'text-slate-400 hover:text-slate-600'
+              }`}
+            >
+              <Icon icon="solar:box-minimalistic-linear" width="16" />
+              Plans
+              {activeTab === 'plans' && (
+                <span className="absolute bottom-0 left-0 right-0 h-[2px] bg-slate-800 rounded-full" />
+              )}
+            </button>
+            <button
+              onClick={() => setActiveTab('credits')}
+              className={`relative flex items-center gap-2 pb-3 text-[14px] font-semibold transition-colors ${
+                activeTab === 'credits' ? 'text-slate-800' : 'text-slate-400 hover:text-slate-600'
+              }`}
+            >
+              <Icon icon="solar:bolt-linear" width="16" />
+              AI Credits
+              {activeTab === 'credits' && (
+                <span className="absolute bottom-0 left-0 right-0 h-[2px] bg-slate-800 rounded-full" />
+              )}
+            </button>
+          </div>
+        </div>
+
+        {activeTab === 'plans' ? (
+        <>
         {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-2xl font-semibold text-slate-800 tracking-tight mb-2">Plans that grow with your team</h1>
@@ -247,7 +301,7 @@ export default function PricingPage({ onBack }: PricingPageProps) {
 
                 {/* Tier name */}
                 <div className="flex items-center gap-2 mb-5 mt-1">
-                  <span className={`text-[13px] font-semibold ${isPro ? 'text-indigo-600' : 'text-slate-500'}`}>
+                  <span className={`text-[13px] font-semibold ${isPro ? 'text-amber-600' : 'text-slate-500'}`}>
                     {tier.name}
                   </span>
                   {tier.isCurrent && (
@@ -388,9 +442,126 @@ export default function PricingPage({ onBack }: PricingPageProps) {
         </div>
         )}
 
+        </>
+        ) : (
+        /* AI Credits Tab */
+        <>
+          <div className="text-center mb-12">
+            <h1 className="text-2xl font-semibold text-slate-800 tracking-tight mb-2">Top-up AI Credits</h1>
+            <p className="text-[14px] text-slate-400">Credits power AI chat, AI calls, and every AI feature. Valid for 12 months.</p>
+          </div>
+
+          {/* Featured credit packs — card grid matching plans style */}
+          <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-5 gap-3">
+            {CREDIT_PACKS.filter(p => [2, 4, 5, 7, 10].includes(p.tier)).map((pack) => {
+              const isFeatured = pack.isPopular;
+              return (
+                <div
+                  key={pack.tier}
+                  className={`relative flex flex-col rounded-2xl p-6 transition-all ${
+                    isFeatured
+                      ? 'border border-slate-900 shadow-[0_2px_12px_rgba(15,23,42,0.08)] bg-white'
+                      : 'bg-white border border-slate-200'
+                  }`}
+                >
+                  {isFeatured && (
+                    <div className="absolute -top-3 left-6">
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-slate-900 text-white text-[10px] font-semibold uppercase tracking-wider">
+                        Best value
+                      </span>
+                    </div>
+                  )}
+
+                  <div className="flex items-center gap-2 mb-5 mt-1">
+                    <span className={`text-[13px] font-semibold ${isFeatured ? 'text-amber-600' : 'text-slate-500'}`}>
+                      Tier {pack.tier}
+                    </span>
+                  </div>
+
+                  <div className="mb-1.5">
+                    <span className={`text-4xl font-semibold tracking-tight ${isFeatured ? 'text-slate-900' : 'text-slate-800'}`}>
+                      {pack.credits >= 1000 ? `${(pack.credits / 1000).toFixed(0)}K` : pack.credits}
+                    </span>
+                    <span className="text-[13px] text-slate-400 ml-1">credits</span>
+                  </div>
+
+                  <p className="text-[13px] text-slate-400 mb-6">${pack.price.toLocaleString()}</p>
+
+                  <button
+                    disabled
+                    className="w-full py-2.5 rounded-xl text-[13px] font-semibold border border-slate-200 text-slate-400 cursor-not-allowed opacity-50"
+                    title="Upgrade to a paid plan to buy credits"
+                  >
+                    Buy credits
+                  </button>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* All tiers expandable */}
+          <div className="mt-14 mb-4 flex justify-center">
+            <button
+              onClick={() => setShowComparison(!showComparison)}
+              className="flex items-center gap-1.5 text-[13px] font-medium text-slate-400 hover:text-slate-600 transition-colors"
+            >
+              See all 15 credit packs
+              <Icon icon="solar:alt-arrow-down-linear" width="14" className={`transition-transform duration-200 ${showComparison ? 'rotate-180' : ''}`} />
+            </button>
+          </div>
+
+          {showComparison && (
+            <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden mb-10">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b border-slate-100 bg-slate-50/50">
+                    <th className="text-left text-[11px] font-medium text-slate-400 uppercase tracking-wider px-5 py-3 w-16">#</th>
+                    <th className="text-left text-[11px] font-medium text-slate-400 uppercase tracking-wider px-4 py-3">Credits</th>
+                    <th className="text-right text-[11px] font-medium text-slate-400 uppercase tracking-wider px-4 py-3">Price</th>
+                    <th className="w-24 px-4 py-3"></th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-50">
+                  {CREDIT_PACKS.map((pack) => (
+                    <tr key={pack.tier} className={`hover:bg-slate-50/70 transition-colors ${pack.isPopular ? 'bg-amber-50/30' : ''}`}>
+                      <td className="px-5 py-3">
+                        <span className={`text-[13px] ${pack.isPopular ? 'text-amber-600 font-semibold' : 'text-slate-400 font-medium'}`}>
+                          {pack.tier}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3">
+                        <span className={`text-[13px] font-semibold ${pack.isPopular ? 'text-slate-900' : 'text-slate-700'}`}>
+                          {pack.credits.toLocaleString()}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3 text-right">
+                        <span className={`text-[13px] font-semibold ${pack.isPopular ? 'text-slate-900' : 'text-slate-700'}`}>
+                          ${pack.price.toLocaleString()}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3 text-right">
+                        <button
+                          disabled
+                          className="px-3 py-1.5 rounded-lg text-[11px] font-semibold bg-slate-100 text-slate-400 cursor-not-allowed opacity-50"
+                          title="Upgrade to a paid plan to buy credits"
+                        >
+                          Buy
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </>
+        )}
+
         {/* Footer */}
-        <p className="text-center text-[12px] text-slate-400 mb-8">
-          All plans include unlimited seats. Secure payment via Stripe. Cancel anytime.
+        <p className="text-center text-[12px] text-slate-400 mb-8 mt-10">
+          {activeTab === 'plans'
+            ? 'All plans include unlimited seats. Secure payment via Stripe. Cancel anytime.'
+            : 'One-time purchase. Available to paid plans only. Secure payment via Stripe.'}
         </p>
       </div>
     </div>

@@ -18,7 +18,7 @@ export default function PricingCard({ onViewPlans }: PricingCardProps) {
                   Current
                 </span>
               </div>
-              <p className="text-[13px] text-slate-400">100 contacts · 2 users · 0 AI credits</p>
+              <p className="text-[13px] text-slate-400">100 contacts · 2 users · CRM features only</p>
             </div>
           </div>
 
@@ -29,10 +29,10 @@ export default function PricingCard({ onViewPlans }: PricingCardProps) {
             </div>
             <button
               onClick={onViewPlans}
-              className="flex items-center gap-2 border border-slate-200 text-slate-600 hover:text-slate-800 hover:border-slate-300 hover:bg-slate-50 px-4 py-2 rounded-xl transition-all active:scale-[0.98]"
+              className="flex items-center gap-2 bg-slate-900 text-white hover:bg-slate-800 px-5 py-2.5 rounded-xl transition-all active:scale-[0.98] shadow-sm"
             >
-              <span className="text-[13px] font-medium">View Plans</span>
-              <Icon icon="solar:arrow-right-linear" width="14" className="text-slate-400" />
+              <span className="text-[13px] font-semibold">View Plans</span>
+              <Icon icon="solar:arrow-right-linear" width="14" />
             </button>
           </div>
         </div>

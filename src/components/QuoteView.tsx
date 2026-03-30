@@ -3,9 +3,10 @@ import { Icon } from '@iconify/react';
 
 interface QuoteViewProps {
   onBackToQuotes: () => void;
+  isFreeTier?: boolean;
 }
 
-export default function QuoteView({ onBackToQuotes }: QuoteViewProps) {
+export default function QuoteView({ onBackToQuotes, isFreeTier = false }: QuoteViewProps) {
   const [showActionMenu, setShowActionMenu] = useState(false);
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
   const [copiedLink, setCopiedLink] = useState(false);
@@ -145,6 +146,19 @@ export default function QuoteView({ onBackToQuotes }: QuoteViewProps) {
 
   return (
     <div className="min-h-screen bg-[#f7f7f8] flex flex-col relative">
+      {/* Branding watermark — top left */}
+      {isFreeTier && (
+        <a href="https://superproxy.com" target="_blank" rel="noopener noreferrer" className="fixed top-6 left-6 z-50 group">
+          <div className="flex items-center gap-2">
+            <img src="/superproxy-icon.png" alt="Superproxy" className="h-3.5 w-3.5 object-contain opacity-30 group-hover:opacity-50 transition-opacity" />
+            <div className="flex flex-col">
+              <span className="text-[10px] text-slate-400 font-medium leading-tight">Powered by <span className="text-slate-500">Superproxy</span></span>
+              <span className="text-[10px] text-amber-500/80 font-medium leading-tight group-hover:text-amber-600 transition-colors">Create yours free →</span>
+            </div>
+          </div>
+        </a>
+      )}
+
       <div className="fixed top-6 right-6 z-50 flex items-center gap-2">
         <button
           onClick={onBackToQuotes}
@@ -323,10 +337,11 @@ export default function QuoteView({ onBackToQuotes }: QuoteViewProps) {
               </div>
             </div>
 
-            <div className="px-12 md:px-16 py-4 bg-slate-50 border-t border-slate-200 flex justify-between items-center text-xs text-slate-500">
-              <span>Created from Superproxy.ai</span>
-              <span>Page 1 of 1</span>
-            </div>
+            {isFreeTier && (
+              <div className="px-12 md:px-16 py-4 bg-slate-50 flex items-center justify-center">
+                <span className="text-[11px] text-slate-400">Created with <span className="font-semibold text-slate-500">Superproxy</span> — Free plan</span>
+              </div>
+            )}
           </div>
         </div>
       </div>
