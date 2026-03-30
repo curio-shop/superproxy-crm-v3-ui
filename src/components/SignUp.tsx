@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Icon } from '@iconify/react';
 
 interface SignUpProps {
-  onSignUp: () => void;
+  onSignUp: (email: string) => void;
   onGoToSignIn: () => void;
 }
 
@@ -17,7 +17,7 @@ export default function SignUp({ onSignUp, onGoToSignIn }: SignUpProps) {
     setIsLoading(true);
     setTimeout(() => {
       setIsLoading(false);
-      onSignUp();
+      onSignUp(email);
     }, 800);
   };
 
@@ -35,7 +35,7 @@ export default function SignUp({ onSignUp, onGoToSignIn }: SignUpProps) {
         </div>
 
         <div className="relative z-10">
-          <img src="/superproxy-logo.png" alt="Superproxy" className="h-7 object-contain opacity-90" />
+          <img src="/superproxy-logo.png" alt="Superproxy" className="h-7 object-contain" style={{ filter: 'brightness(0) invert(1)', opacity: 0.8 }} />
         </div>
 
         <div className="relative z-10 space-y-6">
@@ -55,11 +55,11 @@ export default function SignUp({ onSignUp, onGoToSignIn }: SignUpProps) {
       {/* Right panel — form */}
       <div className="flex-1 flex items-center justify-center px-6 py-12 bg-white">
         <div className="w-full max-w-[380px]">
-          <div className="lg:hidden mb-10">
+          <div className="lg:hidden mb-10 flex justify-center">
             <img src="/superproxy-logo.png" alt="Superproxy" className="h-6 object-contain" />
           </div>
 
-          <div className="mb-8">
+          <div className="mb-8 text-center lg:text-left">
             <h2 className="text-2xl font-bold text-slate-900 tracking-tight mb-2">Create your account</h2>
             <p className="text-[14px] text-slate-400">Get started for free. No credit card required.</p>
           </div>

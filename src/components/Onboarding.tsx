@@ -56,7 +56,7 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
         </div>
 
         <div className="relative z-10">
-          <img src="/superproxy-logo.png" alt="Superproxy" className="h-7 object-contain opacity-90" />
+          <img src="/superproxy-logo.png" alt="Superproxy" className="h-7 object-contain" style={{ filter: 'brightness(0) invert(1)', opacity: 0.8 }} />
         </div>
 
         <div className="relative z-10 space-y-6">
@@ -85,7 +85,7 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
       <div className="flex-1 flex items-center justify-center px-6 py-12 bg-white">
         <div className="w-full max-w-[440px]">
           {/* Mobile logo + step */}
-          <div className="lg:hidden mb-10 flex items-center justify-between">
+          <div className="lg:hidden mb-10 flex flex-col items-center gap-2">
             <img src="/superproxy-logo.png" alt="Superproxy" className="h-6 object-contain" />
             <span className="text-[12px] text-slate-400 font-medium">Step {step} of 2</span>
           </div>
@@ -93,7 +93,7 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
           {step === 1 ? (
             /* Step 1 — Workspace */
             <div>
-              <div className="mb-8">
+              <div className="mb-8 text-center lg:text-left">
                 <h2 className="text-2xl font-bold text-slate-900 tracking-tight mb-2">How would you like to start?</h2>
                 <p className="text-[14px] text-slate-400">You can always change this later.</p>
               </div>
@@ -184,7 +184,7 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
           ) : (
             /* Step 2 — Discovery */
             <div>
-              <div className="mb-8">
+              <div className="mb-8 text-center lg:text-left">
                 <h2 className="text-2xl font-bold text-slate-900 tracking-tight mb-2">How did you find Superproxy?</h2>
                 <p className="text-[14px] text-slate-400">Select all that apply. This helps us improve.</p>
               </div>
@@ -202,7 +202,12 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
                           : 'border-slate-200 hover:border-slate-300 bg-white'
                       }`}
                     >
-                      <Icon icon={option.icon} width="16" className={isSelected ? option.color : 'text-slate-400'} />
+                      <Icon
+                        icon={option.icon}
+                        width="16"
+                        className={isSelected ? option.color : 'text-slate-400'}
+                        style={option.id === 'google' && !isSelected ? { filter: 'grayscale(1) opacity(0.4)' } : option.id === 'google' && isSelected ? { filter: 'none' } : undefined}
+                      />
                       <span className={`text-[13px] font-medium ${isSelected ? 'text-slate-800' : 'text-slate-500'}`}>
                         {option.label}
                       </span>
