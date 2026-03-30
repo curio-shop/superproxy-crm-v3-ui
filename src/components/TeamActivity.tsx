@@ -74,6 +74,18 @@ const activities: Activity[] = [
     iconColor: 'text-indigo-500',
     ringColor: 'ring-indigo-50/50',
   },
+  {
+    id: 6,
+    type: 'sent',
+    user: 'Marco Reyes',
+    action: 'sent email to',
+    target: 'logistics@buildcorp.ph',
+    time: '7d ago',
+    icon: 'solar:letter-bold',
+    iconBg: 'bg-white border-sky-100',
+    iconColor: 'text-sky-500',
+    ringColor: 'ring-sky-50/50',
+  },
 ];
 
 const activityTitles: Record<Activity['type'], string> = {
@@ -86,45 +98,87 @@ const activityTitles: Record<Activity['type'], string> = {
 
 interface TeamActivityProps {
   onViewFullActivity?: () => void;
+  isFreeTier?: boolean;
+  onUpgrade?: () => void;
 }
 
-export default function TeamActivity({ onViewFullActivity }: TeamActivityProps) {
+export default function TeamActivity({ onViewFullActivity, isFreeTier = false, onUpgrade }: TeamActivityProps) {
   return (
-    <div className="bg-white rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.04),0_8px_24px_rgba(0,0,0,0.03)] border border-slate-100/80 h-full flex flex-col">
+    <div className="bg-white rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.04),0_8px_24px_rgba(0,0,0,0.03)] border border-slate-100/80 h-full flex flex-col relative overflow-hidden">
       <div className="px-4 py-3.5 border-b border-slate-100 flex items-center justify-between">
         <h3 className="text-[13px] font-semibold text-slate-700">Team Activity</h3>
         <span className="text-[10px] text-slate-400">Live</span>
       </div>
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        {activities.map((activity) => (
-          <div key={activity.id} className="flex gap-3">
-            <div className="flex-shrink-0 mt-0.5">
-              <div className={`h-6 w-6 rounded-md ${activity.iconBg} flex items-center justify-center ${activity.iconColor}`}>
-                <Icon icon={activity.icon} width="12" />
+
+      {isFreeTier ? (
+        /* Free tier: show all real activities, bottom CTA disguised as "see more" */
+        <>
+          <div className="flex-1 overflow-y-auto p-4 space-y-4">
+            {activities.map((activity) => (
+              <div key={activity.id} className="flex gap-3">
+                <div className="flex-shrink-0 mt-0.5">
+                  <div className={`h-6 w-6 rounded-md ${activity.iconBg} flex items-center justify-center ${activity.iconColor}`}>
+                    <Icon icon={activity.icon} width="12" />
+                  </div>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between mb-0.5">
+                    <p className="text-[13px] font-medium text-slate-700">{activityTitles[activity.type]}</p>
+                    <span className="text-[10px] text-slate-400 flex-shrink-0">{activity.time}</span>
+                  </div>
+                  <p className="text-[12px] text-slate-400 leading-relaxed">
+                    <span className="text-slate-600 font-medium">{activity.user}</span>{' '}
+                    {activity.action} <span className="text-slate-500">{activity.target}</span>
+                    {activity.type === 'presentation' || activity.type === 'published' ? '.' : ''}
+                  </p>
+                </div>
               </div>
-            </div>
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center justify-between mb-0.5">
-                <p className="text-[13px] font-medium text-slate-700">{activityTitles[activity.type]}</p>
-                <span className="text-[10px] text-slate-400 flex-shrink-0">{activity.time}</span>
-              </div>
-              <p className="text-[12px] text-slate-400 leading-relaxed">
-                <span className="text-slate-600 font-medium">{activity.user}</span>{' '}
-                {activity.action} <span className="text-slate-500">{activity.target}</span>
-                {activity.type === 'presentation' || activity.type === 'published' ? '.' : ''}
-              </p>
-            </div>
+            ))}
           </div>
-        ))}
-      </div>
-      <div className="px-4 py-3 border-t border-slate-100">
-        <button
-          onClick={onViewFullActivity}
-          className="w-full py-2 rounded-xl text-[12px] font-medium text-slate-500 hover:text-slate-700 hover:bg-slate-50 transition-colors"
-        >
-          See all activity
-        </button>
-      </div>
+          <div className="px-4 py-3 border-t border-slate-100">
+            <button
+              onClick={onUpgrade}
+              className="w-full py-2 rounded-xl text-[12px] font-medium text-slate-500 hover:text-slate-700 hover:bg-slate-50 transition-colors"
+            >
+              See all activity
+            </button>
+          </div>
+        </>
+      ) : (
+        /* Normal tier: full activity feed */
+        <>
+          <div className="flex-1 overflow-y-auto p-4 space-y-4">
+            {activities.map((activity) => (
+              <div key={activity.id} className="flex gap-3">
+                <div className="flex-shrink-0 mt-0.5">
+                  <div className={`h-6 w-6 rounded-md ${activity.iconBg} flex items-center justify-center ${activity.iconColor}`}>
+                    <Icon icon={activity.icon} width="12" />
+                  </div>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between mb-0.5">
+                    <p className="text-[13px] font-medium text-slate-700">{activityTitles[activity.type]}</p>
+                    <span className="text-[10px] text-slate-400 flex-shrink-0">{activity.time}</span>
+                  </div>
+                  <p className="text-[12px] text-slate-400 leading-relaxed">
+                    <span className="text-slate-600 font-medium">{activity.user}</span>{' '}
+                    {activity.action} <span className="text-slate-500">{activity.target}</span>
+                    {activity.type === 'presentation' || activity.type === 'published' ? '.' : ''}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="px-4 py-3 border-t border-slate-100">
+            <button
+              onClick={onViewFullActivity}
+              className="w-full py-2 rounded-xl text-[12px] font-medium text-slate-500 hover:text-slate-700 hover:bg-slate-50 transition-colors"
+            >
+              See all activity
+            </button>
+          </div>
+        </>
+      )}
     </div>
   );
 }

@@ -501,7 +501,7 @@ export default function Sidebar({ activePage, onPageChange, currentWorkspace, on
           <span className="h-3 w-px bg-slate-200"></span>
           <button
             onClick={() => onPageChange('pricing')}
-            className="text-xs font-semibold text-indigo-600 hover:text-indigo-700 transition-colors"
+            className="text-xs font-semibold text-amber-500 hover:text-amber-600 transition-colors"
           >
             Upgrade
           </button>

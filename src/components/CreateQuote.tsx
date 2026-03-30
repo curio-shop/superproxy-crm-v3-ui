@@ -538,32 +538,34 @@ export default function CreateQuote({ onBack, onPublish }: CreateQuoteProps) {
                     >
                       <div
                         className={`w-5 h-5 rounded-md flex items-center justify-center text-[10px] font-bold transition-all ${
-                          isCompleted && !isActive
-                            ? 'bg-slate-800 text-white'
-                            : isActive
+                          isActive
+                            ? 'bg-amber-500 text-white'
+                            : isCompleted
                             ? 'bg-slate-800 text-white'
                             : 'bg-slate-200 text-slate-600'
                         }`}
                       >
-                        {step.id}
+                        {isCompleted && !isActive ? (
+                          <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5.5L4 7.5L8 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                        ) : step.id}
                       </div>
                       <span
                         className={`text-[12px] font-medium whitespace-nowrap transition-colors ${
                           isActive
-                            ? 'text-slate-800'
+                            ? 'text-amber-600'
                             : isCompleted
-                            ? 'text-slate-600'
+                            ? 'text-slate-700'
                             : 'text-slate-400'
                         }`}
                       >
                         {step.label}
                       </span>
                       {isActive && (
-                        <div className="absolute bottom-0 left-4 right-4 h-[2px] bg-slate-800 rounded-full" />
+                        <div className="absolute bottom-0 left-4 right-4 h-[2px] bg-amber-500 rounded-full" />
                       )}
                     </div>
                     {index < STEPS.length - 1 && (
-                      <div className="w-5 h-px bg-slate-200 flex-shrink-0" />
+                      <div className={`w-5 h-px flex-shrink-0 ${isCompleted ? 'bg-slate-400' : 'bg-slate-200'}`} />
                     )}
                   </div>
                 );

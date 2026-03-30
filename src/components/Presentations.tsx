@@ -17,9 +17,11 @@ interface PresentationsProps {
   onCloseRecordModal: () => void;
   onOpenRecordModal?: () => void;
   onDeletePresentation?: (presentation: Presentation) => void;
+  isFreeTier?: boolean;
+  onUpgrade?: () => void;
 }
 
-export default function Presentations({ showRecordModal, onCloseRecordModal, onOpenRecordModal, onDeletePresentation }: PresentationsProps) {
+export default function Presentations({ showRecordModal, onCloseRecordModal, onOpenRecordModal, onDeletePresentation, isFreeTier = false, onUpgrade }: PresentationsProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [filterType, setFilterType] = useState<FilterType>('all');
   const [scope, setScope] = useState<'all' | 'team' | 'personal'>('team');
@@ -180,7 +182,7 @@ export default function Presentations({ showRecordModal, onCloseRecordModal, onO
         />
       )}
 
-      {showRecordModal && <RecordPresentationModal onClose={onCloseRecordModal} />}
+      {showRecordModal && <RecordPresentationModal onClose={onCloseRecordModal} isFreeTier={isFreeTier} onUpgrade={onUpgrade} />}
     </div>
   );
 }

@@ -43,16 +43,54 @@ const revenueData = [
   { month: 'Dec', invoiced: 2100000, collected: 1890000 },
 ];
 
-function ChartCard() {
+// Flat placeholder data for free tier — renders as calm horizontal lines
+const flatPipelineData = [
+  { month: 'Jan', quotations: 45000, dealsWon: 30000 },
+  { month: 'Feb', quotations: 45000, dealsWon: 30000 },
+  { month: 'Mar', quotations: 45000, dealsWon: 30000 },
+  { month: 'Apr', quotations: 45000, dealsWon: 30000 },
+  { month: 'May', quotations: 45000, dealsWon: 30000 },
+  { month: 'Jun', quotations: 45000, dealsWon: 30000 },
+  { month: 'Jul', quotations: 45000, dealsWon: 30000 },
+  { month: 'Aug', quotations: 45000, dealsWon: 30000 },
+  { month: 'Sep', quotations: 45000, dealsWon: 30000 },
+  { month: 'Oct', quotations: 45000, dealsWon: 30000 },
+  { month: 'Nov', quotations: 45000, dealsWon: 30000 },
+  { month: 'Dec', quotations: 45000, dealsWon: 30000 },
+];
+
+const flatRevenueData = [
+  { month: 'Jan', invoiced: 45000, collected: 30000 },
+  { month: 'Feb', invoiced: 45000, collected: 30000 },
+  { month: 'Mar', invoiced: 45000, collected: 30000 },
+  { month: 'Apr', invoiced: 45000, collected: 30000 },
+  { month: 'May', invoiced: 45000, collected: 30000 },
+  { month: 'Jun', invoiced: 45000, collected: 30000 },
+  { month: 'Jul', invoiced: 45000, collected: 30000 },
+  { month: 'Aug', invoiced: 45000, collected: 30000 },
+  { month: 'Sep', invoiced: 45000, collected: 30000 },
+  { month: 'Oct', invoiced: 45000, collected: 30000 },
+  { month: 'Nov', invoiced: 45000, collected: 30000 },
+  { month: 'Dec', invoiced: 45000, collected: 30000 },
+];
+
+interface ChartCardProps {
+  isFreeTier?: boolean;
+  onUpgrade?: () => void;
+}
+
+function ChartCard({ isFreeTier = false, onUpgrade }: ChartCardProps) {
   const [fiscalYear, setFiscalYear] = useState('2026');
   const [isYearDropdownOpen, setIsYearDropdownOpen] = useState(false);
   const [activeView, setActiveView] = useState<ViewType>('pipeline');
   const [dateRange, setDateRange] = useState<DateRangeType>('12M');
 
-  const chartData = useMemo(() =>
-    activeView === 'pipeline' ? pipelineData : revenueData,
-    [activeView]
-  );
+  const chartData = useMemo(() => {
+    if (isFreeTier) {
+      return activeView === 'pipeline' ? flatPipelineData : flatRevenueData;
+    }
+    return activeView === 'pipeline' ? pipelineData : revenueData;
+  }, [activeView, isFreeTier]);
 
   const primaryLabel = activeView === 'pipeline' ? 'Quotations' : 'Invoiced';
   const secondaryLabel = activeView === 'pipeline' ? 'Deals Won' : 'Collected';
@@ -91,7 +129,7 @@ function ChartCard() {
   return (
     <div className="bg-white rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.04),0_8px_24px_rgba(0,0,0,0.03)] border border-slate-100/80 p-5 relative overflow-hidden flex-1 flex flex-col">
       {/* Header */}
-      <div className="mb-5 space-y-3">
+      <div className={`mb-5 space-y-3 ${isFreeTier ? 'opacity-[0.35] pointer-events-none select-none' : ''}`}>
         {/* Top row: title + date range with FY */}
         <div className="flex items-center justify-between">
           <h3 className="text-[13px] font-semibold text-slate-700">Performance</h3>
@@ -165,69 +203,93 @@ function ChartCard() {
             <div className="flex items-center gap-1.5">
               <div className="w-3 h-[2px] rounded-full bg-slate-800" />
               <span className="text-[11px] text-slate-500">{primaryLabel}</span>
-              <span className="text-[11px] font-semibold text-slate-700">+{metrics.primary}%</span>
+              {!isFreeTier && <span className="text-[11px] font-semibold text-slate-700">+{metrics.primary}%</span>}
             </div>
             <div className="flex items-center gap-1.5">
               <div className="w-3 h-[2px] rounded-full bg-slate-300" />
               <span className="text-[11px] text-slate-500">{secondaryLabel}</span>
-              <span className="text-[11px] font-semibold text-slate-700">+{metrics.secondary}%</span>
+              {!isFreeTier && <span className="text-[11px] font-semibold text-slate-700">+{metrics.secondary}%</span>}
             </div>
           </div>
         </div>
       </div>
 
       {/* Chart */}
-      <div className="flex-1 min-h-[240px] w-full -ml-2">
+      <div className="flex-1 min-h-[240px] w-full -ml-2 relative">
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={chartData} margin={{ top: 5, right: 10, left: 0, bottom: 0 }}>
             <defs>
               <linearGradient id="gradPrimary" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#1e293b" stopOpacity={0.06} />
+                <stop offset="0%" stopColor="#1e293b" stopOpacity={isFreeTier ? 0.03 : 0.06} />
                 <stop offset="100%" stopColor="#1e293b" stopOpacity={0} />
               </linearGradient>
               <linearGradient id="gradSecondary" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#94a3b8" stopOpacity={0.04} />
+                <stop offset="0%" stopColor="#94a3b8" stopOpacity={isFreeTier ? 0.02 : 0.04} />
                 <stop offset="100%" stopColor="#94a3b8" stopOpacity={0} />
               </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
+            <CartesianGrid strokeDasharray="3 3" stroke={isFreeTier ? '#f8fafc' : '#f1f5f9'} vertical={false} />
             <XAxis
               dataKey="month"
-              tick={{ fill: '#94a3b8', fontSize: 10 }}
+              tick={{ fill: isFreeTier ? '#cbd5e1' : '#94a3b8', fontSize: 10 }}
               axisLine={false}
               tickLine={false}
               dy={8}
             />
             <YAxis
-              tick={{ fill: '#94a3b8', fontSize: 10 }}
+              tick={{ fill: isFreeTier ? '#cbd5e1' : '#94a3b8', fontSize: 10 }}
               tickFormatter={formatYAxis}
               axisLine={false}
               tickLine={false}
               width={45}
             />
-            <Tooltip content={<CustomTooltip />} />
+            {!isFreeTier && <Tooltip content={<CustomTooltip />} />}
             <Area
               type="monotone"
               dataKey={activeView === 'pipeline' ? 'quotations' : 'invoiced'}
-              stroke="#1e293b"
-              strokeWidth={2}
+              stroke={isFreeTier ? '#e2e8f0' : '#1e293b'}
+              strokeWidth={isFreeTier ? 1.5 : 2}
               fill="url(#gradPrimary)"
               name={primaryLabel}
               dot={false}
-              activeDot={{ r: 4, fill: '#1e293b', stroke: '#ffffff', strokeWidth: 2 }}
+              activeDot={isFreeTier ? false : { r: 4, fill: '#1e293b', stroke: '#ffffff', strokeWidth: 2 }}
             />
             <Area
               type="monotone"
               dataKey={activeView === 'pipeline' ? 'dealsWon' : 'collected'}
-              stroke="#cbd5e1"
+              stroke={isFreeTier ? '#f1f5f9' : '#cbd5e1'}
               strokeWidth={1.5}
               fill="url(#gradSecondary)"
               name={secondaryLabel}
               dot={false}
-              activeDot={{ r: 4, fill: '#cbd5e1', stroke: '#ffffff', strokeWidth: 2 }}
+              activeDot={isFreeTier ? false : { r: 4, fill: '#cbd5e1', stroke: '#ffffff', strokeWidth: 2 }}
             />
           </AreaChart>
         </ResponsiveContainer>
+
+        {/* Free tier overlay CTA */}
+        {isFreeTier && (
+          <div className="absolute inset-0 flex flex-col items-center justify-center z-10">
+            <div className="text-center px-8 max-w-[320px]">
+              <div className="inline-flex items-center justify-center w-9 h-9 rounded-xl bg-gradient-to-b from-amber-50 to-orange-50 border border-amber-100/60 mb-3.5">
+                <Icon icon="solar:chart-2-bold-duotone" width="18" className="text-amber-500" />
+              </div>
+              <p className="text-[13px] font-medium text-slate-700 leading-snug mb-1">
+                View your performance analytics to stay one step ahead
+              </p>
+              <p className="text-[11px] text-slate-400 leading-relaxed mb-4">
+                Unlock pipeline and revenue trend insights
+              </p>
+              <button
+                onClick={onUpgrade}
+                className="group inline-flex items-center gap-1.5 px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white text-[12px] font-medium rounded-lg transition-all duration-200 shadow-[0_1px_3px_rgba(245,158,11,0.25),0_4px_12px_rgba(245,158,11,0.15)] hover:shadow-[0_2px_6px_rgba(245,158,11,0.3),0_8px_24px_rgba(245,158,11,0.2)]"
+              >
+                Upgrade Plan
+                <Icon icon="solar:arrow-right-linear" width="14" className="transition-transform duration-200 group-hover:translate-x-0.5" />
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

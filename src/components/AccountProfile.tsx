@@ -85,7 +85,9 @@ export default function AccountProfile({
   const [languageFilter, setLanguageFilter] = useState('all');
   const [playingVoiceId, setPlayingVoiceId] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const isVoiceLocked = true;
+  const isFreeTier = true;
+  const [gatedVoiceId, setGatedVoiceId] = useState<string | null>(null);
+  const gatedVoiceTimer = useRef<ReturnType<typeof setTimeout>>();
   const creditPacks = [
     {
       id: 'starter',
@@ -200,8 +202,7 @@ export default function AccountProfile({
 
   const handleVoicePreview = (voiceId: string, e: React.MouseEvent) => {
     e.stopPropagation();
-    if (isVoiceLocked) return;
-    
+
     // If already playing this voice, stop it
     if (playingVoiceId === voiceId) {
       if (audioRef.current) {
@@ -210,25 +211,35 @@ export default function AccountProfile({
       setPlayingVoiceId(null);
       return;
     }
-    
+
     // Stop current playback if any
     if (audioRef.current) {
       clearTimeout(audioRef.current as unknown as number);
     }
-    
-    // Auto-select this voice when previewing for intuitive UX
-    setSelectedVoice(voiceId);
-    
+
+    // Auto-select this voice when previewing (only if not free tier)
+    if (!isFreeTier) setSelectedVoice(voiceId);
+
     // Simulate playback - set playing state
     setPlayingVoiceId(voiceId);
-    
+
     // Auto-stop after 4 seconds (simulated playback duration)
     const timeoutId = setTimeout(() => {
       setPlayingVoiceId(null);
     }, 4000);
-    
+
     // Store timeout reference for cleanup
     audioRef.current = timeoutId as unknown as HTMLAudioElement;
+  };
+
+  const handleVoiceSelect = (voiceId: string) => {
+    if (isFreeTier) {
+      if (gatedVoiceTimer.current) clearTimeout(gatedVoiceTimer.current);
+      setGatedVoiceId(voiceId);
+      gatedVoiceTimer.current = setTimeout(() => setGatedVoiceId(null), 4000);
+      return;
+    }
+    setSelectedVoice(voiceId);
   };
 
   const handleAvatarUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -331,7 +342,6 @@ export default function AccountProfile({
     { id: 'preferences', label: 'Preferences', icon: 'solar:settings-minimalistic-linear' },
     { id: 'security', label: 'Security', icon: 'solar:shield-keyhole-linear' },
     { id: 'billing', label: 'Subscription', icon: 'solar:card-linear' },
-    { id: 'workspaces', label: 'Workspaces', icon: 'solar:buildings-2-linear' },
     { id: 'voice', label: 'AI Voice', icon: 'solar:microphone-3-linear' },
     { id: 'connectors', label: 'Connectors', icon: 'solar:plug-circle-linear' },
     { id: 'contact', label: 'Contact Us', icon: 'solar:chat-round-call-linear' },
@@ -362,8 +372,8 @@ export default function AccountProfile({
                     <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-slate-900"></div>
                   </div>
                 )}
-                <div className="absolute -bottom-1 -right-1 h-6 w-6 rounded-full bg-white flex items-center justify-center shadow-md ring-2 ring-blue-50">
-                  <Icon icon="solar:check-circle-bold" width="14" className="text-blue-600" />
+                <div className="absolute -bottom-1 -right-1 h-6 w-6 rounded-full bg-white flex items-center justify-center shadow-md ring-2 ring-amber-50">
+                  <Icon icon="solar:check-circle-bold" width="14" className="text-amber-500" />
                 </div>
               </div>
 
@@ -754,8 +764,8 @@ export default function AccountProfile({
                   <div className="p-6 space-y-3">
                     <button className="w-full flex items-center justify-between p-5 bg-slate-50 hover:bg-slate-100 rounded-xl transition-all group border border-slate-200">
                       <div className="flex items-center gap-4">
-                        <div className="h-12 w-12 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center">
-                          <Icon icon="solar:lock-password-linear" width="22" className="text-blue-600" />
+                        <div className="h-12 w-12 rounded-xl bg-amber-50 border border-amber-100 flex items-center justify-center">
+                          <Icon icon="solar:lock-password-linear" width="22" className="text-amber-600" />
                         </div>
                         <div className="text-left">
                           <h3 className="text-[13px] font-semibold text-slate-800 mb-0.5">Change Password</h3>
@@ -872,12 +882,12 @@ export default function AccountProfile({
                           key={pack.id}
                           className={`relative rounded-2xl border p-5 transition-all ${
                             pack.isPopular
-                              ? 'border-blue-500 bg-blue-50/60 shadow-md shadow-blue-500/10'
+                              ? 'border-amber-500 bg-amber-50/60 shadow-md shadow-amber-500/10'
                               : 'border-slate-200 bg-white hover:border-slate-300'
                           }`}
                         >
                           {pack.isPopular && (
-                            <span className="absolute top-4 right-4 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-semibold uppercase tracking-wider bg-blue-600 text-white">
+                            <span className="absolute top-4 right-4 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-semibold uppercase tracking-wider bg-amber-500 text-white">
                               <Icon icon="solar:star-linear" width="12" />
                               Most popular
                             </span>
@@ -894,7 +904,7 @@ export default function AccountProfile({
                           <button
                             className={`mt-5 w-full rounded-xl px-4 py-2.5 text-xs font-semibold transition-all ${
                               pack.isPopular
-                                ? 'bg-blue-600 text-white hover:bg-blue-700'
+                                ? 'bg-amber-500 text-white hover:bg-amber-600'
                                 : 'bg-slate-50 text-slate-700 hover:bg-slate-100'
                             }`}
                           >
@@ -1033,29 +1043,7 @@ export default function AccountProfile({
                     <p className="text-[11px] text-slate-400 mt-0.5">Choose the voice that represents your business in every sales conversation. You can change this anytime.</p>
                   </div>
 
-                  <div className="p-8 space-y-6">
-                    {isVoiceLocked && (
-                      <div className="flex items-start justify-between gap-4 p-4 border border-slate-200 rounded-2xl bg-slate-50/80">
-                        <div className="flex items-start gap-3">
-                          <div className="h-9 w-9 rounded-xl bg-white border border-slate-200 flex items-center justify-center flex-shrink-0">
-                            <Icon icon="solar:lock-keyhole-linear" width="18" className="text-slate-600" />
-                          </div>
-                          <div>
-                            <div className="text-[13px] font-semibold text-slate-800">AI credits required</div>
-                            <p className="text-xs text-slate-600 mt-0.5">
-                              Purchase AI credits to unlock voice selection and previews.
-                            </p>
-                          </div>
-                        </div>
-                        <button
-                          onClick={() => onTabChange('billing')}
-                          className="inline-flex items-center gap-2 px-4 py-2 text-xs font-semibold rounded-full bg-slate-900 text-white shadow-sm hover:bg-slate-800 transition-all flex-shrink-0"
-                        >
-                          <Icon icon="solar:wallet-linear" width="16" />
-                          Buy AI Credits
-                        </button>
-                      </div>
-                    )}
+                  <div className="p-8 space-y-6 relative">
 
                     {/* Language Filter */}
                     <div className="max-w-xs">
@@ -1077,41 +1065,41 @@ export default function AccountProfile({
                       {filteredVoices.map((voice) => (
                         <div
                           key={voice.id}
-                          onClick={isVoiceLocked ? undefined : () => setSelectedVoice(voice.id)}
-                          className={`p-4 rounded-2xl border transition-all duration-200 ${
-                            isVoiceLocked
-                              ? selectedVoice === voice.id
-                                ? 'border-slate-300 bg-slate-50 cursor-not-allowed opacity-75'
-                                : 'border-slate-200 bg-white cursor-not-allowed opacity-70'
-                              : selectedVoice === voice.id
-                              ? 'border-purple-400 bg-purple-50/30 cursor-pointer'
-                              : 'border-slate-200 bg-white hover:border-slate-300 cursor-pointer'
+                          onClick={() => handleVoiceSelect(voice.id)}
+                          className={`p-4 rounded-2xl border transition-all duration-200 cursor-pointer ${
+                            selectedVoice === voice.id
+                              ? 'border-amber-400 bg-amber-50/30'
+                              : 'border-slate-200 bg-white hover:border-slate-300'
                           }`}
                         >
                           <div className="flex items-center justify-between">
                             {/* Left: Radio + Voice Info */}
                             <div className="flex items-center gap-3 flex-1 min-w-0">
-                              {/* Radio Button - Inverted */}
+                              {/* Radio Button */}
                               <div
                                 className={`w-5 h-5 rounded-full border flex items-center justify-center flex-shrink-0 transition-all ${
-                                  isVoiceLocked
-                                    ? selectedVoice === voice.id
-                                      ? 'border-slate-400 bg-white'
-                                      : 'border-slate-300 bg-white'
-                                    : selectedVoice === voice.id
-                                    ? 'border-purple-400 bg-white'
+                                  selectedVoice === voice.id
+                                    ? 'border-amber-400 bg-white'
                                     : 'border-slate-300 bg-white'
                                 }`}
                               >
                                 {selectedVoice === voice.id && (
-                                  <div className={`w-3 h-3 rounded-full ${isVoiceLocked ? 'bg-slate-400' : 'bg-purple-600'}`}></div>
+                                  <div className="w-3 h-3 rounded-full bg-amber-500"></div>
                                 )}
                               </div>
-                              
+
                               {/* Voice Details */}
                               <div className="flex-1 min-w-0">
-                                <div className="text-[13px] font-semibold text-slate-800">
-                                  {voice.name} - {voice.role}
+                                <div className="flex items-center gap-2 flex-wrap">
+                                  <span className="text-[13px] font-semibold text-slate-800">{voice.name} - {voice.role}</span>
+                                  {gatedVoiceId === voice.id && (
+                                    <span className="inline-flex items-center gap-1 text-[11px] text-amber-600 font-medium animate-in fade-in duration-200">
+                                      <Icon icon="solar:lock-keyhole-minimalistic-linear" width="11" className="text-amber-500" />
+                                      <button onClick={(e) => { e.stopPropagation(); onViewPlans?.(); }} className="underline hover:text-amber-700 transition-colors">
+                                        Upgrade to unlock
+                                      </button>
+                                    </span>
+                                  )}
                                 </div>
                                 <div className="text-xs text-slate-600 mt-0.5">
                                   {voice.language} • {voice.gender} • {voice.age}
@@ -1121,26 +1109,23 @@ export default function AccountProfile({
                                 </div>
                               </div>
                             </div>
-                            
+
                             {/* Right: Preview Button */}
                             <button
                               onClick={(e) => handleVoicePreview(voice.id, e)}
-                              disabled={isVoiceLocked}
                               className={`flex items-center gap-1.5 px-4 py-2 text-xs font-semibold rounded-full transition-all flex-shrink-0 ml-4 ${
-                                isVoiceLocked
-                                  ? 'bg-slate-100 text-slate-400 cursor-not-allowed'
-                                  : playingVoiceId === voice.id
-                                  ? 'bg-purple-600 text-white shadow-sm hover:bg-purple-700'
+                                playingVoiceId === voice.id
+                                  ? 'bg-amber-500 text-white shadow-sm hover:bg-amber-600'
                                   : selectedVoice === voice.id
-                                  ? 'bg-purple-100 text-purple-700 hover:bg-purple-200'
+                                  ? 'bg-amber-100 text-amber-700 hover:bg-amber-200'
                                   : 'bg-slate-50 text-slate-600 hover:bg-slate-100 hover:text-slate-700'
                               }`}
                             >
-                              <Icon 
-                                icon={isVoiceLocked ? "solar:lock-linear" : playingVoiceId === voice.id ? "solar:pause-circle-bold" : "solar:play-circle-linear"} 
-                                width="16" 
+                              <Icon
+                                icon={playingVoiceId === voice.id ? "solar:pause-circle-bold" : "solar:play-circle-linear"}
+                                width="16"
                               />
-                              {isVoiceLocked ? 'Locked' : playingVoiceId === voice.id ? 'Playing...' : 'Preview'}
+                              {playingVoiceId === voice.id ? 'Playing...' : 'Preview'}
                             </button>
                           </div>
                         </div>
@@ -1148,12 +1133,12 @@ export default function AccountProfile({
                     </div>
 
                     {/* Info Note */}
-                    <div className="flex items-start gap-3 p-4 bg-purple-50/50 border border-purple-100 rounded-xl max-w-3xl">
-                      <Icon icon="solar:microphone-linear" width="20" className="text-purple-600 flex-shrink-0 mt-0.5" />
+                    <div className="flex items-start gap-3 p-4 bg-indigo-50/50 border border-indigo-100 rounded-xl max-w-3xl">
+                      <Icon icon="solar:microphone-linear" width="20" className="text-indigo-600 flex-shrink-0 mt-0.5" />
                       <p className="text-xs text-slate-600 leading-relaxed">
-                        {isVoiceLocked
-                          ? 'Buying credits unlocks voice previews and gives you access to AI calls and Ask AI.'
-                          : 'Your selected voice will be used across all call types (cold calls, follow-ups, and payment reminders)'}
+                        {isFreeTier
+                          ? 'Preview any voice freely. Upgrade your plan to set your preferred voice for AI calls and conversations.'
+                          : 'Your selected voice will be used across all call types (cold calls, follow-ups, and payment reminders).'}
                       </p>
                     </div>
                   </div>
@@ -1251,8 +1236,8 @@ export default function AccountProfile({
               <div className="space-y-6">
                 <div className="bg-gradient-to-br from-slate-50 to-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
                   <div className="p-8 text-center">
-                    <div className="inline-flex items-center justify-center h-16 w-16 rounded-2xl bg-blue-50 border border-blue-100 mb-4">
-                      <Icon icon="solar:chat-round-call-bold" width="32" className="text-blue-600" />
+                    <div className="inline-flex items-center justify-center h-16 w-16 rounded-2xl bg-amber-50 border border-amber-100 mb-4">
+                      <Icon icon="solar:chat-round-call-bold" width="32" className="text-amber-600" />
                     </div>
                     <h2 className="text-2xl font-bold text-slate-900 mb-3">We're Here to Help</h2>
                     <p className="text-slate-600 max-w-xl mx-auto leading-relaxed">
@@ -1275,7 +1260,7 @@ export default function AccountProfile({
                           type="text"
                           value={`${profileData.firstName} ${profileData.lastName}`}
                           readOnly
-                          className="w-full px-4 py-3 border border-slate-200 rounded-xl bg-slate-50 text-[13px] cursor-not-allowed text-slate-500"
+                          className="w-full px-4 py-3 border border-slate-200 rounded-xl bg-slate-50 text-[13px] cursor-not-allowed text-slate-500 focus:outline-none"
                         />
                       </div>
 
@@ -1285,7 +1270,7 @@ export default function AccountProfile({
                           type="email"
                           value={profileData.email}
                           readOnly
-                          className="w-full px-4 py-3 border border-slate-200 rounded-xl bg-slate-50 text-[13px] cursor-not-allowed text-slate-500"
+                          className="w-full px-4 py-3 border border-slate-200 rounded-xl bg-slate-50 text-[13px] cursor-not-allowed text-slate-500 focus:outline-none"
                         />
                       </div>
                     </div>
@@ -1318,7 +1303,7 @@ export default function AccountProfile({
                         value={contactForm.message}
                         onChange={(e) => setContactForm({ ...contactForm, message: e.target.value })}
                         disabled={isSubmittingContact}
-                        className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 text-[13px] resize-none disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:border-slate-400 text-[13px] transition-colors resize-none disabled:opacity-50 disabled:cursor-not-allowed"
                         rows={6}
                         maxLength={500}
                         placeholder="Describe your question or issue in detail..."
@@ -1332,55 +1317,59 @@ export default function AccountProfile({
                       </div>
                     </div>
 
-                    <div>
-                      <label className="block text-[13px] font-semibold text-slate-800 mb-3">Priority</label>
-                      <div className="flex items-center gap-4">
-                        <button
-                          type="button"
-                          onClick={() => setContactForm({ ...contactForm, priority: 'normal' })}
-                          disabled={isSubmittingContact}
-                          className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl border-2 text-[13px] font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed ${
-                            contactForm.priority === 'normal'
-                              ? 'border-slate-900 bg-slate-900 text-white'
-                              : 'border-slate-200 bg-white text-slate-600 hover:border-slate-300'
-                          }`}
-                        >
-                          <Icon icon="solar:chat-round-line-linear" width="18" />
-                          Normal
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => setContactForm({ ...contactForm, priority: 'urgent' })}
-                          disabled={isSubmittingContact}
-                          className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl border-2 text-[13px] font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed ${
-                            contactForm.priority === 'urgent'
-                              ? 'border-amber-500 bg-amber-500 text-white'
-                              : 'border-slate-200 bg-white text-slate-600 hover:border-slate-300'
-                          }`}
-                        >
-                          <Icon icon="solar:danger-triangle-linear" width="18" />
-                          Urgent
-                        </button>
+                    <div className="flex items-end justify-between gap-4">
+                      {/* Priority selector */}
+                      <div>
+                        <label className="block text-[13px] font-semibold text-slate-800 mb-2">Priority</label>
+                        <div className="flex items-center bg-slate-100 rounded-lg p-0.5">
+                          <button
+                            type="button"
+                            onClick={() => setContactForm({ ...contactForm, priority: 'normal' })}
+                            disabled={isSubmittingContact}
+                            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-[12px] font-medium transition-all disabled:opacity-50 ${
+                              contactForm.priority === 'normal'
+                                ? 'bg-white text-slate-800 shadow-sm'
+                                : 'text-slate-400 hover:text-slate-600'
+                            }`}
+                          >
+                            <Icon icon="solar:chat-round-line-linear" width="14" />
+                            Normal
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setContactForm({ ...contactForm, priority: 'urgent' })}
+                            disabled={isSubmittingContact}
+                            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-[12px] font-medium transition-all disabled:opacity-50 ${
+                              contactForm.priority === 'urgent'
+                                ? 'bg-white text-amber-600 shadow-sm'
+                                : 'text-slate-400 hover:text-slate-600'
+                            }`}
+                          >
+                            <Icon icon="solar:danger-triangle-linear" width="14" />
+                            Urgent
+                          </button>
+                        </div>
                       </div>
-                    </div>
 
-                    <button
-                      type="submit"
-                      disabled={isSubmittingContact || !contactForm.message.trim()}
-                      className="w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-slate-900 text-white rounded-xl text-[13px] font-semibold hover:bg-slate-800 transition-all shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                      {isSubmittingContact ? (
-                        <>
-                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                          <span>Sending...</span>
-                        </>
-                      ) : (
-                        <>
-                          <Icon icon="solar:letter-bold" width="18" />
-                          <span>Send Message</span>
-                        </>
-                      )}
-                    </button>
+                      {/* Send button */}
+                      <button
+                        type="submit"
+                        disabled={isSubmittingContact || !contactForm.message.trim()}
+                        className="inline-flex items-center gap-2 px-5 py-2 bg-slate-900 text-white rounded-xl text-[12px] font-semibold hover:bg-slate-800 transition-all shadow-sm disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98]"
+                      >
+                        {isSubmittingContact ? (
+                          <>
+                            <div className="animate-spin rounded-full h-3.5 w-3.5 border-b-2 border-white"></div>
+                            Sending...
+                          </>
+                        ) : (
+                          <>
+                            Send Message
+                            <Icon icon="solar:arrow-right-linear" width="14" />
+                          </>
+                        )}
+                      </button>
+                    </div>
                   </form>
                 </div>
 
@@ -1400,7 +1389,7 @@ export default function AccountProfile({
                         <p className="text-[11px] text-slate-400 mb-2">Send us an email directly</p>
                         <a
                           href="mailto:support@superproxy.ai"
-                          className="inline-flex items-center gap-1.5 text-[13px] font-semibold text-blue-600 hover:text-blue-700 transition-colors"
+                          className="inline-flex items-center gap-1.5 text-[13px] font-semibold text-amber-600 hover:text-amber-700 transition-colors"
                         >
                           support@superproxy.ai
                           <Icon icon="solar:arrow-right-up-linear" width="14" />
@@ -1418,9 +1407,9 @@ export default function AccountProfile({
                       </button>
                     </div>
 
-                    <div className="flex items-start gap-4 p-4 bg-gradient-to-br from-blue-50 to-emerald-50/30 rounded-xl border border-blue-100">
-                      <div className="h-11 w-11 rounded-xl bg-white border border-blue-200 flex items-center justify-center flex-shrink-0 shadow-sm">
-                        <Icon icon="solar:chat-round-dots-bold" width="20" className="text-blue-600" />
+                    <div className="flex items-start gap-4 p-4 bg-gradient-to-br from-amber-50 to-orange-50/30 rounded-xl border border-amber-100">
+                      <div className="h-11 w-11 rounded-xl bg-white border border-amber-200 flex items-center justify-center flex-shrink-0 shadow-sm">
+                        <Icon icon="solar:chat-round-dots-bold" width="20" className="text-amber-600" />
                       </div>
                       <div className="flex-1">
                         <h3 className="text-[13px] font-semibold text-slate-800 mb-1">Live Chat Support</h3>
@@ -1460,7 +1449,7 @@ export default function AccountProfile({
                 Thank you for contacting us. We've received your message and will respond to <span className="font-semibold text-slate-900">{profileData.email}</span> within 24 hours.
               </p>
 
-              <div className="w-full bg-blue-50 border border-blue-200 rounded-xl p-4 mb-6">
+              <div className="w-full bg-amber-50 border border-amber-200 rounded-xl p-4 mb-6">
                 <div className="flex items-center justify-between mb-1">
                   <span className="text-xs font-semibold text-slate-600">Your Ticket Number</span>
                   <button
@@ -1468,7 +1457,7 @@ export default function AccountProfile({
                       navigator.clipboard.writeText(ticketNumber);
                       alert('Ticket number copied to clipboard!');
                     }}
-                    className="text-xs font-semibold text-blue-600 hover:text-blue-700 transition-colors"
+                    className="text-xs font-semibold text-amber-600 hover:text-amber-700 transition-colors"
                   >
                     Copy
                   </button>

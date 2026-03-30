@@ -92,7 +92,7 @@ export default function SupportChatDialog({ isOpen, onClose, userId, userName }:
         className="fixed bottom-24 right-6 w-[380px] h-[550px] bg-white shadow-2xl flex flex-col rounded-2xl border border-slate-200 animate-in slide-in-from-bottom-8 fade-in duration-300"
         style={{ zIndex: Z_INDEX.chatDialog + 1 }}
       >
-        <div className="bg-gradient-to-r from-indigo-600 to-indigo-700 text-white p-4 flex items-center gap-3 rounded-t-2xl">
+        <div className="bg-gradient-to-r from-slate-800 to-slate-900 text-white p-4 flex items-center gap-3 rounded-t-2xl">
           <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
             <Icon icon="solar:chat-round-dots-bold" width="20" />
           </div>
@@ -100,7 +100,7 @@ export default function SupportChatDialog({ isOpen, onClose, userId, userName }:
             <h2 className="text-base font-semibold">Chat With Our Team</h2>
             <div className="flex items-center gap-1.5">
               <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-              <p className="text-xs text-blue-100">Online</p>
+              <p className="text-xs text-slate-400">Online</p>
             </div>
           </div>
         </div>
@@ -142,7 +142,7 @@ export default function SupportChatDialog({ isOpen, onClose, userId, userName }:
                                 className="w-7 h-7 rounded-full object-cover"
                               />
                             ) : (
-                              <div className="w-7 h-7 rounded-full bg-gradient-to-br from-indigo-600 to-indigo-700 flex items-center justify-center text-white text-xs font-semibold shadow-sm">
+                              <div className="w-7 h-7 rounded-full bg-gradient-to-br from-slate-700 to-slate-800 flex items-center justify-center text-white text-xs font-semibold shadow-sm">
                                 {msg.sender_name.charAt(0)}
                               </div>
                             )}
@@ -155,7 +155,7 @@ export default function SupportChatDialog({ isOpen, onClose, userId, userName }:
                           <div
                             className={`rounded-2xl px-4 py-2.5 ${
                               msg.sender_type === 'user'
-                                ? 'bg-gradient-to-br from-indigo-600 to-indigo-700 text-white shadow-md'
+                                ? 'bg-slate-800 text-white shadow-md'
                                 : 'bg-white text-slate-800 shadow-sm border border-slate-200'
                             }`}
                           >
@@ -186,7 +186,7 @@ export default function SupportChatDialog({ isOpen, onClose, userId, userName }:
                 value={newMessage}
                 onChange={(e) => setNewMessage(e.target.value)}
                 placeholder="Type your message..."
-                className="w-full px-4 py-3 pr-12 border border-slate-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm transition-all"
+                className="w-full px-4 py-3 pr-12 border border-slate-300 rounded-2xl focus:outline-none focus:border-slate-400 text-sm transition-colors"
                 disabled={isSending}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' && !e.shiftKey) {

@@ -9,6 +9,8 @@ interface RecordPresentationModalProps {
   preSelectedId?: string;
   documentNumber?: string;
   documentTitle?: string;
+  isFreeTier?: boolean;
+  onUpgrade?: () => void;
 }
 
 type RecordingStep = 'select' | 'configure' | 'presentation-mode';
@@ -16,7 +18,7 @@ type CameraView = 'thumbnail' | 'full-camera' | null;
 
 const PLACEHOLDER_PHOTO = 'https://ryuxwkawbokdgvkiwzqd.supabase.co/storage/v1/object/public/site-asset/iStock-1198252585%20(1).jpg';
 
-export default function RecordPresentationModal({ onClose, preSelectedType, preSelectedId, documentNumber, documentTitle }: RecordPresentationModalProps) {
+export default function RecordPresentationModal({ onClose, preSelectedType, preSelectedId, documentNumber, documentTitle, isFreeTier = false, onUpgrade }: RecordPresentationModalProps) {
   const [currentStep, setCurrentStep] = useState<RecordingStep>(preSelectedType ? 'configure' : 'select');
   const [selectedType, setSelectedType] = useState<'quote' | 'invoice' | null>(preSelectedType || null);
   const [selectedDocument, setSelectedDocument] = useState(preSelectedId || '');
@@ -37,7 +39,7 @@ export default function RecordPresentationModal({ onClose, preSelectedType, preS
   ];
 
   const handleStartPresentation = () => {
-    alert('Presentation setup complete! Recording would start here in the full version.');
+    alert('Walkthrough setup complete! Recording would start here in the full version.');
     onClose();
   };
 
@@ -46,11 +48,11 @@ export default function RecordPresentationModal({ onClose, preSelectedType, preS
       <div className="w-full max-w-2xl bg-white rounded-3xl border border-white/50 overflow-hidden shadow-2xl animate-in fade-in zoom-in-95 duration-300">
         <div className="flex items-center justify-between px-6 py-5 border-b border-slate-100 bg-slate-50/50">
           <div>
-            <h2 className="text-xl font-bold text-slate-900 tracking-tight">Record New Presentation</h2>
+            <h2 className="text-xl font-bold text-slate-900 tracking-tight">Record New Walkthrough</h2>
             <p className="text-sm text-slate-500">
               {currentStep === 'select' && 'Select document type'}
-              {currentStep === 'configure' && 'Configure recording settings'}
-              {currentStep === 'presentation-mode' && `Select how you want to present your ${selectedType}. You can switch views during recording.`}
+              {currentStep === 'configure' && 'Configure walkthrough settings'}
+              {currentStep === 'presentation-mode' && `Select how you want to walk through your ${selectedType}. You can switch views during recording.`}
             </p>
           </div>
 
@@ -73,16 +75,16 @@ export default function RecordPresentationModal({ onClose, preSelectedType, preS
                       setSelectedType('quote');
                       setCurrentStep('configure');
                     }}
-                    className="group relative overflow-hidden p-6 bg-white hover:bg-slate-50 border-2 border-slate-200 hover:border-blue-300 rounded-2xl transition-all duration-300 hover:shadow-lg active:scale-[0.98]"
+                    className="group relative overflow-hidden p-6 bg-white hover:bg-slate-50 border-2 border-slate-200 hover:border-amber-300 rounded-2xl transition-all duration-300 hover:shadow-lg active:scale-[0.98]"
                   >
-                    <div className="absolute top-0 right-0 w-24 h-24 bg-blue-400/5 blur-2xl rounded-full transition-opacity opacity-0 group-hover:opacity-100"></div>
+                    <div className="absolute top-0 right-0 w-24 h-24 bg-amber-400/5 blur-2xl rounded-full transition-opacity opacity-0 group-hover:opacity-100"></div>
                     <div className="relative flex flex-col items-center text-center space-y-3">
-                      <div className="w-14 h-14 bg-blue-50 group-hover:bg-blue-100 border border-blue-200 rounded-xl flex items-center justify-center transition-all duration-300">
-                        <Icon icon="solar:document-text-linear" className="w-7 h-7 text-blue-600" />
+                      <div className="w-14 h-14 bg-amber-50 group-hover:bg-amber-100 border border-amber-200 rounded-xl flex items-center justify-center transition-all duration-300">
+                        <Icon icon="solar:document-text-linear" className="w-7 h-7 text-amber-600" />
                       </div>
                       <div>
-                        <p className="text-base font-bold text-slate-900 mb-1">Quote Presentation</p>
-                        <p className="text-xs text-slate-500 leading-relaxed">Create a presentation for a quote</p>
+                        <p className="text-base font-bold text-slate-900 mb-1">Quote Walkthrough</p>
+                        <p className="text-xs text-slate-500 leading-relaxed">Create a walkthrough for a quote</p>
                       </div>
                     </div>
                   </button>
@@ -100,8 +102,8 @@ export default function RecordPresentationModal({ onClose, preSelectedType, preS
                         <Icon icon="solar:bill-list-linear" className="w-7 h-7 text-emerald-600" />
                       </div>
                       <div>
-                        <p className="text-base font-bold text-slate-900 mb-1">Invoice Presentation</p>
-                        <p className="text-xs text-slate-500 leading-relaxed">Create a presentation for an invoice</p>
+                        <p className="text-base font-bold text-slate-900 mb-1">Invoice Walkthrough</p>
+                        <p className="text-xs text-slate-500 leading-relaxed">Create a walkthrough for an invoice</p>
                       </div>
                     </div>
                   </button>
@@ -112,15 +114,15 @@ export default function RecordPresentationModal({ onClose, preSelectedType, preS
 
           {currentStep === 'configure' && selectedType && (
             <div className="space-y-6">
-              <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-50 via-white to-blue-50/30 border border-blue-100/60 shadow-sm">
+              <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-amber-50/60 via-white to-amber-50/20 border border-amber-100/60 shadow-sm">
                 <div className="flex items-start gap-4 p-5">
-                  <div className="shrink-0 flex items-center justify-center w-10 h-10 rounded-xl bg-blue-600 shadow-lg shadow-blue-600/30">
+                  <div className="shrink-0 flex items-center justify-center w-10 h-10 rounded-xl bg-amber-500 shadow-lg shadow-amber-500/30">
                     <Icon icon="solar:videocamera-record-linear" className="w-5 h-5 text-white" />
                   </div>
                   <div className="flex-1 min-w-0 space-y-1">
-                    <h4 className="text-sm font-bold text-slate-900">Present with Confidence</h4>
+                    <h4 className="text-sm font-bold text-slate-900">Walk Them Through It</h4>
                     <p className="text-[13px] text-slate-600 leading-relaxed">
-                      Create personalized video presentations that showcase your quotes and invoices in an engaging way. Help your clients understand the value you're offering with a face-to-face experience.
+                      Create personalized video walkthroughs that showcase your quotes and invoices in an engaging way. Help your clients understand the value you're offering with a face-to-face experience.
                     </p>
                   </div>
                 </div>
@@ -151,7 +153,7 @@ export default function RecordPresentationModal({ onClose, preSelectedType, preS
                   <select
                     value={selectedDocument}
                     onChange={(e) => setSelectedDocument(e.target.value)}
-                    className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-900 text-sm focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all hover:border-slate-300 hover:shadow-sm"
+                    className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-900 text-sm focus:outline-none focus:border-amber-500 focus:ring-4 focus:ring-amber-500/10 transition-all hover:border-slate-300 hover:shadow-sm"
                   >
                     <option value="">Choose a {selectedType}...</option>
                     {(selectedType === 'quote' ? mockQuotes : mockInvoices).map((doc) => (
@@ -164,7 +166,7 @@ export default function RecordPresentationModal({ onClose, preSelectedType, preS
               </div>
 
               <div>
-                <label className="block text-sm font-bold text-slate-900 mb-3">Recording Settings</label>
+                <label className="block text-sm font-bold text-slate-900 mb-3">Walkthrough Settings</label>
                 <div className="space-y-3">
                   <div className="flex items-center justify-between p-4 bg-white border border-slate-200 rounded-xl hover:border-slate-300 hover:shadow-sm transition-all">
                     <div className="flex items-center gap-3">
@@ -179,7 +181,7 @@ export default function RecordPresentationModal({ onClose, preSelectedType, preS
                     <button
                       onClick={() => setWebcamEnabled(!webcamEnabled)}
                       className={`relative w-12 h-6 rounded-full transition-all duration-300 ${
-                        webcamEnabled ? 'bg-blue-600' : 'bg-slate-300'
+                        webcamEnabled ? 'bg-amber-500' : 'bg-slate-300'
                       }`}
                     >
                       <div
@@ -203,7 +205,7 @@ export default function RecordPresentationModal({ onClose, preSelectedType, preS
                     <button
                       onClick={() => setMicEnabled(!micEnabled)}
                       className={`relative w-12 h-6 rounded-full transition-all duration-300 ${
-                        micEnabled ? 'bg-blue-600' : 'bg-slate-300'
+                        micEnabled ? 'bg-amber-500' : 'bg-slate-300'
                       }`}
                     >
                       <div
@@ -244,13 +246,13 @@ export default function RecordPresentationModal({ onClose, preSelectedType, preS
                     onClick={() => setCameraView('thumbnail')}
                     className={`group relative overflow-hidden p-5 bg-white rounded-2xl transition-all duration-300 hover:shadow-lg active:scale-[0.98] ${
                       cameraView === 'thumbnail'
-                        ? 'border-2 border-blue-500 shadow-lg shadow-blue-500/20'
+                        ? 'border-2 border-amber-400 shadow-lg shadow-amber-400/20'
                         : 'border-2 border-slate-200 hover:border-slate-300'
                     }`}
                   >
                     <div className="aspect-video bg-gradient-to-br from-slate-50 to-slate-100 rounded-xl mb-4 overflow-hidden relative border border-slate-200/60 flex items-center justify-center">
                       <div className="w-[70%] h-[85%] bg-white rounded-lg shadow-sm flex flex-col items-center justify-center gap-2.5 p-3.5">
-                        <div className="w-full h-2 bg-blue-500 rounded-full"></div>
+                        <div className="w-full h-2 bg-amber-400 rounded-full"></div>
                         <div className="w-full space-y-1.5">
                           <div className="w-4/5 h-1.5 bg-slate-200 rounded-full"></div>
                           <div className="w-3/5 h-1.5 bg-slate-200 rounded-full"></div>
@@ -259,7 +261,7 @@ export default function RecordPresentationModal({ onClose, preSelectedType, preS
                         <div className="w-full space-y-1.5">
                           <div className="w-2/5 h-1.5 bg-slate-200 rounded-full"></div>
                         </div>
-                        <div className="w-full h-6 bg-blue-500 rounded"></div>
+                        <div className="w-full h-6 bg-amber-400 rounded"></div>
                       </div>
                       <div className="absolute top-4 right-4 w-16 h-12 rounded-lg border-2 border-white shadow-lg overflow-hidden">
                         <img
@@ -272,7 +274,7 @@ export default function RecordPresentationModal({ onClose, preSelectedType, preS
                     <div className="text-left space-y-1.5">
                       <h4 className="text-base font-bold text-slate-900">Thumbnail View</h4>
                       <p className="text-xs text-slate-500 leading-relaxed">
-                        Show your {selectedType} with your camera in a thumbnail overlay. Best for walking clients through details.
+                        Show your {selectedType} with your camera in a thumbnail overlay. Best for walking clients through the details.
                       </p>
                     </div>
                   </button>
@@ -281,7 +283,7 @@ export default function RecordPresentationModal({ onClose, preSelectedType, preS
                     onClick={() => setCameraView('full-camera')}
                     className={`group relative overflow-hidden p-5 bg-white rounded-2xl transition-all duration-300 hover:shadow-lg active:scale-[0.98] ${
                       cameraView === 'full-camera'
-                        ? 'border-2 border-blue-500 shadow-lg shadow-blue-500/20'
+                        ? 'border-2 border-amber-400 shadow-lg shadow-amber-400/20'
                         : 'border-2 border-slate-200 hover:border-slate-300'
                     }`}
                   >
@@ -295,28 +297,62 @@ export default function RecordPresentationModal({ onClose, preSelectedType, preS
                     <div className="text-left space-y-1.5">
                       <h4 className="text-base font-bold text-slate-900">Full-Camera View</h4>
                       <p className="text-xs text-slate-500 leading-relaxed">
-                        Show only your camera in full view. Best for a personal, engaging face-to-face presentation with clients.
+                        Show only your camera in full view. Best for a personal, engaging face-to-face walkthrough with clients.
                       </p>
                     </div>
                   </button>
                 </div>
 
-              <div className="flex gap-3 pt-2">
-                <button
-                  onClick={() => setCurrentStep('configure')}
-                  className="flex-1 px-5 py-3 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-all border border-slate-200 hover:shadow-sm active:scale-[0.98]"
-                >
-                  Back
-                </button>
-                <button
-                  onClick={handleStartPresentation}
-                  disabled={!cameraView}
-                  className="flex-1 px-5 py-3 rounded-xl bg-slate-900 text-white text-sm font-bold shadow-lg shadow-slate-900/30 hover:bg-slate-800 hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 active:scale-[0.98]"
-                >
-                  <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
-                  Start Presentation
-                </button>
-              </div>
+              {isFreeTier ? (
+                /* Free tier: gate at the final step — they've gone through the full flow */
+                <div className="pt-3 space-y-4">
+                  <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-amber-50/80 via-white to-orange-50/50 border border-amber-100/60 p-5">
+                    <div className="flex items-start gap-3.5">
+                      <div className="shrink-0 flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-b from-amber-100 to-orange-100 border border-amber-200/60">
+                        <Icon icon="solar:videocamera-record-bold-duotone" className="w-5 h-5 text-amber-600" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h4 className="text-sm font-bold text-slate-800 mb-1">You're almost there</h4>
+                        <p className="text-[13px] text-slate-500 leading-relaxed">
+                          Video walkthroughs require a plan upgrade. Upgrade to start recording and sharing walkthroughs with your clients.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex gap-3">
+                    <button
+                      onClick={() => setCurrentStep('configure')}
+                      className="flex-1 px-5 py-3 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-all border border-slate-200 hover:shadow-sm active:scale-[0.98]"
+                    >
+                      Back
+                    </button>
+                    <button
+                      onClick={() => { onClose(); onUpgrade?.(); }}
+                      className="flex-1 px-5 py-3 rounded-xl bg-amber-500 hover:bg-amber-600 text-white text-sm font-bold shadow-lg shadow-amber-500/25 hover:shadow-xl transition-all flex items-center justify-center gap-2 active:scale-[0.98]"
+                    >
+                      Upgrade Plan
+                      <Icon icon="solar:arrow-right-linear" className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div className="flex gap-3 pt-2">
+                  <button
+                    onClick={() => setCurrentStep('configure')}
+                    className="flex-1 px-5 py-3 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-all border border-slate-200 hover:shadow-sm active:scale-[0.98]"
+                  >
+                    Back
+                  </button>
+                  <button
+                    onClick={handleStartPresentation}
+                    disabled={!cameraView}
+                    className="flex-1 px-5 py-3 rounded-xl bg-slate-900 text-white text-sm font-bold shadow-lg shadow-slate-900/30 hover:bg-slate-800 hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 active:scale-[0.98]"
+                  >
+                    <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
+                    Start Walkthrough
+                  </button>
+                </div>
+              )}
             </div>
           )}
         </div>

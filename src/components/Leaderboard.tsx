@@ -261,7 +261,12 @@ const getRankIndicator = (rank: number) => {
   }
 };
 
-export default function Leaderboard() {
+interface LeaderboardProps {
+  isFreeTier?: boolean;
+  onUpgrade?: () => void;
+}
+
+export default function Leaderboard({ isFreeTier = false, onUpgrade }: LeaderboardProps) {
   const [selectedPeriod, setSelectedPeriod] = useState<PeriodType>('month');
   const [isExpanded, setIsExpanded] = useState(true);
   const [showAll, setShowAll] = useState(false);
@@ -384,30 +389,59 @@ export default function Leaderboard() {
                       {/* Member */}
                       <td className="px-5 py-3">
                         <div className="flex items-center gap-2.5">
-                          <div className={`h-8 w-8 rounded-lg overflow-hidden shadow-sm flex-shrink-0 ${
-                            entry.rank === 1 ? 'ring-2 ring-amber-200' : 'ring-2 ring-white'
-                          }`}>
-                            <img
-                              src={entry.member_avatar_url}
-                              alt={entry.member_name}
-                              className="h-full w-full object-cover"
-                            />
-                          </div>
-                          <div className="min-w-0">
-                            <div className="flex items-center gap-1.5">
-                              <span className="text-[13px] font-medium text-slate-800 truncate">{entry.member_name}</span>
-                              {topBadge && (() => {
-                                const config = badgeConfig[topBadge as keyof typeof badgeConfig];
-                                return (
-                                  <div className={`hidden sm:inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded ${config.bg}`}>
-                                    <Icon icon={config.icon} width="10" className={config.color} />
-                                    <span className={`text-[9px] font-semibold ${config.color}`}>{config.label}</span>
-                                  </div>
-                                );
-                              })()}
-                            </div>
-                            <div className="text-[11px] text-slate-400 truncate">{entry.member_email}</div>
-                          </div>
+                          {isFreeTier ? (
+                            /* Free tier: hidden avatar + redacted name */
+                            <>
+                              <div className={`h-8 w-8 rounded-lg flex-shrink-0 bg-slate-100 flex items-center justify-center ${
+                                entry.rank === 1 ? 'ring-2 ring-amber-200' : 'ring-2 ring-slate-100'
+                              }`}>
+                                <Icon icon="solar:user-bold" width="14" className="text-slate-300" />
+                              </div>
+                              <div className="min-w-0">
+                                <div className="flex items-center gap-1.5">
+                                  <div className="h-3.5 w-24 rounded bg-slate-100" />
+                                  {topBadge && (() => {
+                                    const config = badgeConfig[topBadge as keyof typeof badgeConfig];
+                                    return (
+                                      <div className={`hidden sm:inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded ${config.bg}`}>
+                                        <Icon icon={config.icon} width="10" className={config.color} />
+                                        <span className={`text-[9px] font-semibold ${config.color}`}>{config.label}</span>
+                                      </div>
+                                    );
+                                  })()}
+                                </div>
+                                <div className="h-2.5 w-32 rounded bg-slate-50 mt-1.5" />
+                              </div>
+                            </>
+                          ) : (
+                            /* Paid tier: real avatar + name */
+                            <>
+                              <div className={`h-8 w-8 rounded-lg overflow-hidden shadow-sm flex-shrink-0 ${
+                                entry.rank === 1 ? 'ring-2 ring-amber-200' : 'ring-2 ring-white'
+                              }`}>
+                                <img
+                                  src={entry.member_avatar_url}
+                                  alt={entry.member_name}
+                                  className="h-full w-full object-cover"
+                                />
+                              </div>
+                              <div className="min-w-0">
+                                <div className="flex items-center gap-1.5">
+                                  <span className="text-[13px] font-medium text-slate-800 truncate">{entry.member_name}</span>
+                                  {topBadge && (() => {
+                                    const config = badgeConfig[topBadge as keyof typeof badgeConfig];
+                                    return (
+                                      <div className={`hidden sm:inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded ${config.bg}`}>
+                                        <Icon icon={config.icon} width="10" className={config.color} />
+                                        <span className={`text-[9px] font-semibold ${config.color}`}>{config.label}</span>
+                                      </div>
+                                    );
+                                  })()}
+                                </div>
+                                <div className="text-[11px] text-slate-400 truncate">{entry.member_email}</div>
+                              </div>
+                            </>
+                          )}
                         </div>
                       </td>
 
@@ -463,7 +497,15 @@ export default function Leaderboard() {
             <span className="text-[11px] text-slate-400">
               Showing {showAll ? '1–10' : '1–3'} of {topTen.length}
             </span>
-            {remaining.length > 0 && (
+            {isFreeTier ? (
+              <button
+                onClick={onUpgrade}
+                className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-semibold text-amber-600 hover:text-amber-700 hover:bg-amber-50 transition-colors"
+              >
+                <Icon icon="solar:lock-keyhole-minimalistic-linear" width="12" className="text-amber-500" />
+                <span>Reveal who's on top</span>
+              </button>
+            ) : remaining.length > 0 ? (
               <button
                 onClick={() => setShowAll(!showAll)}
                 className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-semibold text-slate-500 hover:text-slate-700 hover:bg-slate-50 transition-colors"
@@ -475,7 +517,7 @@ export default function Leaderboard() {
                   className="text-slate-400"
                 />
               </button>
-            )}
+            ) : null}
           </div>
         </div>
       )}

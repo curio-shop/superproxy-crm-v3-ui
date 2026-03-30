@@ -16,6 +16,8 @@ interface QuotationsProps {
   onOpenTemplateBuilder?: () => void;
   onOpenCreateQuote?: () => void;
   onDeleteQuotation?: (quotation: Quotation) => void;
+  isFreeTier?: boolean;
+  onUpgrade?: () => void;
 }
 
 const statusConfig: Record<QuotationStatus, { label: string; icon: string; pillBg: string; pillText: string; pillBorder: string; pillIconColor: string; badgeBg: string; badgeText: string; badgeBorder: string }> = {
@@ -59,7 +61,7 @@ const statusConfig: Record<QuotationStatus, { label: string; icon: string; pillB
 
 const allStatuses: QuotationStatus[] = ['draft', 'sent', 'published', 'expired', 'deal_won', 'deal_lost'];
 
-export default function Quotations({ isTeamView, homeFilterPreference, onViewQuote, onQuoteFollowUpClick, onEmailQuoteClick, onCreateInvoiceClick, onAskAIClick, onOpenTemplateBuilder, onOpenCreateQuote, onDeleteQuotation }: QuotationsProps) {
+export default function Quotations({ isTeamView, homeFilterPreference, onViewQuote, onQuoteFollowUpClick, onEmailQuoteClick, onCreateInvoiceClick, onAskAIClick, onOpenTemplateBuilder, onOpenCreateQuote, onDeleteQuotation, isFreeTier = false, onUpgrade }: QuotationsProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [openStatusBadge, setOpenStatusBadge] = useState<string | null>(null);
@@ -568,6 +570,8 @@ export default function Quotations({ isTeamView, homeFilterPreference, onViewQuo
           preSelectedId={selectedQuoteForPresentation}
           documentNumber={quotations.find(q => q.id === selectedQuoteForPresentation)?.number}
           documentTitle={quotations.find(q => q.id === selectedQuoteForPresentation)?.title}
+          isFreeTier={isFreeTier}
+          onUpgrade={onUpgrade}
         />
       )}
     </div>

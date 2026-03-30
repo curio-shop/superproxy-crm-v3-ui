@@ -265,8 +265,16 @@ export default function FloatingAIWidget({ isVisible }: FloatingAIWidgetProps) {
               <div className="absolute top-1.5 left-1.5 w-2.5 h-2.5 rounded-sm border-t-[1.5px] border-l-[1.5px] border-slate-300 opacity-0 group-hover:opacity-100 transition-opacity" />
             </div>
 
-            {/* Header */}
-            <div className="flex items-center justify-between px-4 py-3">
+            {/* Header — draggable */}
+            <div
+              className="flex items-center justify-between px-4 py-3 cursor-grab active:cursor-grabbing select-none"
+              onMouseDown={(e) => {
+                if ((e.target as HTMLElement).closest('button')) return;
+                setIsDragging(true);
+                setHasDragged(false);
+                setDragStart({ x: e.clientX - position.x, y: e.clientY - position.y });
+              }}
+            >
               <div className="flex items-center">
                 <img
                   src="/superproxy-logo.png"
@@ -397,13 +405,6 @@ export default function FloatingAIWidget({ isVisible }: FloatingAIWidgetProps) {
         {hasMessages ? (
           /* On-going Task pill */
           <div className="group relative" ref={pillRef} onMouseDown={handleMouseDown} onClick={handlePillClick}>
-            {/* Close button — outside overflow-hidden container */}
-            <button
-              onClick={(e) => { e.stopPropagation(); setDismissed(true); setIsOpen(false); }}
-              className="absolute -top-1 -right-1 z-10 w-[18px] h-[18px] flex items-center justify-center rounded-full bg-white/90 backdrop-blur-sm border border-slate-200/80 shadow-sm transition-all duration-200 opacity-0 group-hover:opacity-100 text-slate-400 hover:text-slate-600 hover:border-slate-300 hover:shadow-md active:scale-90"
-            >
-              <svg width="7" height="7" viewBox="0 0 10 10" fill="none"><path d="M2 2L8 8M8 2L2 8" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round"/></svg>
-            </button>
             <div
               className="relative flex items-center gap-2 pl-3 pr-3.5 py-2 rounded-full cursor-pointer select-none bg-slate-900 border border-blue-500/30 shadow-[0_2px_4px_rgba(0,0,0,0.04),0_8px_24px_rgba(37,99,235,0.10),0_24px_48px_rgba(0,0,0,0.08)] hover:shadow-[0_2px_4px_rgba(0,0,0,0.06),0_12px_32px_rgba(37,99,235,0.14),0_32px_56px_rgba(0,0,0,0.1)] hover:-translate-y-0.5 transition-all duration-200 active:scale-[0.97] overflow-hidden"
             >
