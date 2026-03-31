@@ -465,6 +465,8 @@ interface AIProxyPageProps {
   connectedTools?: Record<string, boolean>;
   initialContext?: { category: string; label: string } | null;
   onConsumeInitialContext?: () => void;
+  fabEnabled?: boolean;
+  onFabEnabledChange?: (enabled: boolean) => void;
 }
 
 const CONNECT_TOOLS = [
@@ -475,7 +477,7 @@ const CONNECT_TOOLS = [
 ];
 
 
-export default function AIProxyPage({ onNavigateToNotifications, onViewContact, onViewCompany, onViewProduct, onViewQuote, onCreateInvoiceFromQuote, onViewInvoice, onOpenConnectors, connectedTools = {}, initialContext, onConsumeInitialContext }: AIProxyPageProps) {
+export default function AIProxyPage({ onNavigateToNotifications, onViewContact, onViewCompany, onViewProduct, onViewQuote, onCreateInvoiceFromQuote, onViewInvoice, onOpenConnectors, connectedTools = {}, initialContext, onConsumeInitialContext, fabEnabled = true, onFabEnabledChange }: AIProxyPageProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);
@@ -609,6 +611,17 @@ export default function AIProxyPage({ onNavigateToNotifications, onViewContact, 
   if (!hasConversation) {
     return (
       <div className="flex-1 flex flex-col bg-[#fafafa] overflow-hidden">
+        {/* FAB toggle — top-left */}
+        <button
+          onClick={() => onFabEnabledChange?.(!fabEnabled)}
+          title={fabEnabled ? 'Task Assistant is active on other pages' : 'Task Assistant is hidden — click to enable'}
+          className="absolute top-5 left-8 z-30 group flex items-center gap-2 h-9 transition-all"
+        >
+          <span className="text-[11.5px] font-medium text-slate-400 select-none">Task Assistant</span>
+          <div className={`relative w-8 h-[18px] rounded-full transition-colors duration-200 ${fabEnabled ? 'bg-slate-900' : 'bg-slate-200'}`}>
+            <div className={`absolute top-[2px] w-3.5 h-3.5 rounded-full bg-white shadow-sm transition-transform duration-200 ${fabEnabled ? 'translate-x-[14px]' : 'translate-x-[2px]'}`} />
+          </div>
+        </button>
         {/* Bell — top-right */}
         <div className="absolute top-5 right-8 z-30">
           <div className="relative">
@@ -763,7 +776,19 @@ export default function AIProxyPage({ onNavigateToNotifications, onViewContact, 
     <div className="flex-1 flex flex-col bg-[#fafafa] overflow-hidden">
       {/* Top bar */}
       <div className="sticky top-0 z-20 bg-[#fafafa]/80 backdrop-blur-xl px-8 py-3.5 flex items-center">
+        {/* FAB toggle — left */}
+        <button
+          onClick={() => onFabEnabledChange?.(!fabEnabled)}
+          title={fabEnabled ? 'Task Assistant is active on other pages' : 'Task Assistant is hidden — click to enable'}
+          className="group flex items-center gap-2 h-9 transition-all"
+        >
+          <span className="text-[11.5px] font-medium text-slate-400 select-none">Task Assistant</span>
+          <div className={`relative w-8 h-[18px] rounded-full transition-colors duration-200 ${fabEnabled ? 'bg-slate-900' : 'bg-slate-200'}`}>
+            <div className={`absolute top-[2px] w-3.5 h-3.5 rounded-full bg-white shadow-sm transition-transform duration-200 ${fabEnabled ? 'translate-x-[14px]' : 'translate-x-[2px]'}`} />
+          </div>
+        </button>
         <div className="ml-auto flex items-center gap-2">
+          {/* New Task */}
           <button
             onClick={() => { setMessages([]); setInputValue(''); setProxySelected(null); }}
             className="group transition-all flex items-center gap-1.5 outline-none text-slate-400 hover:text-slate-600 bg-white border border-slate-200/80 shadow-[0_1px_2px_rgba(0,0,0,0.04)] hover:border-slate-300 hover:shadow-[0_1px_3px_rgba(0,0,0,0.06)] px-3 h-9 rounded-xl active:scale-[0.97]"
@@ -771,6 +796,7 @@ export default function AIProxyPage({ onNavigateToNotifications, onViewContact, 
             <Icon icon="solar:pen-new-square-linear" width="15" className="flex-shrink-0" />
             <span className="text-[13px] font-medium">New Task</span>
           </button>
+          {/* Bell */}
           <div className="relative">
             <button
               onClick={() => setShowNotifications(!showNotifications)}
