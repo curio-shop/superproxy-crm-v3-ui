@@ -99,6 +99,10 @@ function AppContent({ onSignOut }: { onSignOut?: () => void }) {
   const [deleteModalEntity, setDeleteModalEntity] = useState<{ type: 'contact' | 'company' | 'product' | 'quotation' | 'invoice' | 'presentation'; id: string; name: string } | null>(null);
   const [isDeletingEntity, setIsDeletingEntity] = useState(false);
 
+  // FAB state management
+  const [fabDismissed, setFabDismissed] = useState(false);
+  const [showFabUndoToast, setShowFabUndoToast] = useState(false);
+
   // Chat state management
   const [isSupportChatOpen, setIsSupportChatOpen] = useState(false);
   const [chatUnreadCount, setChatUnreadCount] = useState(3);
@@ -766,6 +770,8 @@ function AppContent({ onSignOut }: { onSignOut?: () => void }) {
               connectedTools={connectedTools}
               initialContext={aiProxyInitialContext}
               onConsumeInitialContext={() => setAiProxyInitialContext(null)}
+              fabEnabled={!fabDismissed}
+              onFabEnabledChange={(enabled: boolean) => setFabDismissed(!enabled)}
             />
           </div>
         </main>
@@ -871,7 +877,31 @@ function AppContent({ onSignOut }: { onSignOut?: () => void }) {
         isDeleting={isDeletingEntity}
       />
       <MinimizedCallsBar />
-      <FloatingAIWidget isVisible={activePage !== 'ai-proxy' && !(activePage === 'account' && activeAccountTab === 'contact')} />
+      <FloatingAIWidget
+        isVisible={activePage !== 'ai-proxy' && !(activePage === 'account' && activeAccountTab === 'contact')}
+        dismissed={fabDismissed}
+        onDismiss={() => {
+          setFabDismissed(true);
+          setShowFabUndoToast(true);
+          setTimeout(() => setShowFabUndoToast(false), 4000);
+        }}
+      />
+      {showFabUndoToast && (
+        <div className="fixed bottom-6 left-0 right-0 z-[60] flex justify-center pointer-events-none">
+        <div className="flex items-center gap-5 bg-slate-900 text-white rounded-2xl pl-5 pr-4 py-3.5 shadow-[0_4px_24px_rgba(0,0,0,0.2)] animate-[fadeInUp_0.25s_ease-out] pointer-events-auto">
+          <div className="flex flex-col gap-0.5">
+            <span className="text-[13px] font-medium leading-tight">Task assistant hidden</span>
+            <span className="text-[11.5px] text-slate-400 leading-tight">Re-enable anytime from AI Proxy</span>
+          </div>
+          <button
+            onClick={() => { setFabDismissed(false); setShowFabUndoToast(false); }}
+            className="text-[13px] font-semibold text-amber-400 hover:text-amber-300 transition-colors flex-shrink-0"
+          >
+            Undo
+          </button>
+        </div>
+        </div>
+      )}
       <FloatingChatButton
         unreadCount={chatUnreadCount}
         onClick={() => setIsSupportChatOpen(!isSupportChatOpen)}

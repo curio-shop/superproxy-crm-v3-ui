@@ -44,10 +44,11 @@ interface Message {
 
 interface FloatingAIWidgetProps {
   isVisible: boolean;
+  dismissed: boolean;
+  onDismiss: () => void;
 }
 
-export default function FloatingAIWidget({ isVisible }: FloatingAIWidgetProps) {
-  const [dismissed, setDismissed] = useState(false);
+export default function FloatingAIWidget({ isVisible, dismissed, onDismiss }: FloatingAIWidgetProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
@@ -434,7 +435,7 @@ export default function FloatingAIWidget({ isVisible }: FloatingAIWidgetProps) {
             <Icon icon="solar:pen-new-square-linear" width={13} className="flex-shrink-0 text-white" />
             <span className="text-[12px] font-semibold tracking-tight text-white">New Task</span>
             <button
-              onClick={(e) => { e.stopPropagation(); setDismissed(true); setIsOpen(false); }}
+              onClick={(e) => { e.stopPropagation(); onDismiss(); setIsOpen(false); }}
               className="absolute -top-1 -right-1 w-[18px] h-[18px] flex items-center justify-center rounded-full bg-white/90 backdrop-blur-sm border border-slate-200/80 shadow-sm transition-all duration-200 opacity-0 group-hover:opacity-100 text-slate-400 hover:text-slate-600 hover:border-slate-300 hover:shadow-md active:scale-90"
             >
               <svg width="7" height="7" viewBox="0 0 10 10" fill="none"><path d="M2 2L8 8M8 2L2 8" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round"/></svg>
