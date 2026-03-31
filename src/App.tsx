@@ -87,6 +87,7 @@ function AppContent({ onSignOut }: { onSignOut?: () => void }) {
   const [preSelectedQuoteForInvoice, setPreSelectedQuoteForInvoice] = useState<Quotation | null>(null);
   const [aiProxyInitialContext, setAiProxyInitialContext] = useState<{ category: string; label: string } | null>(null);
   const [pricingOriginPage, setPricingOriginPage] = useState('home');
+  const [pricingInitialTab, setPricingInitialTab] = useState<'plans' | 'credits'>('plans');
   const [isViewContactDrawerOpen, setIsViewContactDrawerOpen] = useState(false);
   const [isViewCompanyDrawerOpen, setIsViewCompanyDrawerOpen] = useState(false);
   const [isViewProductDrawerOpen, setIsViewProductDrawerOpen] = useState(false);
@@ -421,6 +422,7 @@ function AppContent({ onSignOut }: { onSignOut?: () => void }) {
               }
               if (page === 'pricing') {
                 setPricingOriginPage(activePage);
+                setPricingInitialTab('plans');
               }
               setActivePage(page);
             }}
@@ -735,7 +737,7 @@ function AppContent({ onSignOut }: { onSignOut?: () => void }) {
               onSignOut={onSignOut}
             />
           ) : activePage === 'pricing' ? (
-            <PricingPage onBack={() => setActivePage(pricingOriginPage)} />
+            <PricingPage onBack={() => { setActivePage(pricingOriginPage); setPricingInitialTab('plans'); }} initialTab={pricingInitialTab} />
           ) : activePage === 'call-history' ? (
             <CallHistory onBack={() => setActivePage('contacts')} onViewCall={handleViewCall} />
           ) : null}
@@ -772,6 +774,7 @@ function AppContent({ onSignOut }: { onSignOut?: () => void }) {
               onConsumeInitialContext={() => setAiProxyInitialContext(null)}
               fabEnabled={!fabDismissed}
               onFabEnabledChange={(enabled: boolean) => setFabDismissed(!enabled)}
+              onGetMoreCredits={() => { setPricingOriginPage('ai-proxy'); setPricingInitialTab('credits'); setActivePage('pricing'); }}
             />
           </div>
         </main>
@@ -885,13 +888,14 @@ function AppContent({ onSignOut }: { onSignOut?: () => void }) {
           setShowFabUndoToast(true);
           setTimeout(() => setShowFabUndoToast(false), 4000);
         }}
+        onGetMoreCredits={() => { setPricingOriginPage(activePage); setPricingInitialTab('credits'); setActivePage('pricing'); }}
       />
       {showFabUndoToast && (
         <div className="fixed bottom-6 left-0 right-0 z-[60] flex justify-center pointer-events-none">
         <div className="flex items-center gap-5 bg-slate-900 text-white rounded-2xl pl-5 pr-4 py-3.5 shadow-[0_4px_24px_rgba(0,0,0,0.2)] animate-[fadeInUp_0.25s_ease-out] pointer-events-auto">
           <div className="flex flex-col gap-0.5">
             <span className="text-[13px] font-medium leading-tight">Task assistant hidden</span>
-            <span className="text-[11.5px] text-slate-400 leading-tight">Re-enable anytime from AI Proxy</span>
+            <span className="text-[11.5px] text-slate-400 leading-tight">Re-enable anytime from Task page</span>
           </div>
           <button
             onClick={() => { setFabDismissed(false); setShowFabUndoToast(false); }}

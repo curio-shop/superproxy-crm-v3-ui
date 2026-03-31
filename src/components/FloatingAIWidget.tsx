@@ -46,9 +46,10 @@ interface FloatingAIWidgetProps {
   isVisible: boolean;
   dismissed: boolean;
   onDismiss: () => void;
+  onGetMoreCredits?: () => void;
 }
 
-export default function FloatingAIWidget({ isVisible, dismissed, onDismiss }: FloatingAIWidgetProps) {
+export default function FloatingAIWidget({ isVisible, dismissed, onDismiss, onGetMoreCredits }: FloatingAIWidgetProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
@@ -367,7 +368,7 @@ export default function FloatingAIWidget({ isVisible, dismissed, onDismiss }: Fl
                 <span className="text-[10px] font-semibold text-slate-500">159K</span>
                 <span className="text-[10px] text-slate-400">credits</span>
               </div>
-              <button className="text-[10px] font-medium text-amber-500 hover:text-amber-600 transition-colors">
+              <button onClick={onGetMoreCredits} className="text-[10px] font-medium text-amber-500 hover:text-amber-600 transition-colors">
                 Get more
               </button>
             </div>

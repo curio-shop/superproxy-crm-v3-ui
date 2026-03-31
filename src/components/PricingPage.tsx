@@ -3,6 +3,7 @@ import { useState } from 'react';
 
 interface PricingPageProps {
   onBack: () => void;
+  initialTab?: 'plans' | 'credits';
 }
 
 const TIERS = [
@@ -185,10 +186,10 @@ const CREDIT_PACKS = [
 
 type PricingTab = 'plans' | 'credits';
 
-export default function PricingPage({ onBack }: PricingPageProps) {
+export default function PricingPage({ onBack, initialTab = 'plans' }: PricingPageProps) {
   const [showComparison, setShowComparison] = useState(false);
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'annual'>('annual');
-  const [activeTab, setActiveTab] = useState<PricingTab>('plans');
+  const [activeTab, setActiveTab] = useState<PricingTab>(initialTab);
   const getPrice = (monthlyPrice: number) => {
     if (monthlyPrice === 0) return 0;
     return billingCycle === 'annual' ? Math.round(monthlyPrice * 0.8) : monthlyPrice;

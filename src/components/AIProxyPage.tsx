@@ -467,6 +467,7 @@ interface AIProxyPageProps {
   onConsumeInitialContext?: () => void;
   fabEnabled?: boolean;
   onFabEnabledChange?: (enabled: boolean) => void;
+  onGetMoreCredits?: () => void;
 }
 
 const CONNECT_TOOLS = [
@@ -477,7 +478,7 @@ const CONNECT_TOOLS = [
 ];
 
 
-export default function AIProxyPage({ onNavigateToNotifications, onViewContact, onViewCompany, onViewProduct, onViewQuote, onCreateInvoiceFromQuote, onViewInvoice, onOpenConnectors, connectedTools = {}, initialContext, onConsumeInitialContext, fabEnabled = true, onFabEnabledChange }: AIProxyPageProps) {
+export default function AIProxyPage({ onNavigateToNotifications, onViewContact, onViewCompany, onViewProduct, onViewQuote, onCreateInvoiceFromQuote, onViewInvoice, onOpenConnectors, connectedTools = {}, initialContext, onConsumeInitialContext, fabEnabled = true, onFabEnabledChange, onGetMoreCredits }: AIProxyPageProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);
@@ -1076,7 +1077,7 @@ export default function AIProxyPage({ onNavigateToNotifications, onViewContact, 
               <span className="text-xs text-slate-500 flex-1">
                 <span className="font-semibold text-slate-600">159K</span> credits remaining
               </span>
-              <button className="text-[11px] font-semibold text-slate-600 hover:text-slate-800 transition-colors whitespace-nowrap">
+              <button onClick={onGetMoreCredits} className="text-[11px] font-semibold text-slate-600 hover:text-slate-800 transition-colors whitespace-nowrap">
                 Get more credits
               </button>
             </div>
