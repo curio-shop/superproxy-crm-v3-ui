@@ -892,14 +892,25 @@ function AppContent({ onSignOut }: { onSignOut?: () => void }) {
       />
       {showFabUndoToast && (
         <div className="fixed bottom-6 left-0 right-0 z-[60] flex justify-center pointer-events-none">
-        <div className="flex items-center gap-5 bg-slate-900 text-white rounded-2xl pl-5 pr-4 py-3.5 shadow-[0_4px_24px_rgba(0,0,0,0.2)] animate-[fadeInUp_0.25s_ease-out] pointer-events-auto">
+        <div
+          className="relative flex items-center gap-4 pl-4 pr-4 py-3 rounded-[14px] pointer-events-auto toast-enter overflow-hidden"
+          style={{
+            background: 'rgba(15, 23, 42, 0.92)',
+            backdropFilter: 'blur(20px) saturate(1.8)',
+            WebkitBackdropFilter: 'blur(20px) saturate(1.8)',
+            boxShadow: '0 8px 32px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.06) inset, 0 1px 0 rgba(255,255,255,0.05) inset',
+          }}
+        >
+          <div className="shrink-0 flex items-center justify-center w-8 h-8 rounded-[10px]" style={{ background: 'rgba(251,191,36,0.1)' }}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+          </div>
           <div className="flex flex-col gap-0.5">
-            <span className="text-[13px] font-medium leading-tight">Task assistant hidden</span>
+            <span className="text-[13px] font-medium text-white/90 leading-tight tracking-[-0.01em]">Task assistant hidden</span>
             <span className="text-[11.5px] text-slate-400 leading-tight">Re-enable anytime from Task page</span>
           </div>
           <button
             onClick={() => { setFabDismissed(false); setShowFabUndoToast(false); }}
-            className="text-[13px] font-semibold text-amber-400 hover:text-amber-300 transition-colors flex-shrink-0"
+            className="ml-2 text-[12.5px] font-semibold text-amber-400 hover:text-amber-300 transition-colors flex-shrink-0 px-2.5 py-1 rounded-lg hover:bg-amber-400/10"
           >
             Undo
           </button>

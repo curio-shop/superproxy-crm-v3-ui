@@ -285,11 +285,17 @@ export default function NewEmail({ onBack, contactName, contactEmail, onOpenEmai
 
       setTimeout(() => {
         setShowSuccessOverlay(false);
+        // Reset to empty state
+        setIsSending(false);
+        setSendSuccess(false);
+        setSubject('');
+        setEmailBody('');
+        setCcRecipients('');
+        setRecipientField(contactEmail || '');
+        setSourceType('empty');
+        setSelectedSourceItem(null);
+        setViewMode('editor');
       }, 1200);
-
-      setTimeout(() => {
-        onBack();
-      }, 2000);
     }, 800);
   };
 
@@ -660,7 +666,15 @@ export default function NewEmail({ onBack, contactName, contactEmail, onOpenEmai
           {/* Action Bar */}
           <div className="flex items-center justify-between pt-2 pb-12">
             <button
-              onClick={onBack}
+              onClick={() => {
+                setSubject('');
+                setEmailBody('');
+                setCcRecipients('');
+                setRecipientField(contactEmail || '');
+                setSourceType('empty');
+                setSelectedSourceItem(null);
+                setViewMode('editor');
+              }}
               className="text-slate-400 hover:text-red-500 rounded-xl text-[13px] font-medium px-3 py-2 transition-colors flex items-center gap-1.5"
             >
               <Icon icon="solar:trash-bin-trash-linear" width="14" />

@@ -15,170 +15,167 @@ export default function Toast({ message, title, type = 'info', duration = 3000, 
   const [isExiting, setIsExiting] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [dragX, setDragX] = useState(0);
-  const [opacity, setOpacity] = useState(1);
+  const [progress, setProgress] = useState(100);
   const toastRef = useRef<HTMLDivElement>(null);
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const progressRef = useRef<number | null>(null);
   const startXRef = useRef(0);
   const isDraggingRef = useRef(false);
+  const startTimeRef = useRef(Date.now());
+  const elapsedRef = useRef(0);
 
-  const getToastStyles = () => {
+  const getAccent = () => {
     switch (type) {
       case 'success':
-        return {
-          iconBg: 'bg-emerald-500',
-          icon: 'solar:check-circle-bold',
-          iconColor: 'text-white',
-        };
+        return { accent: '#34d399', icon: 'solar:check-circle-bold', label: 'Success' };
       case 'error':
-        return {
-          iconBg: 'bg-rose-500',
-          icon: 'solar:close-circle-bold',
-          iconColor: 'text-white',
-        };
+        return { accent: '#fb7185', icon: 'solar:close-circle-bold', label: 'Error' };
       case 'warning':
-        return {
-          iconBg: 'bg-amber-500',
-          icon: 'solar:danger-triangle-bold',
-          iconColor: 'text-white',
-        };
+        return { accent: '#fbbf24', icon: 'solar:danger-triangle-bold', label: 'Warning' };
       case 'info':
       default:
-        return {
-          iconBg: 'bg-sky-500',
-          icon: 'solar:info-circle-bold',
-          iconColor: 'text-white',
-        };
+        return { accent: '#38bdf8', icon: 'solar:info-circle-bold', label: 'Info' };
     }
   };
 
-  const styles = getToastStyles();
+  const { accent, icon } = getAccent();
 
   const dismiss = () => {
     setIsExiting(true);
-    setTimeout(() => {
-      onClose();
-    }, 300);
+    if (progressRef.current) cancelAnimationFrame(progressRef.current);
+    setTimeout(() => onClose(), 280);
   };
 
+  // Progress bar animation
   useEffect(() => {
-    if (!isPaused && !isExiting) {
-      timerRef.current = setTimeout(dismiss, duration);
-    }
+    if (isExiting) return;
+
+    const tick = () => {
+      if (isPaused) {
+        progressRef.current = requestAnimationFrame(tick);
+        return;
+      }
+      const now = Date.now();
+      const delta = now - startTimeRef.current;
+      startTimeRef.current = now;
+      elapsedRef.current += delta;
+
+      const remaining = Math.max(0, 100 - (elapsedRef.current / duration) * 100);
+      setProgress(remaining);
+
+      if (remaining <= 0) {
+        dismiss();
+        return;
+      }
+      progressRef.current = requestAnimationFrame(tick);
+    };
+
+    startTimeRef.current = Date.now();
+    progressRef.current = requestAnimationFrame(tick);
+
     return () => {
-      if (timerRef.current) clearTimeout(timerRef.current);
+      if (progressRef.current) cancelAnimationFrame(progressRef.current);
     };
   }, [isPaused, isExiting, duration]);
 
+  // Drag handlers
   const handleMouseDown = (e: React.MouseEvent) => {
     isDraggingRef.current = true;
     startXRef.current = e.clientX;
-    if (timerRef.current) clearTimeout(timerRef.current);
   };
 
-  const handleMouseMove = (e: React.MouseEvent) => {
+  const handleGlobalMove = (e: MouseEvent) => {
     if (!isDraggingRef.current) return;
     const diff = e.clientX - startXRef.current;
-    if (diff > 0) {
-      setDragX(diff);
-      setOpacity(Math.max(0, 1 - diff / 250));
-    }
+    setDragX(diff);
   };
 
-  const handleMouseUp = () => {
+  const handleGlobalUp = () => {
     if (!isDraggingRef.current) return;
     isDraggingRef.current = false;
-
-    if (dragX > 100) {
+    if (Math.abs(dragX) > 80) {
       dismiss();
     } else {
       setDragX(0);
-      setOpacity(1);
-      if (!isPaused) {
-        timerRef.current = setTimeout(dismiss, duration);
-      }
     }
   };
 
   useEffect(() => {
-    const handleGlobalMouseMove = (e: MouseEvent) => {
-      if (!isDraggingRef.current) return;
-      const diff = e.clientX - startXRef.current;
-      if (diff > 0) {
-        setDragX(diff);
-        setOpacity(Math.max(0, 1 - diff / 250));
-      }
-    };
-
-    const handleGlobalMouseUp = () => {
-      if (!isDraggingRef.current) return;
-      isDraggingRef.current = false;
-
-      if (dragX > 100) {
-        dismiss();
-      } else {
-        setDragX(0);
-        setOpacity(1);
-        if (!isPaused) {
-          timerRef.current = setTimeout(dismiss, duration);
-        }
-      }
-    };
-
-    document.addEventListener('mousemove', handleGlobalMouseMove);
-    document.addEventListener('mouseup', handleGlobalMouseUp);
-
+    document.addEventListener('mousemove', handleGlobalMove);
+    document.addEventListener('mouseup', handleGlobalUp);
     return () => {
-      document.removeEventListener('mousemove', handleGlobalMouseMove);
-      document.removeEventListener('mouseup', handleGlobalMouseUp);
+      document.removeEventListener('mousemove', handleGlobalMove);
+      document.removeEventListener('mouseup', handleGlobalUp);
     };
-  }, [dragX, isPaused, duration]);
+  }, [dragX]);
+
+  const dragOpacity = Math.max(0, 1 - Math.abs(dragX) / 200);
 
   return (
     <div
       ref={toastRef}
-      className={`pointer-events-auto relative group flex items-center gap-4 px-5 py-4 pr-12 rounded-2xl bg-white border border-slate-200/80 shadow-lg shadow-slate-900/5 transition-all hover:shadow-xl hover:shadow-slate-900/10 max-w-[420px] w-full cursor-grab select-none touch-none ${
-        isExiting ? 'animate-out fade-out slide-out-to-top-2 duration-300' : 'animate-in fade-in slide-in-from-top-5 duration-500'
-      }`}
+      className={`pointer-events-auto relative group cursor-grab select-none touch-none
+        ${isExiting ? 'toast-exit' : 'toast-enter'}`}
       style={{
-        transform: `translateX(${dragX}px) ${isExiting ? 'translateY(-10px) scale(0.95)' : ''}`,
-        opacity: isExiting ? 0 : opacity,
-        transition: isDraggingRef.current ? 'none' : 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+        transform: `translateX(${dragX}px)`,
+        opacity: isExiting ? 0 : dragOpacity,
+        transition: isDraggingRef.current ? 'none' : 'all 0.32s cubic-bezier(0.16, 1, 0.3, 1)',
       }}
       onMouseDown={handleMouseDown}
-      onMouseMove={handleMouseMove}
-      onMouseUp={handleMouseUp}
-      onMouseEnter={() => {
-        setIsPaused(true);
-        if (timerRef.current) clearTimeout(timerRef.current);
-      }}
+      onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => {
         setIsPaused(false);
+        startTimeRef.current = Date.now();
       }}
     >
-      <div className={`shrink-0 flex items-center justify-center w-11 h-11 rounded-xl ${styles.iconBg} ${styles.iconColor}`}>
-        <Icon icon={styles.icon} width="20" />
-      </div>
-
-      <div className="flex-1 min-w-0">
-        {title && (
-          <h4 className="text-sm font-semibold text-slate-900 mb-1 leading-tight">
-            {title}
-          </h4>
-        )}
-        <p className="text-[13.5px] text-slate-600 leading-relaxed">
-          {message}
-        </p>
-      </div>
-
-      <button
-        onClick={(e) => {
-          e.stopPropagation();
-          dismiss();
+      {/* Main toast body */}
+      <div
+        className="relative flex items-center gap-3.5 pl-4 pr-10 py-3 rounded-[14px] overflow-hidden"
+        style={{
+          background: 'rgba(15, 23, 42, 0.92)',
+          backdropFilter: 'blur(20px) saturate(1.8)',
+          WebkitBackdropFilter: 'blur(20px) saturate(1.8)',
+          boxShadow: `0 8px 32px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.06) inset, 0 1px 0 rgba(255,255,255,0.05) inset`,
         }}
-        className="absolute top-3 right-3 transition-colors text-slate-400 hover:text-slate-600 rounded-lg p-1"
       >
-        <Icon icon="solar:close-circle-linear" width="18" />
-      </button>
+        {/* Icon */}
+        <div className="shrink-0 flex items-center justify-center w-8 h-8 rounded-[10px]"
+          style={{ background: `${accent}18` }}
+        >
+          <Icon icon={icon} width="17" style={{ color: accent }} />
+        </div>
+
+        {/* Text */}
+        <div className="flex-1 min-w-0">
+          {title && (
+            <h4 className="text-[12.5px] font-semibold text-white/90 mb-0.5 leading-tight tracking-[-0.01em]">
+              {title}
+            </h4>
+          )}
+          <p className="text-[13px] text-slate-300 leading-snug tracking-[-0.005em]">
+            {message}
+          </p>
+        </div>
+
+        {/* Close button */}
+        <button
+          onClick={(e) => { e.stopPropagation(); dismiss(); }}
+          className="absolute top-2.5 right-2.5 p-1 rounded-lg text-slate-500 hover:text-slate-300 transition-colors opacity-0 group-hover:opacity-100"
+        >
+          <Icon icon="solar:close-circle-linear" width="16" />
+        </button>
+
+        {/* Progress bar */}
+        <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-white/[0.04]">
+          <div
+            className="h-full rounded-full transition-none"
+            style={{
+              width: `${progress}%`,
+              background: `linear-gradient(90deg, ${accent}90, ${accent}50)`,
+              boxShadow: `0 0 6px ${accent}30`,
+            }}
+          />
+        </div>
+      </div>
     </div>
   );
 }
