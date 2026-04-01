@@ -294,6 +294,7 @@ export default function NewEmail({ onBack, contactName, contactEmail, onOpenEmai
         setRecipientField(contactEmail || '');
         setSourceType('empty');
         setSelectedSourceItem(null);
+        setSelectedWalkthrough(null);
         setViewMode('editor');
       }, 1200);
     }, 800);
@@ -673,6 +674,7 @@ export default function NewEmail({ onBack, contactName, contactEmail, onOpenEmai
                 setRecipientField(contactEmail || '');
                 setSourceType('empty');
                 setSelectedSourceItem(null);
+                setSelectedWalkthrough(null);
                 setViewMode('editor');
               }}
               className="text-slate-400 hover:text-red-500 rounded-xl text-[13px] font-medium px-3 py-2 transition-colors flex items-center gap-1.5"
