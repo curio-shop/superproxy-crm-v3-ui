@@ -520,3 +520,38 @@ input[type="range"].slider-thumb::-moz-range-thumb:hover {
 .slide-in-from-top-2 {
   animation: slideDownFade 0.2s ease-out forwards;
 }
+
+/* Toast entrance/exit animations */
+@keyframes toastEnter {
+  0% {
+    opacity: 0;
+    transform: translateY(12px) scale(0.96);
+    filter: blur(4px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes toastExit {
+  0% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(8px) scale(0.95);
+    filter: blur(3px);
+  }
+}
+
+.toast-enter {
+  animation: toastEnter 0.32s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.toast-exit {
+  animation: toastExit 0.28s cubic-bezier(0.4, 0, 1, 1) forwards;
+}
