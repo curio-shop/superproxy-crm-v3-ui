@@ -70,9 +70,11 @@ export default function NewEmail({ onBack, contactName, contactEmail, onOpenEmai
   const [ccRecipients, setCcRecipients] = useState('');
   const [selectedSourceItem, setSelectedSourceItem] = useState<QuoteInvoiceItem | null>(null);
   const [emailBody, setEmailBody] = useState('');
+  const [recipientField, setRecipientField] = useState(contactEmail || '');
   const [isSending, setIsSending] = useState(false);
   const [sendSuccess, setSendSuccess] = useState(false);
   const [showSuccessOverlay, setShowSuccessOverlay] = useState(false);
+  const [viewMode, setViewMode] = useState<'editor' | 'preview'>('editor');
 
   // Handle pre-selected quote or invoice
   useEffect(() => {
@@ -98,7 +100,9 @@ export default function NewEmail({ onBack, contactName, contactEmail, onOpenEmai
         status: preSelectedQuote.status,
       });
       setSubject(`Quote for ${preSelectedQuote.title}`);
+      setEmailBody(defaultBodyText.quote);
     } else if (preSelectedInvoice) {
+
       setSourceType('invoice');
       const formattedAmount = new Intl.NumberFormat('en-US', {
         style: 'currency',
@@ -125,6 +129,7 @@ export default function NewEmail({ onBack, contactName, contactEmail, onOpenEmai
         status: mappedStatus,
       });
       setSubject(`Invoice for ${preSelectedInvoice.title}`);
+      setEmailBody(defaultBodyText.invoice);
     }
   }, [preSelectedQuote, preSelectedInvoice]);
 
@@ -163,16 +168,83 @@ export default function NewEmail({ onBack, contactName, contactEmail, onOpenEmai
     setSelectedSourceItem(item);
     setShowSourceDropdown(false);
     setSubject(`${sourceType === 'quote' ? 'Quote' : 'Invoice'} for ${item.title}`);
+    setEmailBody(defaultBodyText[sourceType as 'quote' | 'invoice']);
+    if (!contactName && !recipientField) {
+      setRecipientField('stacy.chen@berkshire.com');
+    }
   };
 
-  const handleSelectPresentation = (_presentation: PresentationItem) => {
+  const [selectedWalkthrough, setSelectedWalkthrough] = useState<PresentationItem | null>(null);
+
+  const handleSelectPresentation = (presentation: PresentationItem) => {
+    setSelectedWalkthrough(selectedWalkthrough?.id === presentation.id ? null : presentation);
     setShowPresentationDropdown(false);
+  };
+
+  const recipientName = contactName || 'Stacy';
+  const signature = `\nWarm regards,\nJohn Mitchell\nNorthway Creative Media`;
+
+  const defaultBodyText: Record<'quote' | 'invoice', string> = {
+    quote: `Hi ${recipientName},\n\nGreat speaking with you. I've put together the details we discussed — everything is ready for your review.\n\nYou'll find the quotation attached with a clear breakdown of scope and pricing. No hidden lines — what you see is what you get.\n\nThere's also a short walkthrough included that covers how the process works end to end. Should save you a few back-and-forths.\n\nTake your time looking through it. I'm around whenever you'd like to chat.\n${signature}`,
+    invoice: `Hi ${recipientName},\n\nThank you for moving forward — it's a pleasure working with you on this.\n\nThe invoice is attached with a full breakdown of the agreed scope and terms. Everything is itemized so it's easy to review on your end.\n\nFeel free to reach out if you'd like to walk through any of the details together.\n\nIf anything needs adjusting, just let me know — happy to sort it out.\n${signature}`,
+  };
+
+  const parseEmailBody = (body: string) => {
+    const lines = body.split('\n');
+
+    // Extract greeting from first non-empty line
+    let greetingName: string | null = null;
+    let greetingLineIndex = -1;
+    for (let i = 0; i < lines.length; i++) {
+      const match = lines[i].match(/^(Hi|Hey|Hello|Dear)\s+(.+?),*\s*$/);
+      if (match) {
+        greetingName = match[2].trim();
+        greetingLineIndex = i;
+        break;
+      }
+    }
+
+    // Extract signature: scan from bottom for sign-off line
+    let signOff: string | null = null;
+    let sigName: string | null = null;
+    let sigCompany: string | null = null;
+    let sigStartIndex = -1;
+    const signOffWords = ['warm regards', 'best regards', 'kind regards', 'regards', 'cheers', 'thanks', 'thank you', 'best', 'sincerely'];
+    for (let i = lines.length - 1; i >= 0; i--) {
+      const trimmed = lines[i].trim().toLowerCase().replace(/,+$/, '');
+      if (signOffWords.includes(trimmed)) {
+        sigStartIndex = i;
+        signOff = lines[i].trim();
+        // Name is next non-empty line after sign-off
+        for (let j = i + 1; j < lines.length; j++) {
+          if (lines[j].trim()) { sigName = lines[j].trim(); break; }
+        }
+        // Company is next non-empty line after name
+        let foundName = false;
+        for (let j = i + 1; j < lines.length; j++) {
+          if (lines[j].trim() && !foundName) { foundName = true; continue; }
+          if (lines[j].trim() && foundName) { sigCompany = lines[j].trim(); break; }
+        }
+        break;
+      }
+    }
+
+    // Build content from lines between greeting and signature
+    const startIndex = greetingLineIndex >= 0 ? greetingLineIndex + 1 : 0;
+    const endIndex = sigStartIndex >= 0 ? sigStartIndex : lines.length;
+    const content = lines.slice(startIndex, endIndex).join('\n').trim();
+
+    return { greetingName, content, signOff, sigName, sigCompany };
   };
 
   const handleSourceTypeChange = (type: 'quote' | 'invoice' | 'empty') => {
     setSourceType(type);
     setSelectedSourceItem(null);
     setSubject('');
+    setEmailBody(type === 'empty' ? `\n\n\nWarm regards,\nJohn Mitchell\nNorthway Creative Media` : '');
+    if (type === 'empty' && !contactName) {
+      setRecipientField('');
+    }
   };
 
   const avatarColor = contactName ? getAvatarColor(contactName) : { from: 'from-blue-500', to: 'to-blue-600' };
@@ -224,7 +296,7 @@ export default function NewEmail({ onBack, contactName, contactEmail, onOpenEmai
   return (
     <div className="flex-1 flex flex-col h-full overflow-hidden relative">
       {/* Header */}
-      <header className="flex items-center justify-between px-8 py-4 border-b border-slate-100/60 sticky top-0 bg-white/60 backdrop-blur-xl z-30 transition-all">
+      <header className="flex items-center justify-between px-8 py-4 sticky top-0 bg-white/60 backdrop-blur-xl z-30 transition-all">
         <div className="flex items-center gap-3">
           <button
             onClick={onBack}
@@ -242,10 +314,20 @@ export default function NewEmail({ onBack, contactName, contactEmail, onOpenEmai
         <div className="flex items-center gap-2">
           {/* Preview/Editor Toggle */}
           <div className="hidden md:flex items-center bg-slate-100 rounded-lg p-0.5">
-            <button className="px-3 py-1.5 rounded-md text-[12px] font-medium text-slate-400 hover:text-slate-600 transition-all">
+            <button
+              onClick={() => setViewMode('preview')}
+              className={`px-3 py-1.5 rounded-md text-[12px] font-medium transition-all ${
+                viewMode === 'preview' ? 'bg-white text-slate-700 shadow-sm' : 'text-slate-400 hover:text-slate-600'
+              }`}
+            >
               Preview
             </button>
-            <button className="px-3 py-1.5 rounded-md text-[12px] font-medium bg-white text-slate-700 shadow-sm transition-all">
+            <button
+              onClick={() => setViewMode('editor')}
+              className={`px-3 py-1.5 rounded-md text-[12px] font-medium transition-all ${
+                viewMode === 'editor' ? 'bg-white text-slate-700 shadow-sm' : 'text-slate-400 hover:text-slate-600'
+              }`}
+            >
               Editor
             </button>
           </div>
@@ -272,7 +354,8 @@ export default function NewEmail({ onBack, contactName, contactEmail, onOpenEmai
 
       {/* Composer Scroll Area */}
       <div className="flex-1 overflow-y-auto px-4 lg:px-8 pb-8 flex justify-center custom-scrollbar">
-        <div className="w-full max-w-5xl flex flex-col gap-6 pt-6">
+        {viewMode === 'editor' ? (
+        <div key="editor" className="w-full max-w-5xl flex flex-col gap-6 pt-6 animate-in fade-in duration-200">
 
           {/* Context Selector Card */}
           <section className="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm">
@@ -443,6 +526,8 @@ export default function NewEmail({ onBack, contactName, contactEmail, onOpenEmai
                     <input
                       type="email"
                       placeholder="recipient@example.com"
+                      value={recipientField}
+                      onChange={(e) => setRecipientField(e.target.value)}
                       className="flex-1 bg-transparent outline-none text-[13px] text-slate-700 placeholder-slate-300"
                     />
                   )}
@@ -505,10 +590,18 @@ export default function NewEmail({ onBack, contactName, contactEmail, onOpenEmai
                 <div className="relative" data-dropdown>
                   <button
                     onClick={() => setShowPresentationDropdown(!showPresentationDropdown)}
-                    className="flex items-center gap-1.5 h-8 px-2.5 text-slate-400 hover:text-slate-700 rounded-lg hover:bg-slate-100 transition-all text-[12px] font-medium outline-none"
+                    className={`flex items-center gap-1.5 h-8 px-2.5 rounded-lg transition-all text-[12px] font-medium outline-none ${
+                      selectedWalkthrough
+                        ? 'text-slate-700'
+                        : 'text-slate-400 hover:text-slate-700 hover:bg-slate-100'
+                    }`}
                   >
-                    <Icon icon="solar:videocamera-record-linear" width="15" />
-                    <span className="text-inherit">Presentation</span>
+                    {selectedWalkthrough ? (
+                      <Icon icon="solar:check-circle-bold" width="14" className="text-emerald-500" />
+                    ) : (
+                      <Icon icon="solar:videocamera-record-linear" width="15" />
+                    )}
+                    <span>{selectedWalkthrough ? selectedWalkthrough.title : 'Walkthrough'}</span>
                     <Icon
                       icon="solar:alt-arrow-down-linear"
                       width="12"
@@ -520,23 +613,29 @@ export default function NewEmail({ onBack, contactName, contactEmail, onOpenEmai
                   {showPresentationDropdown && (
                     <div className="absolute top-full left-0 mt-2 w-[380px] bg-white rounded-xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.15)] border border-slate-100 p-1.5 z-50">
                       <div className="px-3 py-2 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">
-                        Select Presentation
+                        Select Walkthrough
                       </div>
                       {mockPresentations.map((presentation) => (
                         <button
                           key={presentation.id}
                           onClick={() => handleSelectPresentation(presentation)}
-                          className="w-full flex items-center justify-between px-3 py-2.5 rounded-lg transition-all group hover:bg-slate-50"
+                          className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg transition-all group ${
+                            selectedWalkthrough?.id === presentation.id ? 'bg-slate-50' : 'hover:bg-slate-50'
+                          }`}
                         >
                           <div className="flex flex-col justify-center overflow-hidden text-left flex-1">
-                            <span className="text-[13px] text-slate-600 truncate group-hover:text-slate-800 transition-colors">
-                              {presentation.title} {presentation.date} at {presentation.time} <span className="text-slate-400">({presentation.duration})</span>
+                            <span className={`text-[13px] truncate transition-colors ${
+                              selectedWalkthrough?.id === presentation.id ? 'text-slate-900 font-semibold' : 'text-slate-600 group-hover:text-slate-800'
+                            }`}>
+                              {presentation.title} {presentation.date} at {presentation.time} <span className="text-slate-400 font-normal">({presentation.duration})</span>
                             </span>
                           </div>
                           <Icon
-                            icon="solar:add-circle-linear"
+                            icon={selectedWalkthrough?.id === presentation.id ? 'solar:check-circle-bold' : 'solar:add-circle-linear'}
                             width="20"
-                            className="text-slate-300 group-hover:text-slate-700 transition-colors shrink-0"
+                            className={`shrink-0 transition-colors ${
+                              selectedWalkthrough?.id === presentation.id ? 'text-slate-900' : 'text-slate-300 group-hover:text-slate-700'
+                            }`}
                           />
                         </button>
                       ))}
@@ -655,6 +754,187 @@ export default function NewEmail({ onBack, contactName, contactEmail, onOpenEmai
             </div>
           </div>
         </div>
+        ) : (
+        /* ──────────────────────────────────────────────────────────
+           EMAIL PREVIEW — Receiver's POV
+           ────────────────────────────────────────────────────────── */
+        <div key="preview" className="w-full max-w-5xl pt-6 pb-32 animate-in fade-in duration-200">
+
+          {/* ── Email Client Chrome ── */}
+          <div className="rounded-t-2xl bg-gradient-to-b from-slate-100 to-slate-50 border border-slate-200 border-b-0 px-5 py-3.5 flex items-center">
+            {/* Traffic lights */}
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 rounded-full bg-[#FF5F57] shadow-[inset_0_-1px_2px_rgba(0,0,0,0.15)]" />
+              <div className="w-3 h-3 rounded-full bg-[#FEBC2E] shadow-[inset_0_-1px_2px_rgba(0,0,0,0.15)]" />
+              <div className="w-3 h-3 rounded-full bg-[#28C840] shadow-[inset_0_-1px_2px_rgba(0,0,0,0.15)]" />
+            </div>
+            {/* Title */}
+            <div className="flex-1 text-center">
+              <span className="text-[11px] font-medium text-slate-400 tracking-wide">
+                Inbox — {contactName || 'Recipient'}
+              </span>
+            </div>
+            {/* Decorative toolbar */}
+            <div className="flex items-center gap-2 text-slate-300">
+              <Icon icon="solar:archive-minimalistic-linear" width="14" />
+              <Icon icon="solar:reply-linear" width="14" />
+              <Icon icon="solar:forward-linear" width="14" />
+            </div>
+          </div>
+
+          {/* ── Email Metadata Bar ── */}
+          <div className="bg-slate-50/80 border-x border-slate-200 px-6 py-4 flex flex-col gap-1.5">
+            <div className="flex items-center gap-2">
+              <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider w-14 shrink-0">From</span>
+              <span className="text-[12px] text-slate-600 font-medium">Your Company <span className="text-slate-400 font-normal">&lt;hello@yourcompany.com&gt;</span></span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider w-14 shrink-0">To</span>
+              <span className="text-[12px] text-slate-600 font-medium">{contactName || 'Client'} {contactEmail ? <span className="text-slate-400 font-normal">&lt;{contactEmail}&gt;</span> : ''}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider w-14 shrink-0">Subject</span>
+              <span className="text-[12px] text-slate-700 font-semibold">{subject || 'Your Quotation is Ready'}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider w-14 shrink-0">Date</span>
+              <span className="text-[12px] text-slate-500">{new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</span>
+            </div>
+          </div>
+
+          {/* ── Email Body Container ── */}
+          <div className="rounded-b-2xl bg-white border border-slate-200 border-t border-t-slate-100 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.08)]">
+
+            {/* Brand Header */}
+            <div className="px-10 pt-10 pb-8">
+              <div className="flex justify-center">
+                <img src="/northway-logo.png" alt="Logo" className="h-12 object-contain" />
+              </div>
+            </div>
+
+            {/* Content Card */}
+            <div className="mx-24 mb-8 rounded-2xl border border-slate-200/70 bg-gradient-to-b from-white to-slate-50/40 shadow-[0_2px_12px_-4px_rgba(0,0,0,0.04),0_0_0_1px_rgba(0,0,0,0.02)] overflow-hidden">
+
+              {/* Greeting & Body */}
+              {!emailBody.trim() && (sourceType === 'empty' || !selectedSourceItem) ? (
+                /* Empty state — no content yet */
+                <div className="px-12 py-16 flex flex-col items-center justify-center text-center">
+                  <Icon icon="solar:pen-new-square-linear" width="36" className="text-slate-300/60 mb-5" />
+                  <h3 style={{ fontFamily: "'DM Serif Text', serif" }} className="text-[20px] text-slate-400 leading-tight mb-2">
+                    Your message goes here
+                  </h3>
+                  <p className="text-[13px] text-slate-400/70">
+                    {sourceType === 'empty' ? 'Switch to the editor to start writing' : `Select a ${sourceType} from the dropdown to get started`}
+                  </p>
+                </div>
+              ) : sourceType === 'empty' ? (
+                /* Scratch email — render raw text only */
+                <div className="px-12 pt-10 pb-8">
+                  <p className="text-[14px] leading-[1.85] text-slate-600 whitespace-pre-line">{emailBody}</p>
+                </div>
+              ) : (() => {
+                  const parsed = emailBody ? parseEmailBody(emailBody) : null;
+                  return (
+                    <div className="px-12 pt-10 pb-8">
+                      {/* Greeting */}
+                      <h2 style={{ fontFamily: "'DM Serif Text', serif" }} className="text-[24px] text-slate-900 leading-tight mb-6">
+                        {parsed?.greetingName ? `Hi ${parsed.greetingName},` : 'Hi Stacy,'}
+                      </h2>
+
+                      {/* Body */}
+                      {parsed?.content ? (
+                        <p className="text-[14px] leading-[1.85] text-slate-600 whitespace-pre-line">{parsed.content}</p>
+                      ) : !emailBody ? (
+                        <div className="space-y-4">
+                          {/* --- Quotation body --- */}
+                          {sourceType === 'quote' && (
+                            <>
+                              <p className="text-[14px] leading-[1.85] text-slate-600">
+                                Great speaking with you. I've put together the details we discussed — everything is ready for your review.
+                              </p>
+                              <p className="text-[14px] leading-[1.85] text-slate-600">
+                                You'll find the quotation attached with a clear breakdown of scope and pricing. No hidden lines — what you see is what you get.
+                              </p>
+                              <p className="text-[14px] leading-[1.85] text-slate-600">
+                                There's also a short walkthrough included that covers how the process works end to end. Should save you a few back-and-forths.
+                              </p>
+                              <p className="text-[14px] leading-[1.85] text-slate-600">
+                                Take your time looking through it. I'm around whenever you'd like to chat.
+                              </p>
+                            </>
+                          )}
+
+                          {/* --- Invoice body --- */}
+                          {sourceType === 'invoice' && (
+                            <>
+                              <p className="text-[14px] leading-[1.85] text-slate-600">
+                                Thank you for moving forward — it's a pleasure working with you on this.
+                              </p>
+                              <p className="text-[14px] leading-[1.85] text-slate-600">
+                                The invoice is attached with a full breakdown of the agreed scope and terms. Everything is itemized so it's easy to review on your end.
+                              </p>
+                              <p className="text-[14px] leading-[1.85] text-slate-600">
+                                Feel free to reach out if you'd like to walk through any of the details together.
+                              </p>
+                              <p className="text-[14px] leading-[1.85] text-slate-600">
+                                If anything needs adjusting, just let me know — happy to sort it out.
+                              </p>
+                            </>
+                          )}
+                        </div>
+                      ) : null}
+
+                      {/* Signature */}
+                      <div className="mt-8 text-[14px] leading-[1.85] text-slate-600">
+                        <p>{parsed?.signOff || 'Warm regards,'}</p>
+                        <p className="font-semibold text-slate-800 mt-1">{parsed?.sigName || 'John Mitchell'}</p>
+                        <p className="text-[12px] text-slate-400 mt-0.5">{parsed?.sigCompany || 'Northway Creative Media'}</p>
+                      </div>
+                    </div>
+                  );
+                })()
+              }
+
+
+              {/* CTA Buttons */}
+              {sourceType !== 'empty' && selectedSourceItem && (
+              <div className="px-12 pt-2 pb-10 flex items-center justify-center gap-3">
+                <button className="bg-slate-900 hover:bg-slate-800 text-white text-[13px] font-semibold px-6 py-3 rounded-xl shadow-[0_4px_16px_-4px_rgba(15,23,42,0.3)] transition-all flex items-center gap-2 group">
+                  <Icon
+                    icon={sourceType === 'quote' ? 'solar:document-text-linear' : sourceType === 'invoice' ? 'solar:bill-list-linear' : 'solar:document-linear'}
+                    width="16"
+                  />
+                  <span>{sourceType === 'invoice' ? 'View Invoice' : 'View Quotation'}</span>
+                  <Icon icon="solar:arrow-right-linear" width="14" className="group-hover:translate-x-0.5 transition-transform" />
+                </button>
+                {selectedWalkthrough && (
+                <button className="border border-slate-200 hover:border-slate-300 hover:bg-slate-50 text-slate-600 hover:text-slate-800 text-[13px] font-medium px-6 py-3 rounded-xl transition-all flex items-center gap-2 group">
+                  <Icon icon="solar:play-circle-linear" width="16" className="text-slate-400 group-hover:text-slate-600 transition-colors" />
+                  <span>See Detailed Walkthrough</span>
+                </button>
+                )}
+              </div>
+              )}
+            </div>
+
+            {/* Professional Footer */}
+            <div className="px-10 pt-6 pb-6 text-center">
+              <div className="flex justify-center mb-5">
+                <img src="/northway-logo.png" alt="Logo" className="h-8 object-contain opacity-30 grayscale" />
+              </div>
+              <div className="mt-4 space-y-1.5">
+                <p className="text-[10px] text-slate-300 leading-relaxed">
+                  Sent with care. We value every conversation.
+                </p>
+                <p className="text-[10px] text-slate-300 mt-3">
+                  © 2026 Northway Creative Media. All rights reserved.
+                </p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        )}
       </div>
 
       {showSuccessOverlay && (
