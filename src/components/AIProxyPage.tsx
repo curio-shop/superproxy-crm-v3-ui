@@ -5,6 +5,20 @@ import { ContactDetail } from './Contacts';
 import { Company } from './Companies';
 import { Product } from './Products';
 import { Quotation, Invoice } from '../contexts/CallManagerContext';
+import {
+  type EntityAction,
+  type DocumentCard,
+  type AIResponseResult,
+  type ToolCallStep,
+  MOCK_RESPONSES,
+  toTitleCase,
+  createMockContact,
+  createMockCompany,
+  createMockProduct,
+  createMockQuotation,
+  createMockInvoice,
+  getAIResponse,
+} from '../lib/aiResponseEngine';
 
 /* ── Proxy context data ─────────────────────────────────────── */
 type ProxyCategoryKey = 'contact' | 'company' | 'product' | 'quote' | 'invoice' | 'walkthrough';
@@ -230,29 +244,16 @@ function SparkIcon({ size = 18, className = '' }: { size?: number; className?: s
   );
 }
 
-type EntityActionType = 'contact' | 'company' | 'product';
-
-interface EntityAction {
-  type: EntityActionType;
-  label: string;
-  contact?: ContactDetail;
-  company?: Company;
-  product?: Product;
-}
-
-interface DocumentCard {
-  type: 'quote' | 'invoice';
-  quotation?: Quotation;
-  invoice?: Invoice;
-}
 
 interface Message {
   id: string;
-  role: 'user' | 'assistant';
+  role: 'user' | 'assistant' | 'tool';
   content: string;
   timestamp: Date;
   entityAction?: EntityAction;
   documentCard?: DocumentCard;
+  toolCall?: ToolCallStep;
+  toolCompleted?: boolean;
 }
 
 const THINKING_PHRASES = [
@@ -281,177 +282,6 @@ const ACTION_CHIPS = [
   { label: 'Send Email',      icon: 'solar:letter-linear' },
 ];
 
-const MOCK_RESPONSES: Record<string, string> = {
-  default:  `Here's what I found:\n\n• Your pipeline has **12 active deals** totaling ฿2.4M in potential revenue\n• 3 quotes are awaiting client response for more than 7 days\n• Top performing account this month: **Apex Technologies** (฿480K)\n\nWould you like me to draft outreach for any of the stalled deals, or dig deeper into a specific account?`,
-  email:    `Here's a follow-up email draft:\n\n**Subject:** Following up on your quote — [Company Name]\n\nHi [Name],\n\nI wanted to check in on the proposal we sent over last week. We'd love to answer any questions or adjust terms to better fit your needs.\n\nWould a quick 15-minute call this week work for you?\n\nBest,\n[Your Name]\n\nWant me to personalize this for a specific contact?`,
-  pipeline: `Here's your pipeline summary:\n\n**Total Active Deals:** 12\n**Combined Value:** ฿2,400,000\n\n• 🟢 4 deals in negotiation stage\n• 🟡 5 deals awaiting client decision\n• 🔴 3 deals overdue for follow-up\n\nYour close rate this quarter is **34%**, up 8% from last quarter. Shall I highlight the at-risk deals?`,
-  accounts: `**Top Accounts by Revenue (This Month):**\n\n1. Apex Technologies — ฿480,000\n2. Nova Retail Group — ฿312,000\n3. Meridian Logistics — ฿275,500\n4. SkyLink Partners — ฿198,000\n5. Crestwood Holdings — ฿145,000\n\nApex Technologies has increased activity by 40% — a strong upsell opportunity. Want me to prepare a proposal?`,
-};
-
-/* ── Mock entity factories ─────────────────────────────────── */
-function toTitleCase(str: string): string {
-  return str.replace(/\b\w/g, c => c.toUpperCase());
-}
-
-function createMockContact(name: string): ContactDetail {
-  const initials = name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
-  const colors = ['blue', 'pink', 'amber', 'emerald'];
-  return {
-    id: `ai-c-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
-    name,
-    initials,
-    company: 'Unassigned',
-    title: 'New Contact',
-    email: `${name.toLowerCase().replace(/\s+/g, '.')}@example.com`,
-    phone: '+66 98 765 4321',
-    owner: { name: 'Richard', initials: 'R', color: 'indigo' },
-    avatarColor: colors[Math.floor(Math.random() * colors.length)],
-  };
-}
-
-function createMockCompany(name: string): Company {
-  const initials = name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
-  const colors = ['blue', 'pink', 'amber', 'emerald', 'purple'];
-  return {
-    id: `ai-co-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
-    name,
-    initials,
-    type: 'Prospect',
-    industry: 'Technology',
-    owner: { name: 'Richard', initials: 'R', color: 'indigo' },
-    avatarColor: colors[Math.floor(Math.random() * colors.length)],
-    lifecycleStage: 'Lead',
-  };
-}
-
-function createMockProduct(name: string): Product {
-  return {
-    id: `ai-p-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
-    name,
-    category: 'General',
-    sku: `SKU-${Math.random().toString(36).substring(2, 8).toUpperCase()}`,
-    stock: 100,
-    maxStock: 200,
-    price: 9900,
-    status: 'active',
-  };
-}
-
-function createMockQuotation(clientName: string): Quotation {
-  const initials = clientName.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
-  const colors = ['blue', 'purple', 'amber', 'emerald', 'pink'];
-  const num = Math.floor(Math.random() * 50) + 90;
-  const amount = Math.floor(Math.random() * 400000) + 100000;
-  const items = Math.floor(Math.random() * 4) + 2;
-  const today = new Date();
-  const validUntil = new Date(today);
-  validUntil.setDate(validUntil.getDate() + 30);
-  return {
-    id: `ai-q-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
-    number: `QT-2024-${String(num).padStart(3, '0')}`,
-    title: `Quote for ${clientName}`,
-    client: { name: clientName, initials, color: colors[Math.floor(Math.random() * colors.length)] },
-    status: 'published',
-    amount,
-    date: today.toISOString().slice(0, 10),
-    validUntil: validUntil.toISOString().slice(0, 10),
-    items,
-  };
-}
-
-function createMockInvoice(clientName: string): Invoice {
-  const initials = clientName.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
-  const colors = ['blue', 'purple', 'amber', 'emerald', 'pink'];
-  const num = Math.floor(Math.random() * 50) + 50;
-  const amount = Math.floor(Math.random() * 400000) + 80000;
-  const items = Math.floor(Math.random() * 4) + 2;
-  const today = new Date();
-  const dueDate = new Date(today);
-  dueDate.setDate(dueDate.getDate() + 30);
-  return {
-    id: `ai-inv-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
-    number: `INV-2024-${String(num).padStart(3, '0')}`,
-    title: `Invoice for ${clientName}`,
-    client: { name: clientName, initials, color: colors[Math.floor(Math.random() * colors.length)] },
-    status: 'pending',
-    amount,
-    issueDate: today.toISOString().slice(0, 10),
-    dueDate: dueDate.toISOString().slice(0, 10),
-    items,
-  };
-}
-
-/* ── AI response engine ───────────────────────────────────── */
-interface AIResponseResult {
-  content: string;
-  entityAction?: EntityAction;
-  documentCard?: DocumentCard;
-}
-
-function getAIResponse(input: string): AIResponseResult {
-  const lower = input.toLowerCase();
-
-  // Create contact
-  const contactMatch = lower.match(/create\s+(?:a\s+)?(?:new\s+)?contact\s+(.+)/);
-  if (contactMatch) {
-    const name = toTitleCase(contactMatch[1].trim());
-    const entity = createMockContact(name);
-    return {
-      content: `Done! I've created a new contact for **${name}**.\n\nHere's what I set up:\n\n• Email: ${entity.email}\n• Company: ${entity.company}\n• Owner: Richard\n\nYou can view the full profile or make edits from there.`,
-      entityAction: { type: 'contact', label: `View ${name}`, contact: entity },
-    };
-  }
-
-  // Create company
-  const companyMatch = lower.match(/create\s+(?:a\s+)?(?:new\s+)?company\s+(.+)/);
-  if (companyMatch) {
-    const name = toTitleCase(companyMatch[1].trim());
-    const entity = createMockCompany(name);
-    return {
-      content: `Done! I've created a new company: **${name}**.\n\nHere are the details:\n\n• Industry: Technology\n• Type: Prospect\n• Lifecycle Stage: Lead\n• Owner: Richard\n\nFeel free to update any details from the company profile.`,
-      entityAction: { type: 'company', label: `View ${name}`, company: entity },
-    };
-  }
-
-  // Create product
-  const productMatch = lower.match(/create\s+(?:a\s+)?(?:new\s+)?product\s+(.+)/);
-  if (productMatch) {
-    const name = toTitleCase(productMatch[1].trim());
-    const entity = createMockProduct(name);
-    return {
-      content: `Done! I've created a new product: **${name}**.\n\nHere are the details:\n\n• SKU: ${entity.sku}\n• Price: ฿${entity.price.toLocaleString()}\n• Stock: ${entity.stock} units\n• Status: Active\n\nYou can update pricing, stock levels, and more from the product page.`,
-      entityAction: { type: 'product', label: `View ${name}`, product: entity },
-    };
-  }
-
-  // Generate quote
-  const quoteMatch = lower.match(/(?:generate|create)\s+(?:a\s+)?(?:new\s+)?quote\s+(?:for\s+)?(.+)/);
-  if (quoteMatch) {
-    const name = toTitleCase(quoteMatch[1].trim());
-    const quotation = createMockQuotation(name);
-    return {
-      content: `I've generated a new quote for **${name}**. Here's a summary of what was created:`,
-      documentCard: { type: 'quote', quotation },
-    };
-  }
-
-  // Create invoice
-  const invoiceMatch = lower.match(/(?:generate|create)\s+(?:a\s+)?(?:new\s+)?invoice\s+(?:for\s+)?(.+)/);
-  if (invoiceMatch) {
-    const name = toTitleCase(invoiceMatch[1].trim());
-    const invoice = createMockInvoice(name);
-    return {
-      content: `I've created a new invoice for **${name}**. Here are the details:`,
-      documentCard: { type: 'invoice', invoice },
-    };
-  }
-
-  // Existing keyword matches
-  if (lower.includes('email') || lower.includes('follow')) return { content: MOCK_RESPONSES.email };
-  if (lower.includes('pipeline') || lower.includes('summary')) return { content: MOCK_RESPONSES.pipeline };
-  if (lower.includes('account') || lower.includes('analy')) return { content: MOCK_RESPONSES.accounts };
-  return { content: MOCK_RESPONSES.default };
-}
 
 interface AIProxyPageProps {
   onNavigateToNotifications?: () => void;
@@ -577,19 +407,50 @@ export default function AIProxyPage({ onNavigateToNotifications, onViewContact, 
     setThinkingPhrase(getNextPhrase());
     setIsTyping(true);
 
-    setTimeout(() => {
-      const response = getAIResponse(text);
-      setMessages(prev => [...prev, {
-        id: (Date.now() + 1).toString(),
-        role: 'assistant',
-        content: response.content,
-        timestamp: new Date(),
-        entityAction: response.entityAction,
-        documentCard: response.documentCard,
-      }]);
-      setIsTyping(false);
-      inputRef.current?.focus();
-    }, 3500);
+    const response = getAIResponse(text);
+
+    if (response.toolCall) {
+      // Three-phase: thinking -> tool executing -> result
+      setTimeout(() => {
+        setIsTyping(false);
+        const toolMsgId = (Date.now() + 1).toString();
+        setMessages(prev => [...prev, {
+          id: toolMsgId,
+          role: 'tool',
+          content: response.toolCall!.description,
+          timestamp: new Date(),
+          toolCall: response.toolCall,
+          toolCompleted: false,
+        }]);
+
+        setTimeout(() => {
+          setMessages(prev => prev.map(m => m.id === toolMsgId ? { ...m, toolCompleted: true } : m));
+
+          setTimeout(() => {
+            setMessages(prev => [...prev, {
+              id: (Date.now() + 2).toString(),
+              role: 'assistant',
+              content: response.content,
+              timestamp: new Date(),
+              entityAction: response.entityAction,
+              documentCard: response.documentCard,
+            }]);
+            inputRef.current?.focus();
+          }, 300);
+        }, 1800);
+      }, 1200);
+    } else {
+      setTimeout(() => {
+        setMessages(prev => [...prev, {
+          id: (Date.now() + 1).toString(),
+          role: 'assistant',
+          content: response.content,
+          timestamp: new Date(),
+        }]);
+        setIsTyping(false);
+        inputRef.current?.focus();
+      }, 2500);
+    }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -823,18 +684,62 @@ export default function AIProxyPage({ onNavigateToNotifications, onViewContact, 
       {/* Messages */}
       <div className="flex-1 overflow-y-auto custom-scrollbar px-6 py-8">
         <div className="max-w-[720px] mx-auto space-y-8">
-          {messages.map((message, index) => (
-            <div
-              key={message.id}
-              className=""
-            >
-              {message.role === 'user' ? (
+          {messages.map((message) => (
+            <div key={message.id}>
+              {/* User message */}
+              {message.role === 'user' && (
                 <div className="flex justify-end">
                   <div className="max-w-[72%] rounded-2xl px-5 py-3.5 bg-slate-100/80 text-slate-900 text-[15px] leading-relaxed whitespace-pre-wrap">
                     {message.content}
                   </div>
                 </div>
-              ) : (
+              )}
+
+              {/* Tool call indicator */}
+              {message.role === 'tool' && message.toolCall && (
+                <div className="pl-5 py-1" style={{ animation: 'proxy-tool-enter 350ms cubic-bezier(0.16,1,0.3,1) both' }}>
+                  <div className="flex items-center gap-2.5">
+                    <div className="relative flex items-center gap-2.5 flex-1 min-w-0">
+                      <div
+                        className="absolute left-[-16px] top-[3px] bottom-[3px] w-[1.5px] rounded-full bg-slate-300"
+                        style={!message.toolCompleted ? { animation: 'proxy-tool-line-sweep 400ms cubic-bezier(0.16,1,0.3,1) both' } : undefined}
+                      />
+                      <Icon
+                        icon={message.toolCall.icon}
+                        width="14"
+                        className="flex-shrink-0 text-slate-400"
+                      />
+                      <span
+                        className={`text-[13px] tracking-[-0.01em] flex-1 truncate transition-colors duration-300 ${message.toolCompleted ? 'text-slate-400' : 'text-slate-500 font-medium'}`}
+                        style={{ animation: 'proxy-tool-text-fade 300ms cubic-bezier(0.16,1,0.3,1) 80ms both' }}
+                      >
+                        {message.toolCall.description}
+                      </span>
+                    </div>
+                    {message.toolCompleted ? (
+                      <svg width="13" height="13" viewBox="0 0 12 12" fill="none" className="flex-shrink-0">
+                        <path
+                          d="M2.5 6.5L5 9L9.5 3.5"
+                          stroke="#94a3b8"
+                          strokeWidth="1.25"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeDasharray="12"
+                          style={{ animation: 'proxy-tool-check 350ms ease-out forwards' }}
+                        />
+                      </svg>
+                    ) : (
+                      <div
+                        className="w-3 h-3 rounded-full border border-slate-300 border-t-slate-500 flex-shrink-0"
+                        style={{ animation: 'proxy-tool-spinner 0.8s linear infinite' }}
+                      />
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* Assistant message */}
+              {message.role === 'assistant' && (
                 <div className="group">
                   <div className="text-[15px] text-slate-800 leading-relaxed pl-5 space-y-1">
                     {renderContent(message.content)}
@@ -843,15 +748,14 @@ export default function AIProxyPage({ onNavigateToNotifications, onViewContact, 
                   {/* Entity inline preview */}
                   {message.entityAction && (() => {
                     const action = message.entityAction!;
-                    const viewLabel = action.type === 'contact' ? 'View Contact' : action.type === 'company' ? 'View Company' : 'View Product';
 
                     if (action.type === 'contact' && action.contact) {
                       const c = action.contact;
                       return (
                         <div className="mt-3 ml-5">
-                          <div className="border-l-[1.5px] border-slate-200 pl-4 py-1.5">
+                          <div className="border-l-[1.5px] border-blue-400 pl-4 py-1.5">
                             <div className="flex items-center gap-1.5">
-                              <span className="text-[13px] font-medium text-slate-700">{c.name}</span>
+                              <span className="text-[13px] font-semibold text-slate-800">{c.name}</span>
                               {c.title && <><span className="text-slate-300">·</span><span className="text-[11px] text-slate-400">{c.title}</span></>}
                             </div>
                             <div className="flex items-center gap-1.5 mt-1 flex-wrap">
@@ -861,10 +765,10 @@ export default function AIProxyPage({ onNavigateToNotifications, onViewContact, 
                             </div>
                             <button
                               onClick={() => onViewContact?.(c)}
-                              className="inline-flex items-center gap-1.5 mt-3 px-3 py-1.5 text-[11px] font-semibold text-slate-500 bg-slate-100 hover:bg-slate-200/80 hover:text-slate-700 rounded-lg transition-all active:scale-[0.97]"
+                              className="inline-flex items-center gap-1.5 mt-3 px-3 py-1.5 text-[11px] font-semibold text-blue-600 hover:text-blue-700 bg-blue-50 hover:bg-blue-100/80 rounded-lg transition-all active:scale-[0.97]"
                             >
                               <Icon icon="solar:arrow-right-up-linear" width="13" />
-                              {viewLabel}
+                              View Contact
                             </button>
                           </div>
                         </div>
@@ -875,9 +779,9 @@ export default function AIProxyPage({ onNavigateToNotifications, onViewContact, 
                       const co = action.company;
                       return (
                         <div className="mt-3 ml-5">
-                          <div className="border-l-[1.5px] border-slate-200 pl-4 py-1.5">
+                          <div className="border-l-[1.5px] border-violet-400 pl-4 py-1.5">
                             <div className="flex items-center gap-1.5">
-                              <span className="text-[13px] font-medium text-slate-700">{co.name}</span>
+                              <span className="text-[13px] font-semibold text-slate-800">{co.name}</span>
                               {co.type && <><span className="text-slate-300">·</span><span className="text-[11px] text-slate-400">{co.type}</span></>}
                             </div>
                             <div className="flex items-center gap-1.5 mt-1 flex-wrap">
@@ -887,10 +791,10 @@ export default function AIProxyPage({ onNavigateToNotifications, onViewContact, 
                             </div>
                             <button
                               onClick={() => onViewCompany?.(co)}
-                              className="inline-flex items-center gap-1.5 mt-3 px-3 py-1.5 text-[11px] font-semibold text-slate-500 bg-slate-100 hover:bg-slate-200/80 hover:text-slate-700 rounded-lg transition-all active:scale-[0.97]"
+                              className="inline-flex items-center gap-1.5 mt-3 px-3 py-1.5 text-[11px] font-semibold text-violet-600 hover:text-violet-700 bg-violet-50 hover:bg-violet-100/80 rounded-lg transition-all active:scale-[0.97]"
                             >
                               <Icon icon="solar:arrow-right-up-linear" width="13" />
-                              {viewLabel}
+                              View Company
                             </button>
                           </div>
                         </div>
@@ -901,9 +805,9 @@ export default function AIProxyPage({ onNavigateToNotifications, onViewContact, 
                       const p = action.product;
                       return (
                         <div className="mt-3 ml-5">
-                          <div className="border-l-[1.5px] border-slate-200 pl-4 py-1.5">
+                          <div className="border-l-[1.5px] border-amber-400 pl-4 py-1.5">
                             <div className="flex items-center gap-1.5">
-                              <span className="text-[13px] font-medium text-slate-700">{p.name}</span>
+                              <span className="text-[13px] font-semibold text-slate-800">{p.name}</span>
                               <span className="text-slate-300">·</span>
                               <span className={`text-[11px] font-medium ${p.status === 'active' ? 'text-emerald-600' : p.status === 'draft' ? 'text-slate-400' : 'text-amber-600'}`}>
                                 {p.status === 'active' ? 'Active' : p.status === 'draft' ? 'Draft' : p.status === 'low_stock' ? 'Low Stock' : 'Out of Stock'}
@@ -918,10 +822,10 @@ export default function AIProxyPage({ onNavigateToNotifications, onViewContact, 
                             </div>
                             <button
                               onClick={() => onViewProduct?.(p)}
-                              className="inline-flex items-center gap-1.5 mt-3 px-3 py-1.5 text-[11px] font-semibold text-slate-500 bg-slate-100 hover:bg-slate-200/80 hover:text-slate-700 rounded-lg transition-all active:scale-[0.97]"
+                              className="inline-flex items-center gap-1.5 mt-3 px-3 py-1.5 text-[11px] font-semibold text-amber-600 hover:text-amber-700 bg-amber-50 hover:bg-amber-100/80 rounded-lg transition-all active:scale-[0.97]"
                             >
                               <Icon icon="solar:arrow-right-up-linear" width="13" />
-                              {viewLabel}
+                              View Product
                             </button>
                           </div>
                         </div>
@@ -931,7 +835,7 @@ export default function AIProxyPage({ onNavigateToNotifications, onViewContact, 
                     return null;
                   })()}
 
-                  {/* Document card (quote / invoice) */}
+                  {/* Document card — quote */}
                   {message.documentCard && message.documentCard.type === 'quote' && message.documentCard.quotation && (() => {
                     const q = message.documentCard.quotation;
                     const validDate = new Date(q.validUntil);
@@ -940,9 +844,9 @@ export default function AIProxyPage({ onNavigateToNotifications, onViewContact, 
                     const statusLabel = q.status === 'published' ? 'Published' : q.status === 'sent' ? 'Sent' : 'Draft';
                     return (
                       <div className="mt-3 ml-5">
-                        <div className="border-l-[1.5px] border-slate-200 pl-4 py-1.5">
+                        <div className="border-l-[1.5px] border-emerald-400 pl-4 py-1.5">
                           <div className="flex items-center gap-1.5">
-                            <span className="text-[13px] font-medium text-slate-700 tracking-tight">{q.number}</span>
+                            <span className="text-[13px] font-semibold text-slate-800 tracking-tight">{q.number}</span>
                             <span className="text-slate-300">·</span>
                             <span className={`text-[11px] font-medium ${statusColor}`}>{statusLabel}</span>
                           </div>
@@ -962,7 +866,7 @@ export default function AIProxyPage({ onNavigateToNotifications, onViewContact, 
                               url.searchParams.set('view', 'quote');
                               window.open(url.toString(), '_blank');
                             }}
-                            className="inline-flex items-center gap-1.5 mt-3 px-3 py-1.5 text-[11px] font-semibold text-slate-500 bg-slate-100 hover:bg-slate-200/80 hover:text-slate-700 rounded-lg transition-all active:scale-[0.97]"
+                            className="inline-flex items-center gap-1.5 mt-3 px-3 py-1.5 text-[11px] font-semibold text-emerald-600 hover:text-emerald-700 bg-emerald-50 hover:bg-emerald-100/80 rounded-lg transition-all active:scale-[0.97]"
                           >
                             <Icon icon="solar:arrow-right-up-linear" width="13" />
                             View Quote
@@ -972,6 +876,7 @@ export default function AIProxyPage({ onNavigateToNotifications, onViewContact, 
                     );
                   })()}
 
+                  {/* Document card — invoice */}
                   {message.documentCard && message.documentCard.type === 'invoice' && message.documentCard.invoice && (() => {
                     const inv = message.documentCard.invoice;
                     const dueDate = new Date(inv.dueDate);
@@ -980,9 +885,9 @@ export default function AIProxyPage({ onNavigateToNotifications, onViewContact, 
                     const statusLabel = inv.status === 'paid' ? 'Paid' : inv.status === 'pending' ? 'Pending' : inv.status === 'overdue' ? 'Overdue' : 'Draft';
                     return (
                       <div className="mt-3 ml-5">
-                        <div className="border-l-[1.5px] border-slate-200 pl-4 py-1.5">
+                        <div className="border-l-[1.5px] border-sky-400 pl-4 py-1.5">
                           <div className="flex items-center gap-1.5">
-                            <span className="text-[13px] font-medium text-slate-700 tracking-tight">{inv.number}</span>
+                            <span className="text-[13px] font-semibold text-slate-800 tracking-tight">{inv.number}</span>
                             <span className="text-slate-300">·</span>
                             <span className={`text-[11px] font-medium ${statusColor}`}>{statusLabel}</span>
                           </div>
@@ -1002,7 +907,7 @@ export default function AIProxyPage({ onNavigateToNotifications, onViewContact, 
                               url.searchParams.set('view', 'invoice');
                               window.open(url.toString(), '_blank');
                             }}
-                            className="inline-flex items-center gap-1.5 mt-3 px-3 py-1.5 text-[11px] font-semibold text-slate-500 bg-slate-100 hover:bg-slate-200/80 hover:text-slate-700 rounded-lg transition-all active:scale-[0.97]"
+                            className="inline-flex items-center gap-1.5 mt-3 px-3 py-1.5 text-[11px] font-semibold text-sky-600 hover:text-sky-700 bg-sky-50 hover:bg-sky-100/80 rounded-lg transition-all active:scale-[0.97]"
                           >
                             <Icon icon="solar:arrow-right-up-linear" width="13" />
                             View Invoice
@@ -1048,6 +953,25 @@ export default function AIProxyPage({ onNavigateToNotifications, onViewContact, 
                   -webkit-text-fill-color: transparent;
                   background-clip: text;
                   animation: text-shimmer 3s ease-in-out infinite;
+                }
+                @keyframes proxy-tool-enter {
+                  0% { opacity: 0; transform: translateX(-4px); }
+                  100% { opacity: 1; transform: translateX(0); }
+                }
+                @keyframes proxy-tool-line-sweep {
+                  0% { transform: scaleX(0); transform-origin: left; }
+                  100% { transform: scaleX(1); transform-origin: left; }
+                }
+                @keyframes proxy-tool-text-fade {
+                  0% { opacity: 0; transform: translateX(-3px); }
+                  100% { opacity: 1; transform: translateX(0); }
+                }
+                @keyframes proxy-tool-spinner {
+                  to { transform: rotate(360deg); }
+                }
+                @keyframes proxy-tool-check {
+                  0% { stroke-dashoffset: 12; opacity: 0.4; }
+                  100% { stroke-dashoffset: 0; opacity: 1; }
                 }
               `}</style>
               <div className="flex items-center gap-2">

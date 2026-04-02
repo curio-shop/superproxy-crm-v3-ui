@@ -1,5 +1,15 @@
 import { Icon } from '@iconify/react';
 import { useState, useRef, useEffect } from 'react';
+import type { ContactDetail } from './Contacts';
+import type { Company } from './Companies';
+import type { Product } from './Products';
+import {
+  type EntityAction,
+  type DocumentCard,
+  type ToolCallStep,
+  getAIResponse,
+  MOCK_RESPONSES,
+} from '../lib/aiResponseEngine';
 
 /* ── SparkIcon ── */
 function SparkIcon({ size = 16, className = '' }: { size?: number; className?: string }) {
@@ -23,23 +33,21 @@ const THINKING_PHRASES = [
   'Pulling that up', 'Almost got it', 'Sorting it out',
 ];
 
-const MOCK_RESPONSES: Record<string, string> = {
-  default: `Here's what I found:\n\n• Your pipeline has **12 active deals** totaling ฿2.4M\n• 3 quotes awaiting response for 7+ days\n• Top account: **Apex Technologies** (฿480K)\n\nWant me to dig deeper?`,
-  email: `Here's a draft:\n\n**Subject:** Following up on your quote\n\nHi there,\n\nJust checking in on the proposal we sent. Happy to adjust terms.\n\nWould a 15-min call work this week?`,
-  pipeline: `**Pipeline Summary:**\n\n• 🟢 4 in negotiation\n• 🟡 5 awaiting decision\n• 🔴 3 overdue\n\nClose rate: **34%** (+8% QoQ)`,
-};
-
 const QUICK_ACTIONS = [
-  { label: 'Follow up on a quote', icon: 'solar:letter-linear' },
-  { label: 'Call a contact', icon: 'solar:phone-calling-linear' },
-  { label: 'Create a new quote', icon: 'solar:document-add-linear' },
-  { label: 'Summarize my day', icon: 'solar:calendar-minimalistic-linear' },
+  { label: 'Follow up on a quote', icon: 'solar:letter-linear', command: 'Follow up on a quote' },
+  { label: 'Add a contact', icon: 'solar:user-plus-linear', command: 'create contact New Lead' },
+  { label: 'Create a new quote', icon: 'solar:document-add-linear', command: 'generate quote for Apex Technologies' },
+  { label: 'Summarize my day', icon: 'solar:calendar-minimalistic-linear', command: 'Summarize my day' },
 ];
 
 interface Message {
   id: string;
-  role: 'user' | 'assistant';
+  role: 'user' | 'assistant' | 'tool';
   content: string;
+  entityAction?: EntityAction;
+  documentCard?: DocumentCard;
+  toolCall?: ToolCallStep;
+  toolCompleted?: boolean;
 }
 
 interface FloatingAIWidgetProps {
@@ -47,9 +55,12 @@ interface FloatingAIWidgetProps {
   dismissed: boolean;
   onDismiss: () => void;
   onGetMoreCredits?: () => void;
+  onViewContact?: (contact: ContactDetail) => void;
+  onViewCompany?: (company: Company) => void;
+  onViewProduct?: (product: Product) => void;
 }
 
-export default function FloatingAIWidget({ isVisible, dismissed, onDismiss, onGetMoreCredits }: FloatingAIWidgetProps) {
+export default function FloatingAIWidget({ isVisible, dismissed, onDismiss, onGetMoreCredits, onViewContact, onViewCompany, onViewProduct }: FloatingAIWidgetProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
@@ -93,13 +104,6 @@ export default function FloatingAIWidget({ isVisible, dismissed, onDismiss, onGe
     }
   }, [messages, isTyping]);
 
-  const getResponse = (input: string): string => {
-    const lower = input.toLowerCase();
-    if (lower.includes('email') || lower.includes('follow') || lower.includes('draft')) return MOCK_RESPONSES.email;
-    if (lower.includes('pipeline') || lower.includes('summary') || lower.includes('overview')) return MOCK_RESPONSES.pipeline;
-    return MOCK_RESPONSES.default;
-  };
-
   const renderContent = (text: string) =>
     text.split('\n').map((line, i) => (
       <p
@@ -113,17 +117,56 @@ export default function FloatingAIWidget({ isVisible, dismissed, onDismiss, onGe
     const text = (content ?? inputValue).trim();
     if (!text || isTyping) return;
 
+    // Add user message
     setMessages(prev => [...prev, { id: Date.now().toString(), role: 'user', content: text }]);
     setInputValue('');
     if (inputRef.current) inputRef.current.style.height = 'auto';
     setThinkingPhrase(getNextPhrase());
     setIsTyping(true);
 
-    setTimeout(() => {
-      setMessages(prev => [...prev, { id: (Date.now() + 1).toString(), role: 'assistant', content: getResponse(text) }]);
-      setIsTyping(false);
-      inputRef.current?.focus();
-    }, 3500);
+    // Compute response immediately to know if tool call needed
+    const response = getAIResponse(text);
+
+    if (response.toolCall) {
+      // Three-phase flow: thinking -> tool executing -> result
+      setTimeout(() => {
+        setIsTyping(false);
+        // Insert tool call message
+        const toolMsgId = (Date.now() + 1).toString();
+        setMessages(prev => [...prev, {
+          id: toolMsgId,
+          role: 'tool',
+          content: response.toolCall!.description,
+          toolCall: response.toolCall,
+          toolCompleted: false,
+        }]);
+
+        // After tool execution delay, mark complete + add assistant response
+        setTimeout(() => {
+          // Mark tool as completed
+          setMessages(prev => prev.map(m => m.id === toolMsgId ? { ...m, toolCompleted: true } : m));
+
+          // Add assistant response after brief checkmark pause
+          setTimeout(() => {
+            setMessages(prev => [...prev, {
+              id: (Date.now() + 2).toString(),
+              role: 'assistant',
+              content: response.content,
+              entityAction: response.entityAction,
+              documentCard: response.documentCard,
+            }]);
+            inputRef.current?.focus();
+          }, 300);
+        }, 1800);
+      }, 1200);
+    } else {
+      // Simple text response — standard flow
+      setTimeout(() => {
+        setMessages(prev => [...prev, { id: (Date.now() + 1).toString(), role: 'assistant', content: response.content }]);
+        setIsTyping(false);
+        inputRef.current?.focus();
+      }, 2500);
+    }
   };
 
   /* ── Drag handlers ── */
@@ -232,6 +275,28 @@ export default function FloatingAIWidget({ isVisible, dismissed, onDismiss, onGe
           0% { left: -33%; }
           100% { left: 100%; }
         }
+        @keyframes widget-tool-enter {
+          0% { opacity: 0; transform: translateX(-4px); }
+          100% { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes widget-tool-spinner {
+          to { transform: rotate(360deg); }
+        }
+        @keyframes widget-tool-check {
+          0% { stroke-dashoffset: 12; opacity: 0.4; }
+          100% { stroke-dashoffset: 0; opacity: 1; }
+        }
+        @keyframes widget-tool-line-sweep {
+          0% { transform: scaleX(0); transform-origin: left; }
+          100% { transform: scaleX(1); transform-origin: left; }
+        }
+        @keyframes widget-tool-text-fade {
+          0% { opacity: 0; transform: translateX(-3px); }
+          100% { opacity: 1; transform: translateX(0); }
+        }
+        .widget-tool-line {
+          animation: widget-tool-enter 350ms cubic-bezier(0.16,1,0.3,1) both;
+        }
       `}</style>
 
       <div
@@ -255,11 +320,8 @@ export default function FloatingAIWidget({ isVisible, dismissed, onDismiss, onGe
             }}
           >
             {/* Resize handles */}
-            {/* Top edge */}
             <div onMouseDown={handleResizeStart('top')} className="absolute top-0 left-4 right-0 h-2 cursor-n-resize z-10" />
-            {/* Left edge */}
             <div onMouseDown={handleResizeStart('left')} className="absolute top-4 left-0 bottom-0 w-2 cursor-w-resize z-10" />
-            {/* Top-left corner */}
             <div
               onMouseDown={handleResizeStart('corner')}
               className="absolute top-0 left-0 w-4 h-4 cursor-nw-resize z-20 group"
@@ -316,7 +378,7 @@ export default function FloatingAIWidget({ isVisible, dismissed, onDismiss, onGe
                     {QUICK_ACTIONS.map((action) => (
                       <button
                         key={action.label}
-                        onClick={() => handleSubmit(action.label)}
+                        onClick={() => handleSubmit(action.command)}
                         className="w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-left text-[12px] font-medium text-slate-500 border border-slate-100 hover:border-slate-200 hover:bg-slate-50/80 transition-all group"
                       >
                         <Icon icon={action.icon} width="14" className="text-slate-400 group-hover:text-slate-500 transition-colors flex-shrink-0" />
@@ -333,15 +395,234 @@ export default function FloatingAIWidget({ isVisible, dismissed, onDismiss, onGe
                 <div className="space-y-4">
                   {messages.map((msg, i) => (
                     <div key={msg.id} className="widget-msg-in" style={{ animationDelay: `${i * 30}ms` }}>
-                      {msg.role === 'user' ? (
+                      {/* User message */}
+                      {msg.role === 'user' && (
                         <div className="flex justify-end">
                           <div className="max-w-[82%] rounded-2xl px-3.5 py-2.5 bg-slate-100/80 text-slate-900 text-[13px] leading-relaxed">
                             {msg.content}
                           </div>
                         </div>
-                      ) : (
-                        <div className="text-[13px] text-slate-600 leading-relaxed space-y-0.5">
-                          {renderContent(msg.content)}
+                      )}
+
+                      {/* Tool call indicator */}
+                      {msg.role === 'tool' && msg.toolCall && (
+                        <div className="widget-tool-line pl-3.5 py-0.5">
+                          <div className="flex items-center gap-2">
+                            {/* Hairline left accent */}
+                            <div className="relative flex items-center gap-2 flex-1 min-w-0">
+                              <div
+                                className="absolute left-[-14px] top-[3px] bottom-[3px] w-[1.5px] rounded-full bg-slate-300"
+                                style={!msg.toolCompleted ? { animation: 'widget-tool-line-sweep 400ms cubic-bezier(0.16,1,0.3,1) both' } : undefined}
+                              />
+                              <Icon
+                                icon={msg.toolCall.icon}
+                                width="12"
+                                className={`flex-shrink-0 transition-colors duration-300 ${msg.toolCompleted ? 'text-slate-400' : 'text-slate-400'}`}
+                              />
+                              <span
+                                className={`text-[11px] tracking-[-0.01em] flex-1 truncate transition-colors duration-300 ${msg.toolCompleted ? 'text-slate-400' : 'text-slate-500 font-medium'}`}
+                                style={{ animation: 'widget-tool-text-fade 300ms cubic-bezier(0.16,1,0.3,1) 80ms both' }}
+                              >
+                                {msg.toolCall.description}
+                              </span>
+                            </div>
+                            {/* Status: spinner or checkmark */}
+                            {msg.toolCompleted ? (
+                              <svg width="11" height="11" viewBox="0 0 12 12" fill="none" className="flex-shrink-0">
+                                <path
+                                  d="M2.5 6.5L5 9L9.5 3.5"
+                                  stroke="#94a3b8"
+                                  strokeWidth="1.25"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeDasharray="12"
+                                  style={{ animation: 'widget-tool-check 350ms ease-out forwards' }}
+                                />
+                              </svg>
+                            ) : (
+                              <div
+                                className="w-[10px] h-[10px] rounded-full border border-slate-300 border-t-slate-500 flex-shrink-0"
+                                style={{ animation: 'widget-tool-spinner 0.8s linear infinite' }}
+                              />
+                            )}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Assistant message */}
+                      {msg.role === 'assistant' && (
+                        <div className="group">
+                          <div className="text-[13px] text-slate-600 leading-relaxed space-y-0.5">
+                            {renderContent(msg.content)}
+                          </div>
+
+                          {/* Entity inline preview — compact */}
+                          {msg.entityAction && (() => {
+                            const action = msg.entityAction!;
+
+                            if (action.type === 'contact' && action.contact) {
+                              const c = action.contact;
+                              return (
+                                <div className="mt-2.5">
+                                  <div className="border-l-[1.5px] border-blue-400 pl-3 py-1">
+                                    <div className="flex items-center gap-1.5">
+                                      <span className="text-[12px] font-semibold text-slate-800 truncate">{c.name}</span>
+                                      {c.title && <><span className="text-slate-300">·</span><span className="text-[10px] text-slate-400 truncate">{c.title}</span></>}
+                                    </div>
+                                    <div className="flex items-center gap-1.5 mt-0.5 truncate">
+                                      {c.email && <span className="text-[11px] text-slate-400 truncate">{c.email}</span>}
+                                      {c.company && <><span className="text-slate-300">·</span><span className="text-[11px] text-slate-400 truncate">{c.company}</span></>}
+                                    </div>
+                                    <button
+                                      onClick={() => onViewContact?.(c)}
+                                      className="inline-flex items-center gap-1 mt-2.5 px-2.5 py-1 text-[10px] font-semibold text-blue-600 hover:text-blue-700 bg-blue-50 hover:bg-blue-100/80 rounded-lg transition-all active:scale-[0.97]"
+                                    >
+                                      <Icon icon="solar:arrow-right-up-linear" width="11" />
+                                      View Contact
+                                    </button>
+                                  </div>
+                                </div>
+                              );
+                            }
+
+                            if (action.type === 'company' && action.company) {
+                              const co = action.company;
+                              return (
+                                <div className="mt-2.5">
+                                  <div className="border-l-[1.5px] border-violet-400 pl-3 py-1">
+                                    <div className="flex items-center gap-1.5">
+                                      <span className="text-[12px] font-semibold text-slate-800 truncate">{co.name}</span>
+                                      {co.type && <><span className="text-slate-300">·</span><span className="text-[10px] text-slate-400">{co.type}</span></>}
+                                    </div>
+                                    <div className="flex items-center gap-1.5 mt-0.5 truncate">
+                                      {co.industry && <span className="text-[11px] text-slate-400">{co.industry}</span>}
+                                      {co.lifecycleStage && <><span className="text-slate-300">·</span><span className="text-[11px] text-slate-400">{co.lifecycleStage}</span></>}
+                                    </div>
+                                    <button
+                                      onClick={() => onViewCompany?.(co)}
+                                      className="inline-flex items-center gap-1 mt-2.5 px-2.5 py-1 text-[10px] font-semibold text-violet-600 hover:text-violet-700 bg-violet-50 hover:bg-violet-100/80 rounded-lg transition-all active:scale-[0.97]"
+                                    >
+                                      <Icon icon="solar:arrow-right-up-linear" width="11" />
+                                      View Company
+                                    </button>
+                                  </div>
+                                </div>
+                              );
+                            }
+
+                            if (action.type === 'product' && action.product) {
+                              const p = action.product;
+                              return (
+                                <div className="mt-2.5">
+                                  <div className="border-l-[1.5px] border-amber-400 pl-3 py-1">
+                                    <div className="flex items-center gap-1.5">
+                                      <span className="text-[12px] font-semibold text-slate-800 truncate">{p.name}</span>
+                                      <span className="text-slate-300">·</span>
+                                      <span className={`text-[10px] font-medium ${p.status === 'active' ? 'text-emerald-600' : p.status === 'draft' ? 'text-slate-400' : 'text-amber-600'}`}>
+                                        {p.status === 'active' ? 'Active' : p.status === 'draft' ? 'Draft' : p.status === 'low_stock' ? 'Low Stock' : 'Out of Stock'}
+                                      </span>
+                                    </div>
+                                    <div className="flex items-center gap-1.5 mt-0.5 truncate">
+                                      <span className="text-[11px] text-slate-400">SKU: {p.sku}</span>
+                                      <span className="text-slate-300">·</span>
+                                      <span className="text-[11px] font-medium text-slate-600">฿{p.price.toLocaleString()}</span>
+                                      <span className="text-slate-300">·</span>
+                                      <span className="text-[11px] text-slate-400">{p.stock} in stock</span>
+                                    </div>
+                                    <button
+                                      onClick={() => onViewProduct?.(p)}
+                                      className="inline-flex items-center gap-1 mt-2.5 px-2.5 py-1 text-[10px] font-semibold text-amber-600 hover:text-amber-700 bg-amber-50 hover:bg-amber-100/80 rounded-lg transition-all active:scale-[0.97]"
+                                    >
+                                      <Icon icon="solar:arrow-right-up-linear" width="11" />
+                                      View Product
+                                    </button>
+                                  </div>
+                                </div>
+                              );
+                            }
+
+                            return null;
+                          })()}
+
+                          {/* Document card — quote */}
+                          {msg.documentCard && msg.documentCard.type === 'quote' && msg.documentCard.quotation && (() => {
+                            const q = msg.documentCard.quotation;
+                            const validDate = new Date(q.validUntil);
+                            const formattedValid = validDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                            const statusColor = q.status === 'published' ? 'text-emerald-600' : q.status === 'sent' ? 'text-blue-600' : 'text-slate-400';
+                            const statusLabel = q.status === 'published' ? 'Published' : q.status === 'sent' ? 'Sent' : 'Draft';
+                            return (
+                              <div className="mt-2.5">
+                                <div className="border-l-[1.5px] border-emerald-400 pl-3 py-1">
+                                  <div className="flex items-center gap-1.5">
+                                    <span className="text-[12px] font-semibold text-slate-800 tracking-tight">{q.number}</span>
+                                    <span className="text-slate-300">·</span>
+                                    <span className={`text-[10px] font-medium ${statusColor}`}>{statusLabel}</span>
+                                  </div>
+                                  <div className="flex items-center gap-1.5 mt-0.5 truncate">
+                                    <span className="text-[11px] font-medium text-slate-600">{q.client.name}</span>
+                                    <span className="text-slate-300">·</span>
+                                    <span className="text-[11px] text-slate-400">{q.items} items</span>
+                                    <span className="text-slate-300">·</span>
+                                    <span className="text-[11px] font-medium text-slate-600">฿{q.amount.toLocaleString()}</span>
+                                    <span className="text-slate-300">·</span>
+                                    <span className="text-[11px] text-slate-400">Valid {formattedValid}</span>
+                                  </div>
+                                  <button
+                                    onClick={() => {
+                                      const url = new URL(window.location.href);
+                                      url.searchParams.set('view', 'quote');
+                                      window.open(url.toString(), '_blank');
+                                    }}
+                                    className="inline-flex items-center gap-1 mt-2.5 px-2.5 py-1 text-[10px] font-semibold text-emerald-600 hover:text-emerald-700 bg-emerald-50 hover:bg-emerald-100/80 rounded-lg transition-all active:scale-[0.97]"
+                                  >
+                                    <Icon icon="solar:arrow-right-up-linear" width="11" />
+                                    View Quote
+                                  </button>
+                                </div>
+                              </div>
+                            );
+                          })()}
+
+                          {/* Document card — invoice */}
+                          {msg.documentCard && msg.documentCard.type === 'invoice' && msg.documentCard.invoice && (() => {
+                            const inv = msg.documentCard.invoice;
+                            const dueDate = new Date(inv.dueDate);
+                            const formattedDue = dueDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                            const statusColor = inv.status === 'paid' ? 'text-emerald-600' : inv.status === 'pending' ? 'text-amber-600' : inv.status === 'overdue' ? 'text-red-600' : 'text-slate-400';
+                            const statusLabel = inv.status === 'paid' ? 'Paid' : inv.status === 'pending' ? 'Pending' : inv.status === 'overdue' ? 'Overdue' : 'Draft';
+                            return (
+                              <div className="mt-2.5">
+                                <div className="border-l-[1.5px] border-sky-400 pl-3 py-1">
+                                  <div className="flex items-center gap-1.5">
+                                    <span className="text-[12px] font-semibold text-slate-800 tracking-tight">{inv.number}</span>
+                                    <span className="text-slate-300">·</span>
+                                    <span className={`text-[10px] font-medium ${statusColor}`}>{statusLabel}</span>
+                                  </div>
+                                  <div className="flex items-center gap-1.5 mt-0.5 truncate">
+                                    <span className="text-[11px] font-medium text-slate-600">{inv.client.name}</span>
+                                    <span className="text-slate-300">·</span>
+                                    <span className="text-[11px] text-slate-400">{inv.items} items</span>
+                                    <span className="text-slate-300">·</span>
+                                    <span className="text-[11px] font-medium text-slate-600">฿{inv.amount.toLocaleString()}</span>
+                                    <span className="text-slate-300">·</span>
+                                    <span className="text-[11px] text-slate-400">Due {formattedDue}</span>
+                                  </div>
+                                  <button
+                                    onClick={() => {
+                                      const url = new URL(window.location.href);
+                                      url.searchParams.set('view', 'invoice');
+                                      window.open(url.toString(), '_blank');
+                                    }}
+                                    className="inline-flex items-center gap-1 mt-2.5 px-2.5 py-1 text-[10px] font-semibold text-sky-600 hover:text-sky-700 bg-sky-50 hover:bg-sky-100/80 rounded-lg transition-all active:scale-[0.97]"
+                                  >
+                                    <Icon icon="solar:arrow-right-up-linear" width="11" />
+                                    View Invoice
+                                  </button>
+                                </div>
+                              </div>
+                            );
+                          })()}
                         </div>
                       )}
                     </div>
@@ -409,14 +690,11 @@ export default function FloatingAIWidget({ isVisible, dismissed, onDismiss, onGe
             <div
               className="relative flex items-center gap-2 pl-3 pr-3.5 py-2 rounded-full cursor-pointer select-none bg-slate-900 border border-blue-500/30 shadow-[0_2px_4px_rgba(0,0,0,0.04),0_8px_24px_rgba(37,99,235,0.10),0_24px_48px_rgba(0,0,0,0.08)] hover:shadow-[0_2px_4px_rgba(0,0,0,0.06),0_12px_32px_rgba(37,99,235,0.14),0_32px_56px_rgba(0,0,0,0.1)] hover:-translate-y-0.5 transition-all duration-200 active:scale-[0.97] overflow-hidden"
             >
-              {/* Pulse ring */}
               <span className="absolute inset-0 rounded-full border border-blue-400/40 pointer-events-none" style={{ animation: 'pill-pulse-ring 2.5s ease-out infinite' }} />
-              {/* Surface shimmer */}
               <span className="absolute inset-0 rounded-full overflow-hidden pointer-events-none">
                 <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/[0.06] to-transparent" style={{ animation: 'pill-shimmer 3s ease-in-out infinite' }} />
               </span>
               <span className="relative text-[12px] font-semibold tracking-tight text-white/90 whitespace-nowrap">Task in progress</span>
-              {/* Progress bar — only when minimized */}
               {!isOpen && (
                 <span className="absolute bottom-0 left-3 right-3 h-[2px] rounded-full overflow-hidden">
                   <span className="absolute inset-0 bg-white/[0.08] rounded-full" />

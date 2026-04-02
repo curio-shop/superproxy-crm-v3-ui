@@ -889,6 +889,9 @@ function AppContent({ onSignOut }: { onSignOut?: () => void }) {
           setTimeout(() => setShowFabUndoToast(false), 4000);
         }}
         onGetMoreCredits={() => { setPricingOriginPage(activePage); setPricingInitialTab('credits'); setActivePage('pricing'); }}
+        onViewContact={(contact) => { setSelectedViewContact(contact); setIsViewContactDrawerOpen(true); }}
+        onViewCompany={(company) => { setSelectedViewCompany(company); setIsViewCompanyDrawerOpen(true); }}
+        onViewProduct={(product) => { setSelectedViewProduct(product); setIsViewProductDrawerOpen(true); }}
       />
       {showFabUndoToast && (
         <div className="fixed bottom-6 left-0 right-0 z-[60] flex justify-center pointer-events-none">
