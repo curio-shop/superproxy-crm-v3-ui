@@ -43,11 +43,10 @@ interface InvoicesProps {
   onOpenTemplateBuilder?: () => void;
   onOpenCreateInvoice?: () => void;
   onDeleteInvoice?: (invoice: Invoice) => void;
-  isFreeTier?: boolean;
   onUpgrade?: () => void;
 }
 
-export default function Invoices({ isTeamView, homeFilterPreference, onPaymentReminderClick, onEmailInvoiceClick, onAskAIClick, onOpenTemplateBuilder, onOpenCreateInvoice, onDeleteInvoice, isFreeTier = false, onUpgrade }: InvoicesProps) {
+export default function Invoices({ isTeamView, homeFilterPreference, onPaymentReminderClick, onEmailInvoiceClick, onAskAIClick, onOpenTemplateBuilder, onOpenCreateInvoice, onDeleteInvoice, onUpgrade }: InvoicesProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [openStatusBadge, setOpenStatusBadge] = useState<string | null>(null);
@@ -553,7 +552,6 @@ export default function Invoices({ isTeamView, homeFilterPreference, onPaymentRe
           preSelectedId={selectedInvoiceForPresentation}
           documentNumber={invoices.find(i => i.id === selectedInvoiceForPresentation)?.number}
           documentTitle={invoices.find(i => i.id === selectedInvoiceForPresentation)?.title}
-          isFreeTier={isFreeTier}
           onUpgrade={onUpgrade}
         />
       )}

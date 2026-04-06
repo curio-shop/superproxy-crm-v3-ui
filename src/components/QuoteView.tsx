@@ -1,12 +1,14 @@
 import { useState } from 'react';
 import { Icon } from '@iconify/react';
+import { useTier } from '../contexts/TierContext';
 
 interface QuoteViewProps {
   onBackToQuotes: () => void;
-  isFreeTier?: boolean;
 }
 
-export default function QuoteView({ onBackToQuotes, isFreeTier = false }: QuoteViewProps) {
+export default function QuoteView({ onBackToQuotes }: QuoteViewProps) {
+  const { can } = useTier();
+  const isFreeTier = !can('noWatermark');
   const [showActionMenu, setShowActionMenu] = useState(false);
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
   const [copiedLink, setCopiedLink] = useState(false);

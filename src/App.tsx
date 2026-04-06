@@ -7,6 +7,7 @@ import DashboardHeader from './components/DashboardHeader';
 import StatsCard from './components/StatsCard';
 import ChartCard from './components/ChartCard';
 import TeamActivity from './components/TeamActivity';
+import { TierProvider } from './contexts/TierContext';
 import Contacts, { ContactDetail } from './components/Contacts';
 import Companies, { Company } from './components/Companies';
 import Products, { Product } from './components/Products';
@@ -359,7 +360,7 @@ function AppContent({ onSignOut }: { onSignOut?: () => void }) {
     return (
       <div className="h-screen w-screen">
         <ErrorBoundary>
-          <QuoteView isFreeTier={true} onBackToQuotes={() => {
+          <QuoteView onBackToQuotes={() => {
             setIsViewingQuote(false);
             setActivePage('quotations');
           }} />
@@ -549,14 +550,12 @@ function AppContent({ onSignOut }: { onSignOut?: () => void }) {
                 </div>
 
                 <ChartCard
-                  isFreeTier={true}
                   onUpgrade={() => { setPricingOriginPage('home'); setActivePage('pricing'); }}
                 />
               </div>
 
               <div className="col-span-12 xl:col-span-4">
                 <TeamActivity
-                  isFreeTier={true}
                   onUpgrade={() => { setPricingOriginPage('home'); setActivePage('pricing'); }}
                   onViewFullActivity={() => {
                     setActivePage('workspace');
@@ -670,7 +669,6 @@ function AppContent({ onSignOut }: { onSignOut?: () => void }) {
               onDeleteQuotation={(quotation) => {
                 handleOpenDeleteModal('quotation', quotation.id, quotation.number);
               }}
-              isFreeTier={true}
               onUpgrade={() => { setPricingOriginPage('quotations'); setActivePage('pricing'); }}
             />
           ) : activePage === 'invoices' ? (
@@ -701,7 +699,6 @@ function AppContent({ onSignOut }: { onSignOut?: () => void }) {
               onDeleteInvoice={(invoice) => {
                 handleOpenDeleteModal('invoice', invoice.id, invoice.number);
               }}
-              isFreeTier={true}
               onUpgrade={() => { setPricingOriginPage('invoices'); setActivePage('pricing'); }}
             />
           ) : activePage === 'presentations' ? (
@@ -712,12 +709,10 @@ function AppContent({ onSignOut }: { onSignOut?: () => void }) {
               onDeletePresentation={(presentation) => {
                 handleOpenDeleteModal('presentation', presentation.id, presentation.title);
               }}
-              isFreeTier={true}
               onUpgrade={() => { setPricingOriginPage('presentations'); setActivePage('pricing'); }}
             />
           ) : activePage === 'currency' ? (
             <CurrencyPage
-              isFreeTier={true}
               onUpgrade={() => { setPricingOriginPage('currency'); setActivePage('pricing'); }}
             />
           ) : activePage === 'notifications' ? (
@@ -1054,9 +1049,11 @@ function App() {
 
   return (
     <ToastProvider>
-      <CallManagerWithToast>
-        <AppContent onSignOut={() => setAuthPage('signin')} />
-      </CallManagerWithToast>
+      <TierProvider defaultTier="growth">
+        <CallManagerWithToast>
+          <AppContent onSignOut={() => setAuthPage('signin')} />
+        </CallManagerWithToast>
+      </TierProvider>
     </ToastProvider>
   );
 }

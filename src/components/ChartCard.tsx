@@ -1,5 +1,6 @@
 import { useState, memo, useMemo } from 'react';
 import { Icon } from '@iconify/react';
+import { useTier } from '../contexts/TierContext';
 import {
   AreaChart,
   Area,
@@ -75,11 +76,12 @@ const flatRevenueData = [
 ];
 
 interface ChartCardProps {
-  isFreeTier?: boolean;
   onUpgrade?: () => void;
 }
 
-function ChartCard({ isFreeTier = false, onUpgrade }: ChartCardProps) {
+function ChartCard({ onUpgrade }: ChartCardProps) {
+  const { can, upgradeLabel } = useTier();
+  const isFreeTier = !can('analytics');
   const [fiscalYear, setFiscalYear] = useState('2026');
   const [isYearDropdownOpen, setIsYearDropdownOpen] = useState(false);
   const [activeView, setActiveView] = useState<ViewType>('pipeline');
@@ -247,22 +249,22 @@ function ChartCard({ isFreeTier = false, onUpgrade }: ChartCardProps) {
             <Area
               type="monotone"
               dataKey={activeView === 'pipeline' ? 'quotations' : 'invoiced'}
-              stroke={isFreeTier ? '#e2e8f0' : '#1e293b'}
-              strokeWidth={isFreeTier ? 1.5 : 2}
-              fill="url(#gradPrimary)"
+              stroke={isFreeTier ? '#e2e8f0' : '#cbd5e1'}
+              strokeWidth={1.5}
+              fill="url(#gradSecondary)"
               name={primaryLabel}
               dot={false}
-              activeDot={isFreeTier ? false : { r: 4, fill: '#1e293b', stroke: '#ffffff', strokeWidth: 2 }}
+              activeDot={isFreeTier ? false : { r: 4, fill: '#cbd5e1', stroke: '#ffffff', strokeWidth: 2 }}
             />
             <Area
               type="monotone"
               dataKey={activeView === 'pipeline' ? 'dealsWon' : 'collected'}
-              stroke={isFreeTier ? '#f1f5f9' : '#cbd5e1'}
-              strokeWidth={1.5}
-              fill="url(#gradSecondary)"
+              stroke={isFreeTier ? '#f1f5f9' : '#1e293b'}
+              strokeWidth={isFreeTier ? 1.5 : 2}
+              fill="url(#gradPrimary)"
               name={secondaryLabel}
               dot={false}
-              activeDot={isFreeTier ? false : { r: 4, fill: '#cbd5e1', stroke: '#ffffff', strokeWidth: 2 }}
+              activeDot={isFreeTier ? false : { r: 4, fill: '#1e293b', stroke: '#ffffff', strokeWidth: 2 }}
             />
           </AreaChart>
         </ResponsiveContainer>
@@ -284,7 +286,7 @@ function ChartCard({ isFreeTier = false, onUpgrade }: ChartCardProps) {
                 onClick={onUpgrade}
                 className="group inline-flex items-center gap-1.5 px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white text-[12px] font-medium rounded-lg transition-all duration-200 shadow-[0_1px_3px_rgba(245,158,11,0.25),0_4px_12px_rgba(245,158,11,0.15)] hover:shadow-[0_2px_6px_rgba(245,158,11,0.3),0_8px_24px_rgba(245,158,11,0.2)]"
               >
-                Upgrade Plan
+                {upgradeLabel('analytics')}
                 <Icon icon="solar:arrow-right-linear" width="14" className="transition-transform duration-200 group-hover:translate-x-0.5" />
               </button>
             </div>

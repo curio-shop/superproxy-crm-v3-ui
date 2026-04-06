@@ -1,4 +1,5 @@
 import { Icon } from '@iconify/react';
+import { useTier } from '../contexts/TierContext';
 
 interface Activity {
   id: number;
@@ -98,11 +99,12 @@ const activityTitles: Record<Activity['type'], string> = {
 
 interface TeamActivityProps {
   onViewFullActivity?: () => void;
-  isFreeTier?: boolean;
   onUpgrade?: () => void;
 }
 
-export default function TeamActivity({ onViewFullActivity, isFreeTier = false, onUpgrade }: TeamActivityProps) {
+export default function TeamActivity({ onViewFullActivity, onUpgrade }: TeamActivityProps) {
+  const { can } = useTier();
+  const isFreeTier = !can('teamActivity');
   return (
     <div className="bg-white rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.04),0_8px_24px_rgba(0,0,0,0.03)] border border-slate-100/80 h-full flex flex-col relative overflow-hidden">
       <div className="px-4 py-3.5 border-b border-slate-100 flex items-center justify-between">
