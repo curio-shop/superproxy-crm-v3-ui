@@ -1,20 +1,20 @@
 import { Icon } from '@iconify/react';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
+import { useTier } from '../contexts/TierContext';
 
 interface PricingPageProps {
   onBack: () => void;
   initialTab?: 'plans' | 'credits';
 }
 
-const TIERS = [
+const TIER_DATA = [
   {
     name: 'Free',
+    key: 'free' as const,
     price: 0,
     billing: '',
     target: 'For freelancers and early exploration',
-    isCurrent: true,
     isRecommended: false,
-    cta: 'Current plan',
     features: [
       '2 users',
       '100 contacts',
@@ -26,12 +26,11 @@ const TIERS = [
   },
   {
     name: 'Growth',
+    key: 'growth' as const,
     price: 29,
     billing: '/mo',
     target: 'For small teams getting started',
-    isCurrent: false,
     isRecommended: false,
-    cta: 'Upgrade to Growth',
     features: [
       'Unlimited users',
       '2,500 contacts',
@@ -45,12 +44,11 @@ const TIERS = [
   },
   {
     name: 'Pro',
+    key: 'pro' as const,
     price: 79,
     billing: '/mo',
     target: 'For teams that need more power',
-    isCurrent: false,
     isRecommended: true,
-    cta: 'Upgrade to Pro',
     features: [
       'Everything in Growth',
       '15,000 contacts',
@@ -64,12 +62,11 @@ const TIERS = [
   },
   {
     name: 'Scale',
+    key: 'scale' as const,
     price: 199,
     billing: '/mo',
     target: 'For organizations scaling fast',
-    isCurrent: false,
     isRecommended: false,
-    cta: 'Upgrade to Scale',
     features: [
       'Everything in Pro',
       'Unlimited contacts',
@@ -187,9 +184,17 @@ const CREDIT_PACKS = [
 type PricingTab = 'plans' | 'credits';
 
 export default function PricingPage({ onBack, initialTab = 'plans' }: PricingPageProps) {
+  const { tier: currentTier } = useTier();
   const [showComparison, setShowComparison] = useState(false);
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'annual'>('annual');
   const [activeTab, setActiveTab] = useState<PricingTab>(initialTab);
+
+  const TIERS = useMemo(() => TIER_DATA.map(t => ({
+    ...t,
+    isCurrent: t.key === currentTier,
+    cta: t.key === currentTier ? 'Current plan' : `Upgrade to ${t.name}`,
+  })), [currentTier]);
+
   const getPrice = (monthlyPrice: number) => {
     if (monthlyPrice === 0) return 0;
     return billingCycle === 'annual' ? Math.round(monthlyPrice * 0.8) : monthlyPrice;

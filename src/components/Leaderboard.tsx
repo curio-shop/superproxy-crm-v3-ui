@@ -1,5 +1,6 @@
 import { Icon } from '@iconify/react';
 import { useState } from 'react';
+import { useTier } from '../contexts/TierContext';
 
 interface LeaderboardEntry {
   id: string;
@@ -262,11 +263,12 @@ const getRankIndicator = (rank: number) => {
 };
 
 interface LeaderboardProps {
-  isFreeTier?: boolean;
   onUpgrade?: () => void;
 }
 
-export default function Leaderboard({ isFreeTier = false, onUpgrade }: LeaderboardProps) {
+export default function Leaderboard({ onUpgrade }: LeaderboardProps) {
+  const { can, upgradeLabel } = useTier();
+  const isFreeTier = !can('leaderboard');
   const [selectedPeriod, setSelectedPeriod] = useState<PeriodType>('month');
   const [isExpanded, setIsExpanded] = useState(true);
   const [showAll, setShowAll] = useState(false);
@@ -503,7 +505,7 @@ export default function Leaderboard({ isFreeTier = false, onUpgrade }: Leaderboa
                 className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-semibold text-amber-600 hover:text-amber-700 hover:bg-amber-50 transition-colors"
               >
                 <Icon icon="solar:lock-keyhole-minimalistic-linear" width="12" className="text-amber-500" />
-                <span>Reveal who's on top</span>
+                <span>{upgradeLabel('leaderboard')} to reveal</span>
               </button>
             ) : remaining.length > 0 ? (
               <button

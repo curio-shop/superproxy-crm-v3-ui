@@ -1019,7 +1019,7 @@ export default function Workspace({ onRegisterHandlers, onWorkspaceChange, onUpg
             </div>
           </div>
 
-          {currentWorkspace.show_leaderboard && <Leaderboard isFreeTier={true} onUpgrade={onUpgrade} />}
+          {currentWorkspace.show_leaderboard && <Leaderboard onUpgrade={onUpgrade} />}
 
           {currentWorkspace.profile && (
             <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">

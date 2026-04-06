@@ -2,6 +2,7 @@ import { X, Video, Mic } from 'lucide-react';
 import { Icon } from '@iconify/react';
 import { useState } from 'react';
 import { createPortal } from 'react-dom';
+import { useTier } from '../contexts/TierContext';
 
 interface RecordPresentationModalProps {
   onClose: () => void;
@@ -9,7 +10,6 @@ interface RecordPresentationModalProps {
   preSelectedId?: string;
   documentNumber?: string;
   documentTitle?: string;
-  isFreeTier?: boolean;
   onUpgrade?: () => void;
 }
 
@@ -18,7 +18,9 @@ type CameraView = 'thumbnail' | 'full-camera' | null;
 
 const PLACEHOLDER_PHOTO = 'https://ryuxwkawbokdgvkiwzqd.supabase.co/storage/v1/object/public/site-asset/iStock-1198252585%20(1).jpg';
 
-export default function RecordPresentationModal({ onClose, preSelectedType, preSelectedId, documentNumber, documentTitle, isFreeTier = false, onUpgrade }: RecordPresentationModalProps) {
+export default function RecordPresentationModal({ onClose, preSelectedType, preSelectedId, documentNumber, documentTitle, onUpgrade }: RecordPresentationModalProps) {
+  const { can, upgradeLabel } = useTier();
+  const isFreeTier = !can('videoWalkthroughs');
   const [currentStep, setCurrentStep] = useState<RecordingStep>(preSelectedType ? 'configure' : 'select');
   const [selectedType, setSelectedType] = useState<'quote' | 'invoice' | null>(preSelectedType || null);
   const [selectedDocument, setSelectedDocument] = useState(preSelectedId || '');
@@ -328,7 +330,7 @@ export default function RecordPresentationModal({ onClose, preSelectedType, preS
                       onClick={() => { onClose(); onUpgrade?.(); }}
                       className="flex-1 px-5 py-3 rounded-xl bg-amber-500 hover:bg-amber-600 text-white text-sm font-bold shadow-lg shadow-amber-500/25 hover:shadow-xl transition-all flex items-center justify-center gap-2 active:scale-[0.98]"
                     >
-                      Upgrade Plan
+                      {upgradeLabel('videoWalkthroughs')}
                       <Icon icon="solar:arrow-right-linear" className="w-4 h-4" />
                     </button>
                   </div>

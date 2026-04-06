@@ -1,5 +1,6 @@
 import { useState, useMemo, useRef, useCallback } from 'react';
 import { Icon } from '@iconify/react';
+import { useTier } from '../contexts/TierContext';
 
 const CURRENCIES = [
   { code: 'USD', name: 'US Dollar', symbol: '$', flag: '🇺🇸' },
@@ -49,11 +50,13 @@ const getRate = (from: string, to: string): number => {
 type ActiveTab = 'display' | 'filter';
 
 interface CurrencyPageProps {
-  isFreeTier?: boolean;
   onUpgrade?: () => void;
 }
 
-export default function CurrencyPage({ isFreeTier = false, onUpgrade }: CurrencyPageProps) {
+export default function CurrencyPage({ onUpgrade }: CurrencyPageProps) {
+  const { can, upgradeLabel } = useTier();
+  const isFreeTier = !can('multiCurrency');
+  const isConverterGated = !can('currencyConverter');
   const [showUpgradeHint, setShowUpgradeHint] = useState(false);
   const hintTimer = useRef<ReturnType<typeof setTimeout>>();
   const [activeTab, setActiveTab] = useState<ActiveTab>('display');
@@ -73,14 +76,15 @@ export default function CurrencyPage({ isFreeTier = false, onUpgrade }: Currency
   }, []);
 
   const handleGatedAction = useCallback((action: () => void) => {
-    if (isFreeTier) { showGate(); return; }
+    if (isConverterGated) { showGate(); return; }
     action();
-  }, [isFreeTier, showGate]);
+  }, [isConverterGated, showGate]);
 
   const handleSwap = () => { handleGatedAction(() => { setFromCurrency(toCurrency); setToCurrency(fromCurrency); }); };
 
   const toggleFilter = (code: string) => {
-    handleGatedAction(() => setSelectedFilters(prev => prev.includes(code) ? prev.filter(c => c !== code) : [...prev, code]));
+    if (isFreeTier) { showGate(); return; }
+    setSelectedFilters(prev => prev.includes(code) ? prev.filter(c => c !== code) : [...prev, code]);
   };
 
   const filtered = useMemo(() =>
@@ -177,7 +181,10 @@ export default function CurrencyPage({ isFreeTier = false, onUpgrade }: Currency
                   return (
                     <button
                       key={currency.code}
-                      onClick={() => handleGatedAction(() => isDisplay ? setDisplayCurrency(currency.code) : toggleFilter(currency.code))}
+                      onClick={() => {
+                        if (isFreeTier) { showGate(); return; }
+                        isDisplay ? setDisplayCurrency(currency.code) : toggleFilter(currency.code);
+                      }}
                       className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl text-left transition-all ${
                         isSelected ? 'bg-slate-50 border border-slate-200' : 'border border-transparent hover:bg-slate-50'
                       }`}
@@ -223,8 +230,8 @@ export default function CurrencyPage({ isFreeTier = false, onUpgrade }: Currency
                     type="number"
                     value={amount}
                     onChange={(e) => handleGatedAction(() => setAmount(e.target.value))}
-                    onFocus={() => { if (isFreeTier) showGate(); }}
-                    readOnly={isFreeTier}
+                    onFocus={() => { if (isConverterGated) showGate(); }}
+                    readOnly={isConverterGated}
                     className="flex-1 min-w-0 px-3 py-2 rounded-xl border border-slate-200 text-[13px] font-semibold text-slate-800 focus:border-slate-400 outline-none transition-colors"
                     placeholder="Amount"
                   />
@@ -297,7 +304,7 @@ export default function CurrencyPage({ isFreeTier = false, onUpgrade }: Currency
       </div>
 
       {/* Upgrade popover — appears on any gated interaction */}
-      {showUpgradeHint && isFreeTier && (
+      {showUpgradeHint && (isFreeTier || isConverterGated) && (
         <div className="fixed inset-0 z-50 flex items-center justify-center" onClick={() => setShowUpgradeHint(false)}>
           <div className="absolute inset-0 bg-black/5" />
           <div
@@ -309,13 +316,13 @@ export default function CurrencyPage({ isFreeTier = false, onUpgrade }: Currency
                 <Icon icon="solar:dollar-minimalistic-bold-duotone" width="20" className="text-amber-500" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-[14px] font-semibold text-slate-800 mb-1">Multi-currency requires an upgrade</p>
-                <p className="text-[12px] text-slate-400 leading-relaxed mb-3">Customize your display currency and converter to match how you do business.</p>
+                <p className="text-[14px] font-semibold text-slate-800 mb-1">{isFreeTier ? 'Multi-currency requires an upgrade' : 'Currency converter requires an upgrade'}</p>
+                <p className="text-[12px] text-slate-400 leading-relaxed mb-3">{isFreeTier ? 'Customize your display currency and converter to match how you do business.' : 'Convert between currencies instantly with live rates.'}</p>
                 <button
                   onClick={() => { setShowUpgradeHint(false); onUpgrade?.(); }}
                   className="group inline-flex items-center gap-1.5 px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white text-[12px] font-medium rounded-lg transition-all duration-200 shadow-[0_1px_3px_rgba(245,158,11,0.25),0_4px_12px_rgba(245,158,11,0.15)] hover:shadow-[0_2px_6px_rgba(245,158,11,0.3)]"
                 >
-                  Upgrade Plan
+                  {isFreeTier ? upgradeLabel('multiCurrency') : upgradeLabel('currencyConverter')}
                   <Icon icon="solar:arrow-right-linear" width="13" className="transition-transform duration-200 group-hover:translate-x-0.5" />
                 </button>
               </div>

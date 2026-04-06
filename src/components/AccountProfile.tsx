@@ -3,6 +3,7 @@ import { useState, useRef, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import PricingCard from './PricingCard';
 import Dropdown from './Dropdown';
+import { useTier } from '../contexts/TierContext';
 
 interface AccountProfileProps {
   activeTab: 'profile' | 'preferences' | 'security' | 'billing' | 'workspaces' | 'voice' | 'connectors' | 'contact';
@@ -87,7 +88,8 @@ export default function AccountProfile({
   const [languageFilter, setLanguageFilter] = useState('all');
   const [playingVoiceId, setPlayingVoiceId] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const isFreeTier = true;
+  const { can } = useTier();
+  const isFreeTier = !can('voiceSelection');
   const [gatedVoiceId, setGatedVoiceId] = useState<string | null>(null);
   const gatedVoiceTimer = useRef<ReturnType<typeof setTimeout>>();
   const creditPacks = [
@@ -877,14 +879,14 @@ export default function AccountProfile({
                         </div>
                         <div>
                           <div className="flex items-baseline gap-2">
-                            <span className="text-2xl font-bold text-slate-900">0</span>
-                            <span className="text-[12px] text-slate-400">credits</span>
+                            <span className="text-2xl font-bold text-slate-900">{isFreeTier ? '0' : '1,000'}</span>
+                            <span className="text-[12px] text-slate-400">credits{!isFreeTier && '/mo'}</span>
                           </div>
-                          <p className="text-[11px] text-slate-400 mt-0.5">No AI credits on the Free plan</p>
+                          <p className="text-[11px] text-slate-400 mt-0.5">{isFreeTier ? 'No AI credits on the Free plan' : 'Growth plan — 1,000 AI credits per month'}</p>
                         </div>
                       </div>
                       <span className="text-[11px] text-slate-400 font-medium">
-                        Available on paid plans
+                        {isFreeTier ? 'Available on paid plans' : 'Growth plan'}
                       </span>
                     </div>
                   </div>
